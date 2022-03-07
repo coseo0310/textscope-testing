@@ -7,6 +7,7 @@ import GradientLoader from "@/components/shared/gradient-loader/";
 import IosLoader from "@/components/shared/ios-loader";
 import Calrendar from "@/components/shared/calrendar";
 import Icons from "@/components/shared/icons";
+import Badge from "@/components/shared/badge";
 
 const test = (s: boolean) => {
   console.log(s);
@@ -26,16 +27,15 @@ const c = (v: string) => {
     <div style="height: 80px; margin: 20px">
       <Avatar
         uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-        alarm="5"
       />
     </div>
 
-    <div style="height: 80px; margin: 20px">
-      <Avatar
-        uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-        alarm="5"
-        :badge="true"
-      />
+    <div style="width: 55px">
+      <Badge alarm="299">
+        <Avatar
+          uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
+        />
+      </Badge>
     </div>
     <div class="icons" style="display: flex; margin: 20px">
       <Icons icons="dash-on" />
@@ -68,7 +68,7 @@ const c = (v: string) => {
     <Button class="primary cancel semi-bold">취소</Button>
     <div style="width: 300px; height: 200px; margin: 20px 300px">
       <IosLoader />
-      <GradientLoader class="white" />
+      <GradientLoader />
     </div>
   </div>
 </template>
@@ -76,7 +76,7 @@ const c = (v: string) => {
 <style lang="scss" scoped>
 .icons {
   svg {
-    fill: $basic-orange;
+    fill: $point-blue;
   }
 }
 </style>

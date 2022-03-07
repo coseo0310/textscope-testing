@@ -16,19 +16,19 @@ button {
 
 .primary {
   color: $d1;
-  background-color: $basic-orange;
+  background-color: $point-blue;
   border-radius: 10px;
 
   &.cancel {
-    background-color: $layer3;
-    color: $point2;
+    background-color: $d3;
+    color: $point-blue;
   }
 }
 
 .outline {
-  color: $basic-orange;
+  color: $point-blue;
   background-color: transparent;
-  border: 1px solid $basic-orange;
+  border: 1px solid $point-blue;
   font-size: 18px;
   font-weight: 800;
   border-radius: 10px;

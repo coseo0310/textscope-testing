@@ -61,11 +61,11 @@ const svg = computed(() => svgs[props.icons]);
       stroke: $d4;
     }
     &.fill.on {
-      fill: $basic-orange;
+      fill: $point-blue;
     }
 
     &.stroke.on {
-      stroke: $basic-orange;
+      stroke: $point-blue;
     }
   }
 } */

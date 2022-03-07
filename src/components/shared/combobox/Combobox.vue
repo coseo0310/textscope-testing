@@ -108,7 +108,7 @@ onUnmounted(() => {
     .text {
       margin-bottom: 2px;
       &.open {
-        color: $basic-orange;
+        color: $point-blue;
       }
     }
 
@@ -121,7 +121,7 @@ onUnmounted(() => {
         background-color: $d2;
 
         path {
-          stroke: $basic-orange;
+          stroke: $point-blue;
         }
       }
     }
@@ -150,11 +150,11 @@ onUnmounted(() => {
 
       &.on {
         background-color: $d2;
-        color: $basic-orange;
+        color: $point-blue;
       }
 
       &:hover {
-        background-color: $basic-orange;
+        background-color: $point-blue;
         color: $d1;
       }
     }

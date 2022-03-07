@@ -44,7 +44,7 @@ const onCheck = () => {};
     border: 0;
     border-radius: 20px;
     color: $d1;
-    background-color: $lomin-deep-orange;
+    background-color: $point-blue;
     max-width: 83px;
     max-height: 40px;
     width: 100%;

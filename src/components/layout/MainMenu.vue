@@ -98,10 +98,10 @@ import Avatar from "@/components/shared/avatar";
 
       &:hover {
         svg {
-          fill: $lomin-deep-orange;
+          fill: $point-blue;
         }
         .menu-text {
-          color: $lomin-deep-orange;
+          color: $point-blue;
         }
       }
     }
@@ -121,7 +121,7 @@ import Avatar from "@/components/shared/avatar";
 
       &.on {
         svg {
-          stroke: $lomin-deep-orange;
+          stroke: $point-blue;
         }
       }
     }

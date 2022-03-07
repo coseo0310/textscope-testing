@@ -229,7 +229,7 @@ for (let i = 0; i < 12; i++) {
         }
 
         &.selected {
-          color: $basic-orange;
+          color: $point-blue;
           font-weight: 600;
 
           &::before {
@@ -261,7 +261,7 @@ for (let i = 0; i < 12; i++) {
               position: absolute;
               width: 35px;
               height: 35px;
-              background-color: $basic-orange;
+              background-color: $point-blue;
               border-radius: 50%;
               z-index: -1;
             }

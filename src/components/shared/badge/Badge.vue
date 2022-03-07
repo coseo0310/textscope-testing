@@ -49,10 +49,10 @@ const alarm = computed(() => (props.alarm === "0" ? "" : props.alarm));
     top: 0;
     width: v-bind("width");
     height: 16px;
-    /* border: 2px solid $layer1; */
+    /* border: 2px solid $d1; */
     border-radius: v-bind("radius");
-    /* background-color: $basic-orange; */
-    color: $layer1;
+    /* background-color: $point-blue; */
+    color: $d1;
     font-size: 2px;
     font-weight: 600;
     display: flex;
@@ -62,14 +62,14 @@ const alarm = computed(() => (props.alarm === "0" ? "" : props.alarm));
   }
 
   .lomin {
-    background-color: $lomin-deep-orange;
+    background-color: $point-blue;
   }
   .basic {
-    background-color: $basic-orange;
+    background-color: $point-blue;
   }
 
   .border {
-    border: 2px solid $layer1;
+    border: 2px solid $d1;
   }
 }
 </style>

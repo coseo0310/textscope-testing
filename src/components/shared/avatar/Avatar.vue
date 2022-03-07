@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 interface Props {
   uri: string;
@@ -23,8 +23,8 @@ const url = computed(() => `url(${props.uri})`);
   height: 56px;
   border: 2px solid transparent;
   border-radius: 50%;
-  background-image: linear-gradient($layer1, $layer1),
-    linear-gradient(to top, $basic-orange 0%, $basic-yellow 100%);
+  background-image: linear-gradient($d1, $d1),
+    linear-gradient(to top, $point-blue 0%, $point-peacook 100%);
   background-origin: border-box;
   background-clip: content-box, border-box;
   display: flex;
@@ -35,7 +35,7 @@ const url = computed(() => `url(${props.uri})`);
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background-color: $point3;
+    background-color: $point-blue;
     background-image: v-bind("url");
     background-position: center center;
     background-repeat: no-repeat;

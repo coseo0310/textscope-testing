@@ -29,7 +29,7 @@
   .bar {
     width: 6%;
     height: 16%;
-    background-color: $basic-orange;
+    background-color: $point-blue;
     position: absolute;
     left: 49%;
     top: 43%;
@@ -99,7 +99,7 @@
   }
 
   &.white .bar {
-    background-color: $layer1;
+    background-color: $d1;
   }
 }
 </style>
