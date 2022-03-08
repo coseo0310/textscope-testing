@@ -24,14 +24,14 @@ export type SvgType = {
   fill: string;
   xmlns: string;
   path: {
-    fillRule?: string;
-    clipRule?: string;
+    fillRule?: "nonzero" | "evenodd" | "inherit";
+    clipRule?: number;
     d: string;
     fill?: string;
     stroke?: string;
     strokeWidth?: string;
-    strokeLinecap?: string;
-    strokeLinejoin?: string;
+    strokeLinecap?: "butt" | "round" | "square" | "inherit";
+    strokeLinejoin?: "miter" | "round" | "bevel" | "inherit";
   }[];
   rect?: {
     width: string;

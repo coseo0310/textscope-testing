@@ -37,36 +37,17 @@ const svg = computed(() => svgs[props.icons]);
     <template v-if="svg.path">
       <path
         v-for="p in svg.path"
-        :fill-rule="p.fillRule"
-        :clip-rule="p.clipRule"
+        :fill-rule="p.fillRule ? p.fillRule : 'evenodd'"
+        :clip-rule="p.clipRule || 3"
         :d="p.d"
         :fill="svg.rect ? p.fill : ''"
         :stroke-width="p.strokeWidth"
-        :stroke-linecap="p.strokeLinecap"
-        :stroke-linejoin="p.strokeLinejoin"
+        :stroke-linecap="p.strokeLinecap ? p.strokeLinecap : 'round'"
+        :stroke-linejoin="p.strokeLinejoin ? p.strokeLinejoin : 'round'"
         :class="{ fill: p.fill, stroke: p.stroke, on: props.on }"
       />
     </template>
   </svg>
 </template>
 
-<style lang="scss" scoped>
-/* svg {
-  path {
-    &.fill {
-      fill: $d4;
-    }
-
-    &.stroke {
-      stroke: $d4;
-    }
-    &.fill.on {
-      fill: $point-blue;
-    }
-
-    &.stroke.on {
-      stroke: $point-blue;
-    }
-  }
-} */
-</style>
+<style lang="scss" scoped></style>

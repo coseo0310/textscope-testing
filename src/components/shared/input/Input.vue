@@ -14,5 +14,6 @@ input {
   font-size: 18px;
   padding: 13px 8px;
   color: $d5;
+  outline: none;
 }
 </style>

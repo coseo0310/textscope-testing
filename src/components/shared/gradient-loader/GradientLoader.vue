@@ -17,7 +17,7 @@
       </defs>
       <g id="paths">
         <path
-          d="M100 100 A 40 40 90 0 1 250 100"
+          d="M80 100 A 40 40 90 0 1 250 100"
           stroke="url(#gradient)"
           style="fill: transparent; fill-opacity: 1; stroke-width: 30"
         />
@@ -37,7 +37,7 @@
       </defs>
       <g id="paths2">
         <path
-          d="M100 100 A 40 40 90 0 1 250 100"
+          d="M80 100 A 40 40 90 0 1 250 100"
           stroke="url(#gradient2)"
           style="fill: transparent; fill-opacity: 1; stroke-width: 30"
         />
@@ -49,9 +49,10 @@
 <style lang="scss" scoped>
 .gradient-loader {
   position: relative;
-  height: 100%;
+  width: 200px;
+  height: 200px;
+  /* height: 100%; */
   background-color: transparent;
-  transform: scale(0.3);
   animation: spinner 1s infinite;
 
   #stop1 {
@@ -90,20 +91,20 @@
   #half1 {
     position: absolute;
     top: 0;
-    left: -25px;
+    left: -65px;
     background-color: transparent;
   }
   #half2 {
     position: absolute;
     top: 50px;
-    left: -25px;
+    left: -65px;
     background-color: transparent;
     transform: rotate(180deg) scaleX(-1);
   }
 
   @keyframes spinner {
     100% {
-      transform: scale(0.3) rotate(360deg);
+      transform: rotate(360deg);
     }
   }
 }

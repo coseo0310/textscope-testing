@@ -1,17 +1,41 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import GradientLoader from "@/components/shared/gradient-loader";
+
+type Props = {
+  loader?: boolean;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  loader: false,
+});
+</script>
 
 <template>
   <button id="btn">
     <slot />
+
+    <div class="loader" v-show="props.loader">
+      <GradientLoader class="white" />
+    </div>
   </button>
 </template>
 
 <style lang="scss" scoped>
 button {
+  position: relative;
   outline: none;
   border: 0;
   background-color: $d1;
   cursor: pointer;
+}
+
+.loader {
+  position: absolute;
+  top: -78px;
+  left: 110px;
+  /* width: 200px;
+  height: 200px; */
+  transform: scale(0.15);
 }
 
 .primary {

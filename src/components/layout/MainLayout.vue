@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Menu from "@/components/layout/MainMenu.vue";
-import SubMenu from "@/components/layout/SubMenu.vue";
+import { watch } from "vue";
+// import Menu from "@/components/layout/MainMenu.vue";
+// import SubMenu from "@/components/layout/SubMenu.vue";
+// import { useStore } from "@/store";
+// import { useRouter } from "vue-router";
 
-const isSub = ref<boolean>(true);
-const auth = ref<boolean>(true);
+// const store = useStore();
+// const router = useRouter();
 </script>
 
 <template>
-  <div :class="{ 'main-container': true, sub: isSub }">
-    <header v-if="auth" class="header">
+  <div :class="{ 'main-container': true, sub: false }">
+    <!-- <header v-if="auth" class="header">
       <Menu />
     </header>
     <aside v-if="isSub" class="aside">
       <SubMenu />
-    </aside>
+    </aside> -->
     <main class="main">
       <router-view></router-view>
     </main>

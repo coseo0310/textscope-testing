@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import Button from "@/components/shared/button";
 import Input from "@/components/shared/input";
 import Switch from "@/components/shared/switch";
@@ -8,6 +9,7 @@ import IosLoader from "@/components/shared/ios-loader";
 import Calrendar from "@/components/shared/calrendar";
 import Icons from "@/components/shared/icons";
 import Badge from "@/components/shared/badge";
+import { postAuthToken, getAuthToken } from "@/api/http/auth";
 
 const test = (s: boolean) => {
   console.log(s);
@@ -16,10 +18,35 @@ const test = (s: boolean) => {
 const c = (v: string) => {
   console.log(v);
 };
+
+const token = ref<string>("");
+
+const postToken = async () => {
+  try {
+    const data = await postAuthToken("test", "test");
+    console.log(data);
+    token.value = data.token.token;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const getToken = async () => {
+  const data = await getAuthToken(token.value);
+  console.log(data);
+};
 </script>
 
 <template>
   <div style="height: 100vh">
+    <div>
+      <Button class="primary extra-bold" @click="postToken"
+        >토큰 가져오기</Button
+      >
+      <Button class="primary extra-bold" @click="getToken"
+        >사용자정보 가져오기</Button
+      >
+    </div>
     <div style="height: 500px; margin: 20px 100px">
       <Calrendar date="2022-03-03" @change="c" />
     </div>
