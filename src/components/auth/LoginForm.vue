@@ -14,13 +14,12 @@ const password = ref<string>("");
 const loader = ref<boolean>(false);
 const store = useStore();
 const router = useRouter();
+const emailValidate = ref<boolean>(false);
+const passwordValidate = ref<boolean>(false);
 
 const onShow = () => {
   iconType.value = iconType.value === "hide" ? "show" : "hide";
 };
-
-const emailValidate = ref<boolean>(false);
-const passwordValidate = ref<boolean>(false);
 
 watch(email, () => {
   const regex =

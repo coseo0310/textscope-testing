@@ -1,0 +1,32 @@
+<script setup lang="ts">
+import WaveForm from "@/components/layout/WaveForm.vue";
+import AlertForm from "@/components/auth/AlertForm.vue";
+import Button from "@/components/shared/button";
+import { useRouter, useRoute } from "vue-router";
+import { constants } from "@/router";
+
+const router = useRouter();
+const routes = useRoute();
+
+const toLogin = () => {
+  router.push(constants.login.path);
+};
+</script>
+
+<template>
+  <WaveForm>
+    <AlertForm>
+      <template v-slot:title>
+        <p>404</p>
+      </template>
+      <template v-slot:subject>
+        <p>페이지를 찾을 수 없습니다.</p>
+      </template>
+      <template v-slot:btn>
+        <Button class="primary" @click="toLogin">다시 로그인하기</Button>
+      </template>
+    </AlertForm>
+  </WaveForm>
+</template>
+
+<style lang="scss" scoped></style>
