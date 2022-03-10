@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GradientLoader from "@/components/shared/gradient-loader";
+import GradientLoader from "@/components/shared/GradientLoader.vue";
 
 type Props = {
   loader?: boolean;

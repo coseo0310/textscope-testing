@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Button from "@/components/shared/button";
-import Input from "@/components/shared/input";
-import Switch from "@/components/shared/switch";
-import Avatar from "@/components/shared/avatar";
-import GradientLoader from "@/components/shared/gradient-loader/";
-import IosLoader from "@/components/shared/ios-loader";
-import Calrendar from "@/components/shared/calrendar";
-import Icons from "@/components/shared/icons";
-import Badge from "@/components/shared/badge";
+import Button from "@/components/shared/Button.vue";
+import Input from "@/components/shared/Input.vue";
+import Switch from "@/components/shared/Switch.vue";
+import Avatar from "@/components/shared/Avatar.vue";
+import GradientLoader from "@/components/shared/GradientLoader.vue";
+import IosLoader from "@/components/shared/IosLoader.vue";
+import Calrendar from "@/components/shared/Calrendar.vue";
+import Icons from "@/components/shared/Icons.vue";
+import Badge from "@/components/shared/Badge.vue";
 import { postAuthToken, getAuthToken } from "@/api/http/auth";
 
 const test = (s: boolean) => {

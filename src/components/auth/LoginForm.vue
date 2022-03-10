@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import Input from "@/components/shared/input";
-import Button from "@/components/shared/button";
-import Icons from "@/components/shared/icons";
-import { IconType } from "@/components/shared/icons/type";
+import Input from "@/components/shared/Input.vue";
+import Button from "@/components/shared/Button.vue";
+import Icons from "@/components/shared/Icons.vue";
+import { IconType } from "@/components/shared/type";
 import { useStore } from "@/store";
 import * as R from "@/router/index";
 

@@ -22,8 +22,9 @@ const menuList = ref<MenuList>([
     title: "설정",
   },
 ]);
-const extend = ref<boolean>(false);
 const store = useStore();
+const extend = ref<boolean>(false);
+
 const onExtend = (e: MouseEvent) => {
   extend.value = !extend.value;
 };
@@ -49,6 +50,7 @@ const onExtend = (e: MouseEvent) => {
   height: 100%;
 
   .aside {
+    display: flex;
     transition: width 0.5s;
   }
 
@@ -59,7 +61,6 @@ const onExtend = (e: MouseEvent) => {
   }
   &.separation {
     .aside {
-      display: fixed;
       width: 80px;
     }
 

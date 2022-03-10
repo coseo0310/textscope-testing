@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Icons from "@/components/shared/icons";
-import Badge from "@/components/shared/badge";
-import Avatar from "@/components/shared/avatar";
+import Icons from "@/components/shared/Icons.vue";
+import Badge from "@/components/shared/Badge.vue";
+import Avatar from "@/components/shared/Avatar.vue";
 import { useStore } from "@/store";
 import { MenuList } from "./type";
 import { constants } from "@/router/index";
@@ -109,7 +109,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .navigation {
-  position: fixed;
+  position: sticky;
   width: 80px;
   height: 100%;
   background-color: $d3;
