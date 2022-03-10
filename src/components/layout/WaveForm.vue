@@ -14,7 +14,6 @@
 .wave-form {
   height: 100vh;
   position: relative;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,7 +31,7 @@
       background: url(../../assets/svg/wave1.svg) repeat-x;
 
       @media (min-height: 1025px) {
-        height: 800px;
+        height: 700px;
       }
     }
     .wave2 {
@@ -43,7 +42,7 @@
       background: url(../../assets/svg/wave2.svg) repeat-x;
 
       @media (min-height: 1025px) {
-        height: 600px;
+        height: 500px;
       }
     }
   }

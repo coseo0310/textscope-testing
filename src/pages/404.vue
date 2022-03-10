@@ -2,14 +2,13 @@
 import WaveForm from "@/components/layout/WaveForm.vue";
 import AlertForm from "@/components/auth/AlertForm.vue";
 import Button from "@/components/shared/button";
-import { useRouter, useRoute } from "vue-router";
-import { constants } from "@/router";
+import { useRouter } from "vue-router";
+import * as Router from "@/router/index";
 
 const router = useRouter();
-const routes = useRoute();
 
 const toLogin = () => {
-  router.push(constants.login.path);
+  router.push(Router.constants.login.path);
 };
 </script>
 

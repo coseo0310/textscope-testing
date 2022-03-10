@@ -6,9 +6,9 @@ import Button from "@/components/shared/button";
 import Icons from "@/components/shared/icons";
 import { IconType } from "@/components/shared/icons/type";
 import { useStore } from "@/store";
-import { constants } from "@/router";
+import * as R from "@/router/index";
 
-const iconType = ref<IconType>("hide");
+const icon = ref<IconType>("hide");
 const email = ref<string>("");
 const password = ref<string>("");
 const loader = ref<boolean>(false);
@@ -18,7 +18,7 @@ const emailValidate = ref<boolean>(false);
 const passwordValidate = ref<boolean>(false);
 
 const onShow = () => {
-  iconType.value = iconType.value === "hide" ? "show" : "hide";
+  icon.value = icon.value === "hide" ? "show" : "hide";
 };
 
 watch(email, () => {
@@ -46,13 +46,14 @@ const onLogin = async () => {
   }
   loader.value = true;
   const login = await store.onLogin(email.value, password.value);
+  console.log("login>>", login);
   if (!login) {
     passwordValidate.value = true;
     loader.value = false;
     return;
   }
 
-  router.push(constants.dashboard.path);
+  router.push(R.constants.dashboard.path);
 };
 
 const onEmailKeyup = (e: KeyboardEvent) => {
@@ -71,6 +72,8 @@ const onPasswordKeyup = (e: KeyboardEvent) => {
     onLogin();
   }
 };
+
+const test = false;
 </script>
 
 <template>
@@ -79,6 +82,7 @@ const onPasswordKeyup = (e: KeyboardEvent) => {
       <img src="@/assets/logo/textscope-logo.png" alt="logo" />
       <p>AI 기반 문서 인식 솔루션</p>
     </div>
+    <div class="input email" :class="{ validate: test }"></div>
     <div class="input email" :class="{ validate: emailValidate }">
       <label>ID</label>
       <Input type="text" :value="email" @keyup="onEmailKeyup" />
@@ -90,15 +94,11 @@ const onPasswordKeyup = (e: KeyboardEvent) => {
     <div class="input pasword" :class="{ validate: passwordValidate }">
       <label>Passwrod</label>
       <Input
-        :type="iconType === 'hide' ? 'password' : 'text'"
+        :type="icon === 'hide' ? 'password' : 'text'"
         v-model="password"
         @keyup="onPasswordKeyup"
       />
-      <Icons
-        :icons="iconType"
-        :class="{ on: iconType === 'show' }"
-        @click="onShow"
-      />
+      <Icons :icons="icon" :class="{ on: icon === 'show' }" @click="onShow" />
       <p>
         <span v-if="passwordValidate && password !== ''"
           >입력된 비밀번호가 올바르지 않습니다.</span

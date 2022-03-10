@@ -3,6 +3,7 @@ import { ref } from "vue";
 import MainMenu from "@/components/layout/MainMenu.vue";
 import { constants } from "@/router";
 import { MenuList } from "./type";
+import { useStore } from "@/store";
 
 const menuList = ref<MenuList>([
   {
@@ -22,14 +23,24 @@ const menuList = ref<MenuList>([
   },
 ]);
 const extend = ref<boolean>(false);
+const store = useStore();
 const onExtend = () => {
   extend.value = !extend.value;
 };
 </script>
 
 <template>
-  <div class="main-container" :class="{ extend: extend }">
-    <aside class="aside" @mouseenter="onExtend" @mouseleave="onExtend">
+  <div
+    class="main-container"
+    :class="{ separation: !!store.accessToken, extend }"
+  >
+    <aside
+      v-if="!!store.accessToken"
+      class="aside"
+      :class="{ extend }"
+      @mouseenter="onExtend"
+      @mouseleave="onExtend"
+    >
       <MainMenu :extend="extend" :menuList="menuList" />
     </aside>
     <main class="main">
@@ -41,17 +52,36 @@ const onExtend = () => {
 <style lang="scss" scoped>
 .main-container {
   display: flex;
-  height: 100vh;
+  height: 100%;
 
   .aside {
-    display: flex;
-    width: 80px;
     transition: width 0.5s;
   }
 
-  &.extend {
+  .main {
+    width: 100vw;
+    height: 100vh;
+    transition: width 0.5s;
+  }
+  &.separation {
     .aside {
+      display: fixed;
+      width: 80px;
+    }
+
+    .main {
+      width: calc(100vw - 80px);
+    }
+  }
+
+  &.separation.extend {
+    .aside {
+      display: fixed;
       width: 220px;
+    }
+
+    .main {
+      width: calc(100vw - 220px);
     }
   }
 }

@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import WaveForm from "@/components/layout/WaveForm.vue";
 import AlertForm from "@/components/auth/AlertForm.vue";
 import Button from "@/components/shared/button";
-import { useRouter } from "vue-router";
-import { constants } from "@/router";
+import * as Router from "@/router/index";
 
 const router = useRouter();
 const toLogin = () => {
-  router.push(constants.login.path);
+  router.push(Router.constants.login.path);
 };
 </script>
 
