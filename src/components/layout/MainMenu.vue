@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import Icons from "@/components/shared/icons";
 import Badge from "@/components/shared/badge";
@@ -10,17 +10,50 @@ import { MenuList } from "./type";
 type Props = {
   menuList: MenuList;
   extend?: boolean;
+  onExtend?: (e: MouseEvent) => void;
 };
 
 const props = withDefaults(defineProps<Props>(), {
   extend: false,
+  onExtend: (e: MouseEvent) => {},
 });
+
+const isTab = ref<boolean>(false);
 const routes = useRoute();
 const store = useStore();
+
+const onTab = () => {
+  isTab.value = !isTab.value;
+};
+
+const onClosest = (e: MouseEvent) => {
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+  const closest = !!el.closest(".profile") || !!el.closest(".sub");
+
+  if (!closest && isTab.value) {
+    isTab.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("click", onClosest);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", onClosest);
+});
 </script>
 
 <template>
-  <div class="navigation" :class="{ active: extend }">
+  <div
+    class="navigation"
+    :class="{ active: extend }"
+    @mouseenter="props.onExtend"
+    @mouseleave="props.onExtend"
+  >
     <div class="logo">
       <img src="../../assets/logo/textscope-logo.png" />
     </div>
@@ -41,7 +74,7 @@ const store = useStore();
       </li>
     </ul>
 
-    <div class="profile">
+    <div class="profile" @click="onTab">
       <div class="avatar">
         <Badge alarm="0" :border="true" :disable="!extend">
           <Avatar
@@ -58,6 +91,12 @@ const store = useStore();
         </span>
       </div>
     </div>
+  </div>
+  <div v-if="isTab" class="sub" :class="{ extend }" @click="store.onLogout">
+    <span class="icon">
+      <img src="@/assets/svg/logout.svg" alt="logout" />
+    </span>
+    <span class="title">로그아웃</span>
   </div>
 </template>
 
@@ -218,10 +257,11 @@ const store = useStore();
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    cursor: pointer;
 
     .avatar {
       width: 55px;
-      margin-left: 10px;
+      margin-left: 5px;
     }
     .info {
       display: flex;
@@ -234,6 +274,40 @@ const store = useStore();
       line-height: 24px;
       color: $d5;
     }
+  }
+}
+
+.sub {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  left: 90px;
+  width: 146px;
+  height: 68px;
+  background-color: $d2;
+  color: $d5;
+  border-radius: 16px;
+  box-shadow: 2px 2px 20px 0.5px $d4;
+  transition: left 0.5s;
+  cursor: pointer;
+  &.extend {
+    left: 230px;
+  }
+
+  .icon {
+    display: flex;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .title {
+    display: flex;
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: 600;
   }
 }
 </style>

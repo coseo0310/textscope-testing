@@ -24,7 +24,7 @@ const menuList = ref<MenuList>([
 ]);
 const extend = ref<boolean>(false);
 const store = useStore();
-const onExtend = () => {
+const onExtend = (e: MouseEvent) => {
   extend.value = !extend.value;
 };
 </script>
@@ -34,14 +34,8 @@ const onExtend = () => {
     class="main-container"
     :class="{ separation: !!store.accessToken, extend }"
   >
-    <aside
-      v-if="!!store.accessToken"
-      class="aside"
-      :class="{ extend }"
-      @mouseenter="onExtend"
-      @mouseleave="onExtend"
-    >
-      <MainMenu :extend="extend" :menuList="menuList" />
+    <aside v-if="!!store.accessToken" class="aside" :class="{ extend }">
+      <MainMenu :extend="extend" :onExtend="onExtend" :menuList="menuList" />
     </aside>
     <main class="main">
       <router-view></router-view>

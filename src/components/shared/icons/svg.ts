@@ -301,4 +301,22 @@ export const svgs: Svgs = {
       },
     ],
   },
+  logout: {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 32 32",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    path: [
+      {
+        fillRule: "evenodd",
+        clipRule: 0,
+        d: "M12 3V1H1V19H12V17M5 10H17M17 10L13 6M17 10L13 14",
+        stroke: "#5B5A81",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+      },
+    ],
+  },
 };
