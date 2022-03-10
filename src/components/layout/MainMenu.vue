@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Icons from "@/components/shared/icons";
 import Badge from "@/components/shared/badge";
 import Avatar from "@/components/shared/avatar";
 import { useStore } from "@/store";
 import { MenuList } from "./type";
+import { constants } from "@/router/index";
 
 type Props = {
   menuList: MenuList;
@@ -19,8 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isTab = ref<boolean>(false);
-const routes = useRoute();
 const store = useStore();
+const routes = useRoute();
+const router = useRouter();
 
 const onTab = () => {
   isTab.value = !isTab.value;
@@ -36,6 +38,11 @@ const onClosest = (e: MouseEvent) => {
   if (!closest && isTab.value) {
     isTab.value = false;
   }
+};
+
+const onLogout = async () => {
+  await store.onLogout();
+  router.push(constants.logout.path);
 };
 
 onMounted(() => {
@@ -92,7 +99,7 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
-  <div v-if="isTab" class="sub" :class="{ extend }" @click="store.onLogout">
+  <div v-if="isTab" class="sub" :class="{ extend }" @click="onLogout">
     <span class="icon">
       <img src="@/assets/svg/logout.svg" alt="logout" />
     </span>

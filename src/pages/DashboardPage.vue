@@ -7,13 +7,7 @@ const store = useStore();
 </script>
 
 <template>
-  <div>
-    Dashboard
-    <div>{{ store.user?.id }}</div>
-    <div>{{ store.user?.name }}</div>
-    <div>{{ store.user?.authority }}</div>
-    <button @click="store.onLogout">logout</button>
-  </div>
+  <div>dashboard</div>
 </template>
 
 <style lang="scss" scoped></style>

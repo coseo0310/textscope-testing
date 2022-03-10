@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { getCookie, setCookie, eraseCookie } from "@/utils";
-import { postAuthToken, getAuthToken, deleteAuthToken } from "@/api/http/auth";
+import { postAuthToken, deleteAuthToken } from "@/api/http/auth";
 import { TOKEN } from "@/constants";
 import { User } from "@/api/http/type";
 
