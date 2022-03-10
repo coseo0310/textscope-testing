@@ -23,7 +23,7 @@ const svg = computed(() => svgs[props.icons]);
     :width="svg.width"
     :height="svg.height"
     :view-box="svg.viewBox"
-    :fill="svg.fill"
+    fill="currentColor"
     :xmlns="svg.xmlns"
   >
     <template v-if="svg.rect">

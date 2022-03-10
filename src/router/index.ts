@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import LoginPage from "@/pages/LoginPage.vue";
 import DashboardPage from "@/pages/DashboardPage.vue";
 import SettingsPage from "@/pages/SettingsPAge.vue";
+import ClassificationPage from "@/pages/ClassificationPage.vue";
+import TemplatePage from "@/pages/TemplatePage.vue";
+import WorkPage from "@/pages/WorkPage.vue";
 import LogoutPage from "@/pages/LogoutPage.vue";
 import NotFound from "@/pages/404.vue";
 import Test from "@/pages/Test.vue";
@@ -24,9 +27,24 @@ export const constants = {
     component: DashboardPage,
   },
   settings: {
-    path: "/settins",
-    name: "settins",
+    path: "/settings",
+    name: "settings",
     component: SettingsPage,
+  },
+  classification: {
+    path: "/classification",
+    name: "classification",
+    component: ClassificationPage,
+  },
+  template: {
+    path: "/template",
+    name: "template",
+    component: TemplatePage,
+  },
+  work: {
+    path: "/work",
+    name: "work",
+    component: WorkPage,
   },
   logout: {
     path: "/logout",
@@ -59,7 +77,7 @@ router.beforeEach(async (to, from, next) => {
   if (!ignore && !auth && to.name !== "login") {
     next("/login");
   } else if (!ignore && auth && to.name === "login") {
-    next("/dashboard");
+    next("/settings");
   } else {
     next();
   }

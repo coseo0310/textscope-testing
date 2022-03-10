@@ -23,7 +23,7 @@ const toLogin = () => {
         <p>페이지를 찾을 수 없습니다.</p>
       </template>
       <template v-slot:btn>
-        <Button class="primary" @click="toLogin">다시 로그인하기</Button>
+        <Button class="primary" @click="toLogin">초기화면으로 돌아가기</Button>
       </template>
     </AlertForm>
   </WaveForm>

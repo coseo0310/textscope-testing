@@ -51,7 +51,6 @@ const alarm = computed(() => (props.alarm === "0" ? "" : props.alarm));
     height: 16px;
     /* border: 2px solid $d1; */
     border-radius: v-bind("radius");
-    /* background-color: $point-blue; */
     color: $d1;
     font-size: 2px;
     font-weight: 600;

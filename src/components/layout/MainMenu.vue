@@ -1,135 +1,191 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 import Icons from "@/components/shared/icons";
 import Badge from "@/components/shared/badge";
 import Avatar from "@/components/shared/avatar";
+import { MenuList } from "./type";
+
+type Props = {
+  menuList: MenuList;
+  extend?: boolean;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  extend: false,
+});
+const routes = useRoute();
 </script>
 
 <template>
-  <div class="main-menu-container">
-    <div class="logo"><img src="../../assets/logo/textscope-logo.png" /></div>
-    <div class="menu-wrap">
-      <div class="menu-list">
-        <div class="icon-wrap">
-          <Icons icons="dashboard" />
-        </div>
-        <div class="menu-text">대시보드</div>
-      </div>
-      <div class="menu-list">
-        <div class="icon-wrap">
-          <Icons icons="classification" />
-        </div>
-        <div class="menu-text">문서 분류 AI 모델</div>
-      </div>
-      <div class="menu-list">
-        <div class="icon-wrap">
-          <Icons icons="template" />
-        </div>
-        <div class="menu-text">템플릿 OCR</div>
-      </div>
-      <div class="menu-list">
-        <div class="icon-wrap">
-          <Icons icons="work" />
-        </div>
-        <div class="menu-text">업무 관리</div>
-      </div>
+  <div class="navigation" :class="{ active: extend }">
+    <div class="logo">
+      <img src="../../assets/logo/textscope-logo.png" />
     </div>
-    <div class="profile">
-      <div class="alarm on">
-        <Badge alarm="299">
-          <Icons icons="bell" />
-        </Badge>
-      </div>
-      <div class="avatar-wrap">
-        <Avatar
-          uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-        />
-      </div>
-      <div class="name">Anonymous</div>
-    </div>
+    <ul>
+      <li
+        v-for="m in props.menuList"
+        class="list"
+        :class="{ active: m.path === routes.path }"
+      >
+        <router-link :to="m.path">
+          <b></b>
+          <b></b>
+          <span class="icon">
+            <Icons :icons="m.icons" />
+          </span>
+          <span class="title">{{ m.title }}</span>
+        </router-link>
+      </li>
+    </ul>
+    <!-- <div class="profile">
+      <div class="menu-btn">
+        <div class="top"></div>
+        <div class="avatar">
+          <Badge alarm="0" :border="true">
+            <Avatar
+              uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
+            />
+          </Badge>
+        </div>
+        <div class="bottom"></div>
+      </div> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
-.main-menu-container {
-  width: 100%;
-  min-height: 100px;
-  background-color: $d1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
+.navigation {
+  position: fixed;
+  width: 80px;
+  height: 100%;
+  background-color: $d3;
+  overflow: hidden;
+  transition: width 0.5s;
+  padding-left: 10px;
 
   .logo {
-    width: 205px;
-    height: 46px;
-    margin: 27px 0;
-    margin-right: 110px;
+    position: relative;
+    display: flex;
+    padding: 50px 0 50px 14px;
+    cursor: pointer;
+
+    img {
+      height: 40px;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      display: flex;
+      width: 10px;
+      height: 40px;
+      background-color: $d3;
+    }
   }
 
-  .menu-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left: 100px;
+  ul {
+    position: relative;
 
-    .menu-list {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 52px;
-      margin: 0 20px;
-      cursor: pointer;
+    .list {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
 
-      .icon-wrap {
-        margin-right: 10px;
-
-        svg {
-          fill: $d4;
-        }
-      }
-
-      .menu-text {
+      b:nth-child(1) {
+        position: absolute;
+        top: -40px;
         width: 100%;
-        font-size: 18px;
-        font-weight: 600;
-        color: $d4;
+        height: 40px;
+        background-color: $d1;
+        display: none;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-bottom-right-radius: 30px;
+          background-color: $d3;
+        }
       }
 
-      &:hover {
-        svg {
-          fill: $point-blue;
+      b:nth-child(2) {
+        position: absolute;
+        bottom: -40px;
+        width: 100%;
+        height: 40px;
+        background-color: $d1;
+        display: none;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-top-right-radius: 30px;
+          background-color: $d3;
         }
-        .menu-text {
+      }
+
+      a {
+        position: relative;
+        display: flex;
+        width: 100%;
+
+        .icon {
+          position: relative;
+          min-width: 70px;
+          height: 70px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .title {
+          position: absolute;
+          top: 27px;
+          left: 70px;
+          width: 140px;
+          height: inherit;
+          overflow: hidden;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          white-space: normal;
+        }
+
+        &:hover {
           color: $point-blue;
         }
       }
-    }
-  }
 
-  .profile {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+      &.active {
+        background-color: $d1;
+        border-top-left-radius: 40px;
+        border-bottom-left-radius: 40px;
 
-    .alarm {
-      margin-right: 40px;
+        a {
+          color: $point-blue;
+        }
 
-      svg {
-        stroke: $d4;
-      }
-
-      &.on {
-        svg {
-          stroke: $point-blue;
+        b {
+          display: flex;
+          z-index: -1;
         }
       }
     }
-    .name {
-      color: $d4;
-      margin: 0 10px;
-      font-size: 18px;
-      font-weight: 600;
+  }
+
+  &.active {
+    width: 220px;
+    .logo {
+      &::before {
+        display: none;
+      }
     }
   }
 }

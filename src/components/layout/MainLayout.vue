@@ -1,22 +1,37 @@
 <script setup lang="ts">
-import { watch } from "vue";
-// import Menu from "@/components/layout/MainMenu.vue";
-// import SubMenu from "@/components/layout/SubMenu.vue";
-// import { useStore } from "@/store";
-// import { useRouter } from "vue-router";
+import { ref } from "vue";
+import MainMenu from "@/components/layout/MainMenu.vue";
+import { constants } from "@/router";
+import { MenuList } from "./type";
 
-// const store = useStore();
-// const router = useRouter();
+const menuList = ref<MenuList>([
+  {
+    path: constants.dashboard.path,
+    icons: "dashboard",
+    title: "대시보드",
+  },
+  {
+    path: constants.work.path,
+    icons: "work",
+    title: "업무 리스트",
+  },
+  {
+    path: constants.settings.path,
+    icons: "setting",
+    title: "설정",
+  },
+]);
+const extend = ref<boolean>(false);
+const onExtend = () => {
+  extend.value = !extend.value;
+};
 </script>
 
 <template>
-  <div :class="{ 'main-container': true, sub: false }">
-    <!-- <header v-if="auth" class="header">
-      <Menu />
-    </header>
-    <aside v-if="isSub" class="aside">
-      <SubMenu />
-    </aside> -->
+  <div class="main-container" :class="{ extend: extend }">
+    <aside class="aside" @mouseenter="onExtend" @mouseleave="onExtend">
+      <MainMenu :extend="extend" :menuList="menuList" />
+    </aside>
     <main class="main">
       <router-view></router-view>
     </main>
@@ -25,24 +40,18 @@ import { watch } from "vue";
 
 <style lang="scss" scoped>
 .main-container {
-  display: grid;
-  grid-template-columns: 200px repeat(5, 1fr);
+  display: flex;
+  height: 100vh;
 
-  .header {
-    grid-column: 1/7;
+  .aside {
+    display: flex;
+    width: 80px;
+    transition: width 0.5s;
   }
 
-  .main {
-    grid-column: 1/7;
-  }
-
-  &.sub {
+  &.extend {
     .aside {
-      grid-column: 1/2;
-    }
-
-    .main {
-      grid-column: 2/7;
+      width: 220px;
     }
   }
 }
