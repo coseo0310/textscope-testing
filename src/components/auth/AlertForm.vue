@@ -40,11 +40,11 @@
   }
 
   .btn-wrap {
+    width: 330px;
+    height: 46px;
     margin-top: 50px;
 
     button {
-      width: 330px;
-      height: 46px;
       font-size: 18px;
       font-weight: 800;
     }

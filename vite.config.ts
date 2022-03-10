@@ -13,7 +13,7 @@ export default defineConfig(({ command, mode }) => {
         allow: [".."],
       },
     },
-    base: mode === "development" ? "./coseo0310.github.io" : "./",
+    base: "./",
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),

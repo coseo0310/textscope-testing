@@ -46,7 +46,6 @@ const onLogin = async () => {
   }
   loader.value = true;
   const login = await store.onLogin(email.value, password.value);
-  console.log("login>>", login);
   if (!login) {
     passwordValidate.value = true;
     loader.value = false;
@@ -174,11 +173,11 @@ const test = false;
     }
   }
   .btn {
+    width: 100%;
+    height: 46px;
     margin-top: 30px;
 
     button {
-      width: 100%;
-      height: 46px;
       font-size: 18px;
       font-weight: 800;
     }

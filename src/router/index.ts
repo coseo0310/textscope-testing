@@ -74,8 +74,6 @@ router.beforeEach(async (to, from, next) => {
 
   const auth = getCookie(TOKEN);
 
-  console.log(to.name);
-
   if (!ignore && !auth && to.name !== "login") {
     next("/login");
   } else if (!ignore && auth && to.name === "login") {

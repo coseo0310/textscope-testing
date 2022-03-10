@@ -275,14 +275,11 @@ for (let i = 0; i < 12; i++) {
   }
 
   .btn-wrap {
+    width: 136px;
+    height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    button {
-      width: 136px;
-      height: 40px;
-    }
   }
 }
 </style>

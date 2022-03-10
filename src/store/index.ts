@@ -34,8 +34,17 @@ export const useStore = defineStore("main", {
     },
     async getUser(token: string) {
       try {
-        const userData = await getAuthToken(token);
-        this.user = userData.user;
+        // const userData = await getAuthToken(token);
+        // this.user = userData.user;
+        this.user = {
+          id: `${Date.now()}`,
+          name: `super`,
+          division: `검수1팀`,
+          job_position: `부장`,
+          phone_number: `000-0000-000`,
+          authority: `super`,
+          extension_number: `000`,
+        };
         return true;
       } catch (error) {
         console.error(error);

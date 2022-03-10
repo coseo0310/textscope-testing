@@ -4,10 +4,12 @@ import { computed } from "vue";
 interface Props {
   alarm: string;
   color?: "lomin" | "basic";
+  disable?: boolean;
   border?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  disable: true,
   alarm: "0",
   color: "lomin",
   border: false,
@@ -27,6 +29,7 @@ const alarm = computed(() => (props.alarm === "0" ? "" : props.alarm));
   <div class="badge-wrap">
     <slot />
     <div
+      v-if="props.disable"
       id="badge"
       :class="{
         lomin: props.color === 'lomin',
