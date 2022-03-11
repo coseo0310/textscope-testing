@@ -298,7 +298,9 @@ onUnmounted(() => {
   border-radius: 16px;
   box-shadow: 2px 2px 20px 0.5px $d4;
   transition: left 0.5s;
+  z-index: 1;
   cursor: pointer;
+
   &.extend {
     left: 230px;
   }
