@@ -174,7 +174,7 @@ export const getMainMenu = (): MenuList => {
 
 export const getSubMenu = (path: string): MenuList => {
   const item = cEntries.find(
-    ([k, v]) => path.includes(path) && !!v.routeRecordRaw.children
+    ([k, v]) => path.includes(k) && !!v.routeRecordRaw.children
   );
   if (!item) {
     return [];

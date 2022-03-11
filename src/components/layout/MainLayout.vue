@@ -4,20 +4,11 @@ import { useRoute } from "vue-router";
 import SubMenu from "@/components/layout/SubMenu.vue";
 import { getSubMenu } from "@/router";
 import { MenuList } from "./type";
-import { useStore } from "@/store";
 
-const store = useStore();
 const routes = useRoute();
-const extend = ref<boolean>(false);
 const menuList = ref<MenuList>(getSubMenu(routes.path));
 
-console.log(routes.path);
-
-const onExtend = (e: MouseEvent) => {
-  extend.value = !extend.value;
-};
-
-console.log(menuList.value);
+console.log(">>>>", menuList.value[0]);
 </script>
 
 <template>
@@ -28,6 +19,10 @@ console.log(menuList.value);
 </template>
 
 <style lang="scss" scoped>
-/* .sub-container {
-} */
+.sub-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: lightcoral;
+}
 </style>
