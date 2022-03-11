@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>classification</div>
+  <div>Holidays</div>
 </template>
 
 <style lang="scss" scoped></style>

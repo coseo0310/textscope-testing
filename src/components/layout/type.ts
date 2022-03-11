@@ -1,4 +1,4 @@
-import { IconType } from "@/components/shared/icons/type";
+import { IconType } from "@/components/shared/type";
 
 export type MenuItem = {
   path: string;

@@ -52,7 +52,7 @@ const onLogin = async () => {
     return;
   }
 
-  router.push(R.constants.dashboard.path);
+  router.push(R.constants.dashboard.routeRecordRaw.path);
 };
 
 const onEmailKeyup = (e: KeyboardEvent) => {

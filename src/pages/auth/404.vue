@@ -8,7 +8,7 @@ import * as Router from "@/router/index";
 const router = useRouter();
 
 const toLogin = () => {
-  router.push(Router.constants.login.path);
+  router.push(Router.constants.login.routeRecordRaw.path);
 };
 </script>
 

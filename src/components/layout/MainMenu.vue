@@ -42,7 +42,7 @@ const onClosest = (e: MouseEvent) => {
 
 const onLogout = async () => {
   await store.onLogout();
-  router.push(constants.logout.path);
+  router.push(constants.logout.routeRecordRaw.path);
 };
 
 onMounted(() => {

@@ -4,63 +4,193 @@ import LogoutPage from "@/pages/auth/LogoutPage.vue";
 import NotFound from "@/pages/auth/404.vue";
 import DashboardPage from "@/pages/dashboard/DashboardPage.vue";
 import SettingsPage from "@/pages/settings/SettingsPage.vue";
-import ClassificationPage from "@/pages/ClassificationPage.vue";
-import TemplatePage from "@/pages/template/TemplatePage.vue";
+import ProfilePage from "@/pages/settings/ProfilePage.vue";
+import PushPage from "@/pages/settings/PushPage.vue";
+import HolidaysPage from "@/pages/settings/HolidaysPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
+import { MenuList, MenuItem } from "@/components/layout/type";
+import { Constants } from "./type";
+import { IconType } from "@/components/shared/type";
 
-export const constants = {
+export const constants: Constants = {
   root: {
-    path: "/",
-    redirect: "/login",
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/",
+      redirect: "/login",
+      meta: {
+        requiresAuth: false,
+      },
+    },
   },
   login: {
-    path: "/login",
-    name: "login",
-    component: LoginPage,
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/login",
+      name: "login",
+      component: LoginPage,
+      meta: {
+        requiresAuth: false,
+      },
+    },
   },
   dashboard: {
-    path: "/dashboard",
-    name: "dashboard",
-    component: DashboardPage,
-  },
-  settings: {
-    path: "/settings",
-    name: "settings",
-    component: SettingsPage,
-  },
-  classification: {
-    path: "/classification",
-    name: "classification",
-    component: ClassificationPage,
-  },
-  template: {
-    path: "/template",
-    name: "template",
-    component: TemplatePage,
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/dashboard",
+      name: "dashboard",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "대시보드",
+        icons: "dashboard",
+      },
+    },
   },
   work: {
-    path: "/work",
-    name: "work",
-    component: WorkPage,
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/work",
+      name: "work",
+      component: WorkPage,
+      meta: {
+        requiresAuth: true,
+        title: "업무 리스트",
+        icons: "work",
+      },
+    },
+  },
+  settings: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/settings",
+      name: "settings",
+      component: SettingsPage,
+      children: [
+        {
+          path: "",
+          name: "profile",
+          component: ProfilePage,
+          meta: {
+            requiresAuth: true,
+            title: "프로필",
+            icons: "user",
+          },
+        },
+
+        {
+          path: "holidays",
+          name: "holidays",
+          component: HolidaysPage,
+          meta: {
+            requiresAuth: true,
+            title: "연차",
+            icons: "calendar",
+          },
+        },
+
+        {
+          path: "push",
+          name: "push",
+          component: PushPage,
+          meta: {
+            requiresAuth: true,
+            title: "푸시알림",
+            icons: "bell",
+          },
+        },
+      ],
+
+      meta: {
+        requiresAuth: true,
+        title: "설정",
+        icons: "setting",
+      },
+    },
   },
   logout: {
-    path: "/logout",
-    name: "logout",
-    component: LogoutPage,
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/logout",
+      name: "logout",
+      component: LogoutPage,
+      meta: {
+        requiresAuth: false,
+      },
+    },
   },
   errors: {
-    path: "/404",
-    name: "404",
-    component: NotFound,
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/404",
+      name: "404",
+      component: NotFound,
+      meta: {
+        requiresAuth: false,
+      },
+    },
   },
-  test: { path: "/test", name: "test", component: Test },
-  catch: { path: "/:catchAll(.*)", redirect: "/404" },
+  test: {
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/test",
+      name: "test",
+      component: Test,
+      meta: {
+        requiresAuth: false,
+      },
+    },
+  },
+  catch: {
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/:catchAll(.*)",
+      redirect: "/404",
+      meta: {
+        requiresAuth: false,
+      },
+    },
+  },
 };
 
-export const routes = Object.entries(constants).map(([_, v]) => v);
+const cEntries = Object.entries(constants);
+
+export const routes = cEntries.map(([_, v]) => v.routeRecordRaw);
+
+export const getMainMenu = (): MenuList => {
+  return cEntries
+    .filter(([_, v]) => !!v.isMenu)
+    .map(([_, v]): MenuItem => {
+      return {
+        path: v.routeRecordRaw.path,
+        icons: v.routeRecordRaw.meta!.icons as IconType,
+        title: v.routeRecordRaw.meta!.title as string,
+      };
+    });
+};
+
+export const getSubMenu = (path: string): MenuList => {
+  const item = cEntries.find(
+    ([k, v]) => path.includes(path) && !!v.routeRecordRaw.children
+  );
+  if (!item) {
+    return [];
+  }
+  const find = item.find((f) => typeof f !== "string");
+  if (!find || typeof find === "string" || !find.routeRecordRaw.children) {
+    return [];
+  }
+  return find.routeRecordRaw.children.map((m): MenuItem => {
+    return {
+      path: `${find.routeRecordRaw.path}/${m.path}`,
+      icons: m.meta!.icons as IconType,
+      title: m.meta!.title as string,
+    };
+  });
+};
 
 export const router = createRouter({
   history: createWebHashHistory(),
@@ -78,6 +208,8 @@ router.beforeEach(async (to, from, next) => {
     next("/login");
   } else if (!ignore && auth && to.name === "login") {
     next("/dashboard");
+  } else if (!auth && to.meta.requiresAuth) {
+    next("/404");
   } else {
     next();
   }

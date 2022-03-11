@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, onMounted } from "vue";
-import MainLayout from "@/components/layout/MainLayout.vue";
+import HomeLayout from "@/components/layout/HomeLayout.vue";
 import { useStore } from "@/store";
 
 const store = useStore();
@@ -19,7 +19,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <MainLayout />
+  <HomeLayout />
 </template>
 
 <style lang="scss">
