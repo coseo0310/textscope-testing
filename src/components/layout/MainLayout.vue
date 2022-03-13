@@ -7,13 +7,11 @@ import { MenuList } from "./type";
 
 const routes = useRoute();
 const menuList = ref<MenuList>(getSubMenu(routes.path));
-
-console.log(">>>>", menuList.value[0]);
 </script>
 
 <template>
   <div class="sub-container" :class="{ separation: menuList.length > 0 }">
-    <SubMenu v-if="menuList.length > 0" />
+    <SubMenu v-if="menuList.length > 0" :menu-list="menuList" />
     <slot />
   </div>
 </template>

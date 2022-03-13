@@ -68,7 +68,7 @@ onUnmounted(() => {
       <li
         v-for="m in props.menuList"
         class="list"
-        :class="{ active: m.path === routes.path }"
+        :class="{ active: routes.path.includes(m.path) }"
       >
         <router-link :to="m.path">
           <b></b>
@@ -80,7 +80,6 @@ onUnmounted(() => {
         </router-link>
       </li>
     </ul>
-
     <div class="profile" @click="onTab">
       <div class="avatar">
         <Badge alarm="0" :border="true" :disable="!extend">
@@ -117,7 +116,7 @@ onUnmounted(() => {
   transition: width 0.5s;
   padding-left: 10px;
   display: grid;
-  grid-template-rows: 170px 1fr 100px;
+  grid-template-rows: 150px 1fr 100px;
 
   &.active {
     width: 220px;
@@ -173,7 +172,7 @@ onUnmounted(() => {
         top: -40px;
         width: 100%;
         height: 40px;
-        background-color: $d1;
+        background-color: $d2;
         display: none;
 
         &::before {
@@ -193,7 +192,7 @@ onUnmounted(() => {
         bottom: -40px;
         width: 100%;
         height: 40px;
-        background-color: $d1;
+        background-color: $d2;
         display: none;
 
         &::before {
@@ -240,7 +239,7 @@ onUnmounted(() => {
       }
 
       &.active {
-        background-color: $d1;
+        background-color: $d2;
         border-top-left-radius: 40px;
         border-bottom-left-radius: 40px;
 

@@ -185,7 +185,7 @@ export const getSubMenu = (path: string): MenuList => {
   }
   return find.routeRecordRaw.children.map((m): MenuItem => {
     return {
-      path: `${find.routeRecordRaw.path}/${m.path}`,
+      path: `${find.routeRecordRaw.path}${m.path ? `/${m.path}` : ""}`,
       icons: m.meta!.icons as IconType,
       title: m.meta!.title as string,
     };
