@@ -55,6 +55,16 @@ const onLogin = async () => {
   router.push(R.constants.dashboard.routeRecordRaw.path);
 };
 
+const onSingleSignOne = async () => {
+  loader.value = true;
+  const sso = await store.onSingleSignOne();
+  if (!sso) {
+    return;
+  }
+
+  router.push(R.constants.dashboard.routeRecordRaw.path);
+};
+
 const onEmailKeyup = (e: KeyboardEvent) => {
   const el = e.target as HTMLInputElement;
   email.value = el.value;
@@ -111,6 +121,7 @@ const test = false;
     <div class="btn">
       <Button class="primary" :loader="loader" @click="onLogin">로그인</Button>
     </div>
+    <div class="sso" @click="onSingleSignOne">SSO (Single Sign One) 로그인</div>
   </div>
 </template>
 
@@ -175,12 +186,25 @@ const test = false;
   .btn {
     width: 100%;
     height: 46px;
-    margin-top: 30px;
+    margin-top: 20px;
 
     button {
       font-size: 18px;
       font-weight: 800;
     }
+  }
+
+  .sso {
+    color: $point-blue;
+    font-size: 18px;
+    font-weight: 700;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    text-decoration: underline;
+    cursor: pointer;
   }
 }
 </style>

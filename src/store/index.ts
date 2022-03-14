@@ -21,6 +21,18 @@ export const useStore = defineStore("main", {
     };
   },
   actions: {
+    async onSingleSignOne() {
+      try {
+        // TODO : SSO
+        const tokenData = await postAuthToken("test", "test");
+        this.accessToken = tokenData.token.token;
+        setCookie(TOKEN, tokenData.token.token, 30);
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
     async onLogin(email: string, password: string) {
       try {
         const tokenData = await postAuthToken(email, password);
@@ -34,6 +46,7 @@ export const useStore = defineStore("main", {
     },
     async getUser(token: string) {
       try {
+        // TODO: GET USER
         // const userData = await getAuthToken(token);
         // this.user = userData.user;
         this.user = {
