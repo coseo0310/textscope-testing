@@ -7,6 +7,7 @@ import Grid, {
   Columns,
   Selected,
 } from "@/components/shared/Grid.vue";
+import Pagination from "@/components/shared/Pagination.vue";
 
 const columns = ref<Columns>([
   {
@@ -97,28 +98,33 @@ console.log(">>", selected.value);
 
 <template>
   <MainLayout>
-    <Grid :columns="columns" :grid-list="gridList" :selected="selected">
-      <template v-slot:inspection="{ item }">
-        <template v-if="item.inspection !== 'save'">
-          {{ item.inspection }}
+    <div class="work-page">
+      <Grid :columns="columns" :grid-list="gridList" :selected="selected">
+        <template v-slot:inspection="{ item }">
+          <template v-if="item.inspection !== 'save'">
+            {{ item.inspection }}
+          </template>
+          <template v-else>
+            <div class="icon">
+              <Icons icons="save" />
+            </div>
+          </template>
         </template>
-        <template v-else>
-          <div class="icon">
-            <Icons icons="save" />
-          </div>
-        </template>
-      </template>
-    </Grid>
+      </Grid>
+      <Pagination :current="13" />
+    </div>
   </MainLayout>
 </template>
 
 <style lang="scss" scoped>
-.icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  color: $d5;
-  cursor: pointer;
+.work-page {
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: $d5;
+    cursor: pointer;
+  }
 }
 </style>
