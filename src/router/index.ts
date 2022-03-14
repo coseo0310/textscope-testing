@@ -12,7 +12,7 @@ import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
 import { Constants, MenuList, MenuItem } from "@/types";
-import { IconType } from "@/assets/svg";
+import { IconType } from "@/types";
 
 export const constants: Constants = {
   root: {

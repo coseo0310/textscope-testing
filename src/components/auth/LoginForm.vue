@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
-import { IconType } from "@/components/shared/type";
+import { IconType } from "@/types";
 import { useStore } from "@/store";
 import * as R from "@/router/index";
 
