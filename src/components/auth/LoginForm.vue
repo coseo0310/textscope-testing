@@ -165,6 +165,13 @@ const test = false;
         border-color: $point-red;
       }
     }
+    input {
+      color: $d4;
+
+      &:focus {
+        color: $d5;
+      }
+    }
   }
 
   .pasword {
