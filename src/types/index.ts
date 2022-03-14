@@ -27,7 +27,8 @@ export type IconType =
   | "hide"
   | "work"
   | "chevron-down"
-  | "logout";
+  | "logout"
+  | "save";
 
 export type SvgType = {
   width: string;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 type Props = {
   default?: boolean;
@@ -15,6 +15,10 @@ const emits = defineEmits<{
 }>();
 
 const checked = ref<boolean>(props.default);
+
+watch(props, () => {
+  checked.value = props.default;
+});
 
 const onClick = () => {
   checked.value = !checked.value;
@@ -40,7 +44,7 @@ const onClick = () => {
         </svg>
       </div>
     </div>
-    <p>{{ props.label }}</p>
+    <p v-if="props.label">{{ props.label }}</p>
   </div>
 </template>
 
@@ -63,6 +67,9 @@ const onClick = () => {
     align-items: center;
 
     .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: transparent;
     }
     &.active {
