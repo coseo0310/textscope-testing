@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
-import { ComboboxItem, DefaultType } from "./type";
+
+export type ComboboxItem = { id: number; text: string; value: string };
+
+export type DefaultType = number | null;
 
 interface Props {
   default?: DefaultType;

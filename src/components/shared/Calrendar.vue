@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import Button from "@/components/shared/Button.vue";
-import Combobox from "@/components/shared/Combobox.vue";
-import { ComboboxItem } from "./type";
+import Combobox, { ComboboxItem } from "@/components/shared/Combobox.vue";
 
 interface Props {
   date: string;

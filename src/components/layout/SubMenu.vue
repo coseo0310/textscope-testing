@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import Icons from "@/components/shared/Icons.vue";
-import { MenuList } from "@/components/layout/type";
+import { IconType } from "@/assets/svg";
+
+export type MenuItem = {
+  path: string;
+  icons: IconType;
+  title: string;
+};
+
+export type MenuList = MenuItem[];
 
 type Props = {
   menuList: MenuList;

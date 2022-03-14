@@ -11,9 +11,8 @@ import WorkPage from "@/pages/work/WorkPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
-import { MenuList, MenuItem } from "@/components/layout/type";
-import { Constants } from "./type";
-import { IconType } from "@/components/shared/type";
+import { Constants, MenuList, MenuItem } from "@/types";
+import { IconType } from "@/assets/svg";
 
 export const constants: Constants = {
   root: {

@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { svgs } from "./svg";
-import { IconType } from "./type";
+import { svgs } from "@/assets/svg";
+import { IconType } from "@/types";
 
-interface Props {
+type Props = {
   icons: IconType;
   on?: boolean;
-}
+};
 
 const props = withDefaults(defineProps<Props>(), {
   on: false,
 });
 
-// const size = computed(() => `${props.size}`);
-// const src = computed(() => `/src/assets/icons/${props.icons}.svg`);
 const svg = computed(() => svgs[props.icons]);
 </script>
 
 <template>
-  <!-- <img class="icon" :src="src" /> -->
   <svg
     :width="svg.width"
     :height="svg.height"

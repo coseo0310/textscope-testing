@@ -5,8 +5,8 @@ import Icons from "@/components/shared/Icons.vue";
 import Badge from "@/components/shared/Badge.vue";
 import Avatar from "@/components/shared/Avatar.vue";
 import { useStore } from "@/store";
-import { MenuList } from "./type";
-import { constants } from "@/router/index";
+import { constants } from "@/router";
+import { MenuList } from "@/types";
 
 type Props = {
   menuList: MenuList;

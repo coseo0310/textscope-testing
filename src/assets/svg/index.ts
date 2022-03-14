@@ -1,4 +1,4 @@
-import { Svgs } from "./type";
+import { Svgs } from "@/types";
 
 export const svgs: Svgs = {
   "dash-on": {

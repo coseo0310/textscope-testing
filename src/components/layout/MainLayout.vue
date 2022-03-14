@@ -3,10 +3,9 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import SubMenu from "@/components/layout/SubMenu.vue";
 import { getSubMenu } from "@/router";
-import { MenuList } from "./type";
 
 const routes = useRoute();
-const menuList = ref<MenuList>(getSubMenu(routes.path));
+const menuList = ref(getSubMenu(routes.path));
 </script>
 
 <template>
@@ -21,6 +20,5 @@ const menuList = ref<MenuList>(getSubMenu(routes.path));
   display: flex;
   width: 100%;
   height: 100vh;
-  background-color: lightcoral;
 }
 </style>

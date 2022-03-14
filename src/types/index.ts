@@ -1,5 +1,14 @@
-export type ComboboxItem = { id: number; text: string; value: string };
-export type DefaultType = number | null;
+import { RouteRecordRaw } from "vue-router";
+import "vue-router";
+
+declare module "vue-router" {
+  interface RouteMeta {
+    requiresAuth: boolean;
+    title?: string;
+    icons?: IconType;
+  }
+}
+
 export type IconType =
   | "dash-on"
   | "class-on"
@@ -47,3 +56,31 @@ export type SvgType = {
 export type Svgs = {
   [k in IconType]: SvgType;
 };
+
+export type Constant =
+  | "root"
+  | "login"
+  | "dashboard"
+  | "work"
+  | "settings"
+  | "logout"
+  | "errors"
+  | "catch"
+  | "test";
+
+export type Routes = {
+  isMenu: boolean;
+  routeRecordRaw: RouteRecordRaw;
+};
+
+export type Constants = {
+  [k in Constant]: Routes;
+};
+
+export type MenuItem = {
+  path: string;
+  icons: IconType;
+  title: string;
+};
+
+export type MenuList = MenuItem[];
