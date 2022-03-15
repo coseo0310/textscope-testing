@@ -26,7 +26,7 @@ const onExtend = (e: MouseEvent) => {
     <main class="main">
       <router-view></router-view>
     </main>
-    <Toast :message="store.message" />
+    <Toast :message="store.message" :type="store.messageType" />
   </div>
 </template>
 

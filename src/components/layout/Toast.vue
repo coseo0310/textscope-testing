@@ -3,12 +3,12 @@ import { ref, watch } from "vue";
 
 type Props = {
   message: string;
+  type: "info" | "warn";
 };
 
 const props = defineProps<Props>();
 
 const toastEl = ref<HTMLDivElement | null>(null);
-const els = ref<HTMLDivElement[]>([]);
 
 watch(props, () => {
   if (!toastEl.value) {
@@ -18,6 +18,7 @@ watch(props, () => {
   d.innerText = "test message";
   d.classList.add("text");
   d.classList.add("start");
+  d.classList.add(props.type);
   toastEl.value.appendChild(d);
   toastEl.value.addEventListener("animationend", (e: AnimationEvent) => {
     const el = e.target as HTMLElement;
@@ -55,10 +56,17 @@ watch(props, () => {
     border-radius: 10px;
     margin: 20px;
     z-index: 10;
-    color: $point-red;
     font-size: 18px;
     font-weight: 600;
     transform: translate(0, 0);
+
+    &.info {
+      color: $point-blue;
+    }
+
+    &.warn {
+      color: $point-red;
+    }
 
     &.start {
       animation: start 0.8s ease-in-out;

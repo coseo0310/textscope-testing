@@ -8,6 +8,7 @@ type States = {
   accessToken: string;
   user: User | null;
   message: string;
+  messageType: "info" | "warn";
 };
 
 // useStore could be anything like useUser, useCart
@@ -20,11 +21,13 @@ export const useStore = defineStore("main", {
       accessToken: getCookie(TOKEN) || "",
       user: null,
       message: "",
+      messageType: "info",
     };
   },
   actions: {
-    setMessage(message: string) {
+    setMessage(message: string, type: "info" | "warn") {
       this.message = message;
+      this.messageType = type;
     },
     async onSingleSignOne() {
       try {
