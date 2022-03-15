@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
+import Filter from "@/components/work/Filter.vue";
 
 const onFilter = () => {
   alert("준비중...");
@@ -33,7 +35,10 @@ const onUpload = () => {
       </div>
       <div class="waiting">대기: {{ "200" }}</div>
       <div class="confirm">완료: {{ "192,049" }}</div>
-      <div class="filter-btn" @click="onFilter">검색 필터 선택</div>
+      <div class="filter-wrap">
+        <div class="text" @click="onFilter">검색 필터 선택</div>
+        <Filter />
+      </div>
     </div>
     <div class="work-menu__btn-wrap">
       <div class="delete">
@@ -78,17 +83,21 @@ const onUpload = () => {
       padding: 0 50px;
     }
 
-    .filter-btn {
-      color: $point-blue;
-      text-decoration: underline;
-      line-height: 20px;
-      padding: 0 40px;
-      cursor: pointer;
+    .filter-wrap {
+      position: relative;
+
+      .text {
+        color: $point-blue;
+        text-decoration: underline;
+        line-height: 20px;
+        padding: 0 40px;
+        font-weight: 600;
+        cursor: pointer;
+      }
     }
 
     .total,
-    .title,
-    .filter-btn {
+    .title {
       font-weight: 600;
     }
   }

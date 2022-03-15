@@ -110,7 +110,7 @@ for (let i = 0; i < 14; i++) {
       </Grid>
       <div v-if="gridList.length === 0" class="not-found">
         <img src="@/assets/img/magnifier.png" alt="magnifier" />
-        <div class="text">검색 필터가 선택되지 않았습니다.</div>
+        <div class="text">검색 필터가 선택되지 않았습니다</div>
       </div>
     </div>
     <div v-if="gridList.length > 0" class="grid-form__pagination">

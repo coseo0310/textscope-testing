@@ -53,7 +53,6 @@ const onClick = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
   height: 20px;
   cursor: pointer;
 
