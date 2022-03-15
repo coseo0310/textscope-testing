@@ -32,7 +32,9 @@ const emits = defineEmits<{
 const selected = ref<Selected[]>(props.selected || []);
 const list = ref<GridList>(props.gridList);
 const allSelected = computed(() => {
-  return !list.value.find((f) => f.checked === false);
+  return list.value.length === 0
+    ? false
+    : !list.value.find((f) => f.checked === false);
 });
 
 const getGridTemplateColumns = () => {

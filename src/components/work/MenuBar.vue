@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Filter from "@/components/work/Filter.vue";
 
+const isFilter = ref<boolean>(true);
+
 const onFilter = () => {
-  alert("준비중...");
+  isFilter.value = !isFilter.value;
 };
 
 const onReload = () => {
@@ -23,6 +25,27 @@ const onDownload = () => {
 const onUpload = () => {
   alert("준비중...");
 };
+
+const onClosest = (e: MouseEvent) => {
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+
+  const closest = el.closest(".filter-wrap");
+  if (closest) {
+    return;
+  }
+  isFilter.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener("click", onClosest);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", onClosest);
+});
 </script>
 
 <template>
@@ -37,7 +60,7 @@ const onUpload = () => {
       <div class="confirm">완료: {{ "192,049" }}</div>
       <div class="filter-wrap">
         <div class="text" @click="onFilter">검색 필터 선택</div>
-        <Filter />
+        <Filter v-show="isFilter" />
       </div>
     </div>
     <div class="work-menu__btn-wrap">

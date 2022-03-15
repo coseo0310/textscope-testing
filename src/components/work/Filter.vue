@@ -1,6 +1,192 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
+import Calendar from "@/components/shared/Calendar.vue";
+
+type Keys = "category" | "type" | "save" | "inspection" | "ocr";
+
+type Item = {
+  name: string;
+  checked: boolean;
+};
+
+type CList = {
+  [k in Keys]: Item[];
+};
+
+const date = new Date();
+const year = String(date.getFullYear());
+const month = String(date.getMonth() + 1);
+const day = String(date.getDate());
+
+const isStartDt = ref<boolean>(false);
+const isEndDt = ref<boolean>(false);
+const startDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
+const endDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
+const lists = ref<CList>({
+  category: [
+    {
+      name: "실손 의료비 영수증",
+      checked: false,
+    },
+    {
+      name: "온라인 뱅킹 가입 신청서",
+      checked: false,
+    },
+    {
+      name: "통장 사본",
+      checked: false,
+    },
+    {
+      name: "가계 대출 신청서",
+      checked: false,
+    },
+    {
+      name: "진료비 계산서",
+      checked: false,
+    },
+  ],
+  type: [
+    {
+      name: "템플릿 OCR",
+      checked: false,
+    },
+    {
+      name: "정형",
+      checked: false,
+    },
+    {
+      name: "비정형",
+      checked: false,
+    },
+  ],
+  save: [
+    {
+      name: "저장",
+      checked: false,
+    },
+    {
+      name: "저장 안함",
+      checked: false,
+    },
+  ],
+  ocr: [
+    {
+      name: "시스템",
+      checked: false,
+    },
+    {
+      name: "수동",
+      checked: false,
+    },
+    {
+      name: "대기",
+      checked: false,
+    },
+  ],
+  inspection: [
+    {
+      name: "변경",
+      checked: false,
+    },
+    {
+      name: "변경 안함",
+      checked: false,
+    },
+  ],
+});
+
+const isAllDefault = computed(() => ({
+  category:
+    lists.value.category.length === 0
+      ? false
+      : !lists.value.category.find((f) => f.checked === false),
+  type:
+    lists.value.type.length === 0
+      ? false
+      : !lists.value.type.find((f) => f.checked === false),
+  save:
+    lists.value.save.length === 0
+      ? false
+      : !lists.value.save.find((f) => f.checked === false),
+  ocr:
+    lists.value.ocr.length === 0
+      ? false
+      : !lists.value.ocr.find((f) => f.checked === false),
+  inspection:
+    lists.value.inspection.length === 0
+      ? false
+      : !lists.value.inspection.find((f) => f.checked === false),
+}));
+const getStartDt = computed(() => startDt.value.split("-").join("."));
+const getEndDt = computed(() => endDt.value.split("-").join("."));
+
+const onCalendar = (t: "start" | "end") => {
+  if (t === "start") {
+    isStartDt.value = !isStartDt.value;
+    isEndDt.value = false;
+  } else {
+    isEndDt.value = !isEndDt.value;
+    isStartDt.value = false;
+  }
+};
+const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
+  if (t === "start") {
+    startDt.value = d;
+    isStartDt.value = false;
+  } else if (t === "end") {
+  } else {
+    isStartDt.value = false;
+    isEndDt.value = false;
+  }
+};
+
+const onAllChecked = (key: Keys) => {
+  if (!!lists.value[key].find((f) => f.checked === false)) {
+    lists.value[key] = lists.value[key].map((c) => {
+      c.checked = true;
+      return { ...c };
+    });
+  } else {
+    lists.value[key] = lists.value[key].map((c) => {
+      c.checked = false;
+      return { ...c };
+    });
+  }
+};
+
+const onChange = (name: string, v: boolean, key: Keys) => {
+  const list = lists.value[key];
+  list.forEach((c) => {
+    if (c.name == name) {
+      c.checked = v;
+    }
+  });
+};
+
+const onClosest = (e: MouseEvent) => {
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+  const closestStart = el.closest(".start");
+  const closestEnd = el.closest(".end");
+  if (!closestStart) {
+    isStartDt.value = false;
+  }
+  if (!closestEnd) {
+    isEndDt.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("click", onClosest);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", onClosest);
+});
 </script>
 
 <template>
@@ -13,59 +199,126 @@ import Button from "@/components/shared/Button.vue";
       <div class="category">
         <div class="title">카테고리</div>
         <div class="box">
-          <CheckBox class="checkbox" label="전체" />
-          <CheckBox class="checkbox" label="실손 의료비 영수증" />
-          <CheckBox class="checkbox" label="온라인 뱅킹 가입 신청서" />
-          <CheckBox class="checkbox" label="통장 사본" />
-          <CheckBox class="checkbox" label="가계 대출 신청서" />
-          <CheckBox class="checkbox" label="진료비 계산서" />
+          <CheckBox
+            :default="isAllDefault.category"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('category')"
+          />
+          <CheckBox
+            v-for="c in lists.category"
+            class="checkbox"
+            :label="c.name"
+            :default="c.checked"
+            @change="(v: boolean) => {onChange(c.name, v, 'category')}"
+          />
         </div>
       </div>
       <div class="types">
         <div class="title">문서 유형</div>
         <div class="box">
-          <CheckBox class="checkbox" label="전체" />
-          <CheckBox class="checkbox" label="템플릿 OCR" />
-          <CheckBox class="checkbox" label="정형" />
-          <CheckBox class="checkbox" label="비정형" />
+          <CheckBox
+            :default="isAllDefault.type"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('type')"
+          />
+          <CheckBox
+            v-for="t in lists.type"
+            class="checkbox"
+            :label="t.name"
+            :default="t.checked"
+            @change="(v: boolean) => {onChange(t.name, v, 'type')}"
+          />
         </div>
       </div>
       <div class="save">
         <div class="title">저장</div>
         <div class="box">
-          <CheckBox class="checkbox" label="전체" />
-          <CheckBox class="checkbox" label="저장" />
-          <CheckBox class="checkbox" label="저장 안함" />
+          <CheckBox
+            :default="isAllDefault.save"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('save')"
+          />
+          <CheckBox
+            v-for="s in lists.save"
+            class="checkbox"
+            :label="s.name"
+            :default="s.checked"
+            @change="(v: boolean) => {onChange(s.name, v, 'save')}"
+          />
         </div>
       </div>
       <div class="ocr">
         <div class="title">OCR</div>
         <div class="box">
-          <CheckBox class="checkbox" label="전체" />
-          <CheckBox class="checkbox" label="시스템" />
-          <CheckBox class="checkbox" label="수동" />
-          <CheckBox class="checkbox" label="대기" />
+          <CheckBox
+            :default="isAllDefault.ocr"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('ocr')"
+          />
+          <CheckBox
+            v-for="o in lists.ocr"
+            class="checkbox"
+            :label="o.name"
+            :default="o.checked"
+            @change="(v: boolean) => {onChange(o.name, v, 'ocr')}"
+          />
         </div>
       </div>
       <div class="inspection">
         <div class="title">검수</div>
         <div class="box">
-          <CheckBox class="checkbox" label="전체" />
-          <CheckBox class="checkbox" label="변경" />
-          <CheckBox class="checkbox" label="변경 안함" />
+          <CheckBox
+            :default="isAllDefault.inspection"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('inspection')"
+          />
+          <CheckBox
+            v-for="i in lists.inspection"
+            class="checkbox"
+            :label="i.name"
+            :default="i.checked"
+            @change="(v: boolean) => {onChange(i.name, v, 'inspection')}"
+          />
         </div>
       </div>
       <div class="date">
         <div class="title">기간</div>
         <div class="box">
-          <div class="start time">2022.01.18</div>
+          <div class="start time">
+            <div class="text" @click="onCalendar('start')">
+              {{ getStartDt }}
+            </div>
+            <div class="calendar">
+              <Calendar
+                v-if="isStartDt"
+                :date="startDt"
+                @confirm="(d) => onDateConfirm(d, 'start')"
+                @cancel="(d) => onDateConfirm(d, 'cancel')"
+              />
+            </div>
+          </div>
           <div class="divider">~</div>
-          <div class="end time">2022.03.21</div>
+          <div class="end time">
+            <div class="text" @click="onCalendar('end')">{{ getEndDt }}</div>
+            <div class="calendar">
+              <Calendar
+                v-if="isEndDt"
+                :date="endDt"
+                @confirm="(d) => onDateConfirm(d, 'end')"
+                @cancel="(d) => onDateConfirm(d, 'cancel')"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="btn-wrap">
-      <Button class="primary">검색</Button>
+      <Button class="primary extra-bold">검색</Button>
     </div>
   </div>
 </template>
@@ -81,7 +334,7 @@ import Button from "@/components/shared/Button.vue";
   min-height: 763px;
   background-color: $d2;
   border-radius: 40px;
-  padding: 50px;
+  padding: 60px;
   box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
   font-size: 18px;
   font-weight: 700;
@@ -92,6 +345,7 @@ import Button from "@/components/shared/Button.vue";
     justify-content: center;
     align-items: center;
     color: $point-blue;
+    margin-bottom: 30px;
 
     .title {
       font-size: 24px;
@@ -124,7 +378,7 @@ import Button from "@/components/shared/Button.vue";
         justify-content: flex-start;
         align-items: center;
         flex-wrap: wrap;
-        padding: 20px 0;
+        padding: 20px 0 30px 0;
 
         .checkbox {
           display: flex;
@@ -150,8 +404,17 @@ import Button from "@/components/shared/Button.vue";
           cursor: pointer;
         }
 
-        .start {
+        .start,
+        .end {
+          position: relative;
           margin-right: 15px;
+
+          .calendar {
+            position: absolute;
+            top: -440px;
+            left: 0;
+            z-index: 2;
+          }
         }
         .end {
           margin-left: 15px;
@@ -163,7 +426,6 @@ import Button from "@/components/shared/Button.vue";
   .btn-wrap {
     width: 100%;
     height: 46px;
-    margin-top: 10px;
   }
 }
 </style>

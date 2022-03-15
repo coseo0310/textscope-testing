@@ -74,7 +74,6 @@ for (let i = 0; i < 14; i++) {
   const id = `${Date.now() + i}`;
 
   if (i % 3 === 0) {
-    console.log("??");
     selected.value.push({ id });
   }
   const obj = {

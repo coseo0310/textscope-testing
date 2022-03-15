@@ -8,8 +8,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
+const emits = defineEmits<{
   (e: "change", date: string): void;
+  (e: "confirm", date: string): void;
+  (e: "cancel", date: string): void;
 }>();
 
 const prev = ref<number>(0);
@@ -86,7 +88,20 @@ const onCalendarSelect = (e: MouseEvent) => {
     day: Number(vDate[2]),
   };
   days.value = calculateDays(date.value.year, date.value.month);
-  emit("change", v);
+  emits("change", v);
+};
+
+const onConfirm = () => {
+  emits(
+    "confirm",
+    `${date.value.year}-${date.value.month + 1}-${date.value.day}`
+  );
+};
+const onCancel = () => {
+  emits(
+    "cancel",
+    `${date.value.year}-${date.value.month + 1}-${date.value.day}`
+  );
 };
 
 watch(props, () => {
@@ -169,10 +184,14 @@ for (let i = 0; i < 12; i++) {
     </div>
     <div class="btn-wrap">
       <div class="btn-cancel">
-        <Button class="primary cancel semi-bold">취소</Button>
+        <Button class="primary cancel semi-bold" @click.stop="onCancel"
+          >취소</Button
+        >
       </div>
       <div class="btn-confirm">
-        <Button class="primary semi-bold">일정 선택</Button>
+        <Button class="primary semi-bold" @click.stop="onConfirm"
+          >일정 선택</Button
+        >
       </div>
     </div>
   </div>
@@ -180,8 +199,8 @@ for (let i = 0; i < 12; i++) {
 
 <style lang="scss" scoped>
 .calendar-wrap {
-  max-width: 344px;
-  max-height: 432px;
+  min-width: 344px;
+  min-height: 432px;
   width: 100%;
   height: 100%;
   background-color: $d1;
@@ -190,6 +209,7 @@ for (let i = 0; i < 12; i++) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
 
   .calrendar-wrap {
     .combobox-wrap {
@@ -274,11 +294,15 @@ for (let i = 0; i < 12; i++) {
   }
 
   .btn-wrap {
-    width: 136px;
-    height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .btn-cancel,
+    .btn-confirm {
+      width: 136px;
+      height: 40px;
+    }
   }
 }
 </style>

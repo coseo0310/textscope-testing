@@ -57,6 +57,7 @@ const onClick = () => {
   cursor: pointer;
 
   .checkbox__box {
+    position: relative;
     width: 16px;
     height: 16px;
     border: 1px solid $point-blue;
@@ -64,6 +65,16 @@ const onClick = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &::before {
+      position: absolute;
+      content: "";
+      width: 35px;
+      height: 35px;
+      background-color: $point-blue;
+      opacity: 0;
+      border-radius: 50%;
+    }
 
     .icon {
       display: flex;
@@ -85,6 +96,14 @@ const onClick = () => {
     color: $d5;
     font-size: 18px;
     font-weight: 400;
+  }
+
+  &:hover {
+    .checkbox__box {
+      &::before {
+        opacity: 0.1;
+      }
+    }
   }
 }
 </style>

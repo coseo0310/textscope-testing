@@ -6,7 +6,7 @@ import Switch from "@/components/shared/Switch.vue";
 import Avatar from "@/components/shared/Avatar.vue";
 import GradientLoader from "@/components/shared/GradientLoader.vue";
 import IosLoader from "@/components/shared/IosLoader.vue";
-import Calrendar from "@/components/shared/Calrendar.vue";
+import Calendar from "@/components/shared/Calendar.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Badge from "@/components/shared/Badge.vue";
 import { postAuthToken, getAuthToken } from "@/api/http/auth";
@@ -48,7 +48,7 @@ const getToken = async () => {
       >
     </div>
     <div style="height: 500px; margin: 20px 100px">
-      <Calrendar date="2022-03-03" @change="c" />
+      <Calendar date="2022-03-03" @change="c" />
     </div>
 
     <div style="height: 80px; margin: 20px">
