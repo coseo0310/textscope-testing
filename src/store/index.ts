@@ -7,6 +7,7 @@ import { User } from "@/api/http/type";
 type States = {
   accessToken: string;
   user: User | null;
+  message: string;
 };
 
 // useStore could be anything like useUser, useCart
@@ -18,6 +19,7 @@ export const useStore = defineStore("main", {
       // all these properties will have their type inferred automatically
       accessToken: getCookie(TOKEN) || "",
       user: null,
+      message: "",
     };
   },
   actions: {

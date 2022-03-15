@@ -4,7 +4,7 @@ import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Filter from "@/components/work/Filter.vue";
 
-const isFilter = ref<boolean>(true);
+const isFilter = ref<boolean>(false);
 
 const onFilter = () => {
   isFilter.value = !isFilter.value;

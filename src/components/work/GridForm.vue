@@ -142,8 +142,7 @@ for (let i = 0; i < 14; i++) {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 200px 0;
-
+      margin-top: 25vh;
       .text {
         color: $d5;
         font-size: 24px;

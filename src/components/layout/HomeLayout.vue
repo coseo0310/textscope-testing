@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import MainMenu from "@/components/layout/MainMenu.vue";
+import Toast from "@/components/layout/Toast.vue";
 import { getMainMenu } from "@/router";
 import { useStore } from "@/store";
 
@@ -25,6 +26,7 @@ const onExtend = (e: MouseEvent) => {
     <main class="main">
       <router-view></router-view>
     </main>
+    <Toast :message="store.message" />
   </div>
 </template>
 

@@ -76,7 +76,7 @@ const onAllSelected = (c: boolean) => {
 <template>
   <div class="grid">
     <div class="grid__headers">
-      <div class="header">
+      <div class="header center">
         <CheckBox :default="allSelected" @change="onAllSelected" />
       </div>
       <div
