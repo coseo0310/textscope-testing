@@ -49,6 +49,10 @@ button {
     background-color: $d3;
     color: $point-blue;
   }
+
+  &.color-red {
+    background-color: $point-red;
+  }
 }
 
 .outline {
@@ -58,6 +62,11 @@ button {
   font-size: 18px;
   font-weight: 800;
   border-radius: 10px;
+
+  &.color-red {
+    color: $point-red;
+    border-color: $point-red;
+  }
 }
 
 .primary,

@@ -90,7 +90,7 @@ const onAllSelected = (c: boolean) => {
         {{ c.text }}
       </div>
     </div>
-    <div class="grid__columns">
+    <div class="grid__columns" :class="{ none: list.length === 0 }">
       <div v-for="g in list" class="row" :class="{ selected: !!g.checked }">
         <div class="col">
           <CheckBox
@@ -146,6 +146,10 @@ const onAllSelected = (c: boolean) => {
     width: 100%;
     border-bottom: 2px solid $d4;
 
+    &.none {
+      border-bottom: 0;
+    }
+
     .row {
       display: grid;
       grid-template-columns: v-bind("gridTemplateColumns");
@@ -155,7 +159,7 @@ const onAllSelected = (c: boolean) => {
       background-color: $d2;
 
       &.selected {
-        background-color: $d4;
+        background-color: $d3;
       }
       &:hover {
         background-color: $d3;

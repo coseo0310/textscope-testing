@@ -334,4 +334,21 @@ export const svgs: Svgs = {
       },
     ],
   },
+  reload: {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    path: [
+      {
+        d: "M4.84 12.52H1M1 12.52C1 12.52 4.2 17 9 17C13.4186 17 17 13.8 17 9.96M1 12.52V17M13.16 5.48H17M17 5.48C17 5.48 13.8 1 9 1C4.58144 1 1 4.2 1 8.04M17 5.48V1",
+        stroke: "#6779D7",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none",
+      },
+    ],
+  },
 };
