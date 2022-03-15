@@ -23,6 +23,9 @@ export const useStore = defineStore("main", {
     };
   },
   actions: {
+    setMessage(message: string) {
+      this.message = message;
+    },
     async onSingleSignOne() {
       try {
         // TODO : SSO
