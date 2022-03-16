@@ -133,13 +133,15 @@ export const constants: Constants = {
     },
   },
   test: {
-    isMenu: false,
+    isMenu: true,
     routeRecordRaw: {
       path: "/test",
       name: "test",
       component: Test,
       meta: {
         requiresAuth: false,
+        title: "테스트",
+        icons: "classification",
       },
     },
   },

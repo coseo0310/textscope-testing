@@ -1,109 +1,13 @@
-<script setup lang="ts">
-import { ref } from "vue";
-import Button from "@/components/shared/Button.vue";
-import Input from "@/components/shared/Input.vue";
-import Switch from "@/components/shared/Switch.vue";
-import Avatar from "@/components/shared/Avatar.vue";
-import GradientLoader from "@/components/shared/GradientLoader.vue";
-import IosLoader from "@/components/shared/IosLoader.vue";
-import Calendar from "@/components/shared/Calendar.vue";
-import Icons from "@/components/shared/Icons.vue";
-import Badge from "@/components/shared/Badge.vue";
-import { postAuthToken, getAuthToken } from "@/api/http/auth";
-
-const test = (s: boolean) => {
-  console.log(s);
-};
-
-const c = (v: string) => {
-  console.log(v);
-};
-
-const token = ref<string>("");
-
-const postToken = async () => {
-  try {
-    const data = await postAuthToken("test", "test");
-    console.log(data);
-    token.value = data.token.token;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const getToken = async () => {
-  const data = await getAuthToken(token.value);
-  console.log(data);
-};
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div style="height: 100vh">
-    <div>
-      <Button class="primary extra-bold" @click="postToken"
-        >토큰 가져오기</Button
-      >
-      <Button class="primary extra-bold" @click="getToken"
-        >사용자정보 가져오기</Button
-      >
-    </div>
-    <div style="height: 500px; margin: 20px 100px">
-      <Calendar date="2022-03-03" @change="c" />
-    </div>
-
-    <div style="height: 80px; margin: 20px">
-      <Avatar
-        uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-      />
-    </div>
-
-    <div style="width: 55px">
-      <Badge alarm="299">
-        <Avatar
-          uri="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-        />
-      </Badge>
-    </div>
-    <div class="icons" style="display: flex; margin: 20px">
-      <Icons icons="dash-on" />
-      <Icons icons="class-on" />
-      <Icons icons="temp-on" />
-      <Icons icons="work-on" />
-      <Icons icons="user-plus" />
-      <Icons icons="user" />
-      <Icons icons="bell" />
-      <Icons icons="classification" />
-      <Icons icons="dashboard" />
-      <Icons icons="password" />
-      <Icons icons="calendar" />
-      <Icons icons="show" />
-      <Icons icons="template" />
-      <Icons icons="setting" />
-      <Icons icons="hide" />
-      <Icons icons="work" />
-      <Icons icons="chevron-down" />
-    </div>
-    <div style="height: 40px">
-      <Switch :default="false" @change="test" />
-    </div>
-    <div style="height: 40px">
-      <Input type="password" />
-    </div>
-    <Button class="primary extra-bold">변경</Button>
-    <Button class="outline extra-bold">취소</Button>
-    <Button class="primary semi-bold">일정 선택</Button>
-    <Button class="primary cancel semi-bold">취소</Button>
-    <div style="width: 300px; height: 200px; margin: 20px 300px">
-      <IosLoader />
-      <GradientLoader />
-    </div>
-  </div>
+  <div class="test">Test</div>
 </template>
 
 <style lang="scss" scoped>
-.icons {
-  svg {
-    fill: $point-blue;
-  }
+.test {
+  width: 100%;
+  height: 100vh;
+  background-color: $d2;
 }
 </style>

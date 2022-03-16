@@ -129,6 +129,10 @@ const onClosest = (e: MouseEvent) => {
   }
 };
 
+const onSearch = () => {
+  workStore.getGridList();
+};
+
 onMounted(() => {
   window.addEventListener("click", onClosest);
 });
@@ -267,7 +271,7 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="btn-wrap">
-      <Button class="primary extra-bold">검색</Button>
+      <Button class="primary extra-bold" @click="onSearch">검색</Button>
     </div>
   </div>
 </template>

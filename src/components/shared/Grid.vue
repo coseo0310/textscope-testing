@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import { Grid } from "@/types";
 
@@ -60,6 +60,10 @@ const onAllSelected = (c: boolean) => {
   }
   emits("selected", list.value);
 };
+
+watch(props, () => {
+  list.value = props.gridList;
+});
 </script>
 
 <template>

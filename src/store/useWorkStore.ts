@@ -19,8 +19,7 @@ export const useWorkStore = defineStore("workStore", {
       filterLists: getFilterLists(),
       workColumns: getWorkColumns(),
       selected: [],
-      workList: getWorkList(),
-      // workList: [],
+      workList: [],
     };
   },
   actions: {
