@@ -134,7 +134,7 @@ onUnmounted(() => {
     </div>
     <div class="work-menu">
       <div class="work-menu__info">
-        <div class="title">업무</div>
+        <!-- <div class="title">업무</div> -->
         <div class="total">전체: {{ "302,234" }}</div>
         <div class="reload" @click="onReload">
           <Icons icons="reload" />
@@ -286,9 +286,10 @@ onUnmounted(() => {
 
       .title {
         font-size: 24px;
+        padding-right: 40px;
       }
       .total {
-        padding: 0 40px;
+        padding-right: 20px;
       }
       .reload {
         stroke: $point-blue;
