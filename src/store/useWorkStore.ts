@@ -28,29 +28,9 @@ export const useWorkStore = defineStore("workStore", {
     },
     async getGridList() {
       try {
-        let tmp = [];
         //TODO: Get Grid list
-        for (let i = 0; i < 14; i++) {
-          const id = `${Date.now() + i}`;
 
-          if (i % 3 === 0) {
-            this.selected.push({ id });
-          }
-          const obj = {
-            id,
-            checked: false,
-            task: `abcs-${134 - i}`,
-            category: `Category-${i + 1}`,
-            types: `type-${i + 1}`,
-            name: `document-${i + 1}`,
-            ocr: `orc-${i + 1}`,
-            inspection: i % 5 === 0 ? "save" : i % 3 ? `완료-${i + 1}` : "-",
-            accuracy: `${100 - i}%`,
-            date: `${Date.now()}`,
-          };
-          tmp.push(obj);
-        }
-        this.workList = tmp;
+        this.workList = getWorkList();
         return true;
       } catch (error) {
         console.error(error);
