@@ -2,11 +2,11 @@ import { defineStore } from "pinia";
 import { getCookie, setCookie, eraseCookie } from "@/utils";
 import { postAuthToken, deleteAuthToken } from "@/api/http/auth";
 import { TOKEN } from "@/constants";
-import { User } from "@/api/http/type";
+import { HTTP } from "@/types";
 
 type States = {
   accessToken: string;
-  user: User | null;
+  user: HTTP.User | null;
 };
 
 // useStore could be anything like useUser, useCart

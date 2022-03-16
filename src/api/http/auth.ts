@@ -1,12 +1,12 @@
 import { instance as http } from "./index";
 import { v4 as uuidv4 } from "uuid";
-import { PostAuthToken, GetAuthToken, DeleteAuthToken } from "./type";
+import { HTTP } from "@/types";
 
 const URL = "/auth/token";
 
 export const postAuthToken = async (username: string, password: string) => {
   const uuid = uuidv4();
-  const res = await http.post<PostAuthToken>(
+  const res = await http.post<HTTP.PostAuthToken>(
     URL,
     {
       username,
@@ -30,7 +30,7 @@ export const postAuthToken = async (username: string, password: string) => {
 
 export const getAuthToken = async (token: string) => {
   const uuid = uuidv4();
-  const res = await http.get<GetAuthToken>(URL, {
+  const res = await http.get<HTTP.GetAuthToken>(URL, {
     headers: {
       "x-request-id": uuid,
       Accept: "application/json",
@@ -43,7 +43,7 @@ export const getAuthToken = async (token: string) => {
 
 export const deleteAuthToken = async (token: string) => {
   const uuid = uuidv4();
-  const res = await http.delete<DeleteAuthToken>(URL, {
+  const res = await http.delete<HTTP.DeleteAuthToken>(URL, {
     headers: {
       "x-request-id": uuid,
       Accept: "application/json",

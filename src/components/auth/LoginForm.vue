@@ -3,8 +3,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
-import Icons from "@/components/shared/Icons.vue";
-import { IconType } from "@/types";
+import Icons, { IconType } from "@/components/shared/Icons.vue";
 import { useAuthStore } from "@/store";
 import * as R from "@/router/index";
 

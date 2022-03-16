@@ -119,3 +119,50 @@ export declare module Icons {
     [k in IconType]: SvgType;
   };
 }
+
+export declare module HTTP {
+  type ResponseMetadata = {
+    request_datetime: string;
+    response_datetime: string;
+    time_elapsed: string;
+  };
+
+  type RequestType = {
+    password: string;
+  };
+
+  type User = {
+    id: string;
+    name: string;
+    division: string;
+    job_position: string;
+    phone_number: string;
+    authority: string;
+    extension_number: string;
+    profile_img: string;
+    team?: User[];
+  };
+
+  type Token = {
+    token: string;
+    expires_after: string;
+    created_at: string;
+  };
+
+  type PostAuthToken = {
+    request: RequestType;
+    response_metadata: ResponseMetadata;
+    token: Token;
+  };
+
+  type GetAuthToken = {
+    user: User;
+    request: RequestType;
+    response_metadata: ResponseMetadata;
+  };
+
+  type DeleteAuthToken = {
+    request: RequestType;
+    response_metadata: ResponseMetadata;
+  };
+}

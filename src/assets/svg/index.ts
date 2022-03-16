@@ -1,6 +1,6 @@
-import { Svgs } from "@/types";
+import { Icons } from "@/types";
 
-export const svgs: Svgs = {
+export const svgs: Icons.Svgs = {
   "dash-on": {
     width: "52",
     height: "52",
