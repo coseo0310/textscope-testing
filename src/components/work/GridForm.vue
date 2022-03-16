@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
-import Grid from "@/components/shared/Grid.vue";
+import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useWorkStore } from "@/store";
 
 const workStore = useWorkStore();
 const columns = ref(workStore.workColumns);
 const selected = ref(workStore.selected);
+
+const onSelected = (list: GridList) => {
+  workStore.selected = list
+    .filter((item) => !!item.checked)
+    .map((item) => ({ id: item.id as string }));
+};
+
+onMounted(() => {});
+onUnmounted(() => {});
 </script>
 
 <template>
@@ -17,6 +26,7 @@ const selected = ref(workStore.selected);
         :columns="columns"
         :grid-list="workStore.workList"
         :selected="selected"
+        @selected="onSelected"
       >
         <template v-slot:inspection="{ item }">
           <template v-if="item.inspection !== 'save'">

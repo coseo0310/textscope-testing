@@ -2,8 +2,10 @@
 import { ref, watch } from "vue";
 
 type Props = {
-  message: string;
-  type: "info" | "warn";
+  messages: {
+    message: string;
+    messageType: "warn" | "info";
+  };
 };
 
 const props = defineProps<Props>();
@@ -15,10 +17,10 @@ watch(props, () => {
     return;
   }
   const d = document.createElement("div");
-  d.innerText = "test message";
+  d.innerText = props.messages.message;
   d.classList.add("text");
   d.classList.add("start");
-  d.classList.add(props.type);
+  d.classList.add(props.messages.messageType);
   toastEl.value.appendChild(d);
   toastEl.value.addEventListener("animationend", (e: AnimationEvent) => {
     const el = e.target as HTMLElement;
@@ -59,6 +61,7 @@ watch(props, () => {
     font-size: 18px;
     font-weight: 600;
     transform: translate(0, 0);
+    background-color: $d2;
 
     &.info {
       color: $point-blue;

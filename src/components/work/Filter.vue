@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
 import Calendar from "@/components/shared/Calendar.vue";
-import { useWorkStore } from "@/store";
+import { useWorkStore, useCommonStore } from "@/store";
 import { Work } from "@/types";
 
 export type FilterLists = Work.FilterLists;
@@ -15,6 +15,7 @@ const month = String(date.getMonth() + 1);
 const day = String(date.getDate());
 
 const workStore = useWorkStore();
+const commonStore = useCommonStore();
 
 const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
@@ -56,11 +57,32 @@ const onCalendar = (t: "start" | "end") => {
     isStartDt.value = false;
   }
 };
+
+const dateVaildate = (s: string, e: string) => {
+  const sDate = new Date(s).getTime();
+  const eDate = new Date(e).getTime();
+
+  if (sDate > eDate) {
+    commonStore.setToast("선택하신 기간을 다시 확인해주세요.", "warn");
+
+    return true;
+  }
+  return false;
+};
+
 const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
   if (t === "start") {
+    if (dateVaildate(d, endDt.value)) {
+      return;
+    }
     startDt.value = d;
     isStartDt.value = false;
   } else if (t === "end") {
+    if (dateVaildate(startDt.value, d)) {
+      return;
+    }
+    endDt.value = d;
+    isEndDt.value = false;
   } else {
     isStartDt.value = false;
     isEndDt.value = false;
@@ -87,7 +109,6 @@ const onChange = (name: string, v: boolean, key: FilterKeys) => {
       c.checked = v;
     }
   });
-  console.log(">>", workStore.filterLists.category[0]);
 };
 const onReset = () => {
   workStore.resetFilterLists();

@@ -28,14 +28,8 @@ const onExtend = (e: MouseEvent) => {
     <main class="main">
       <router-view></router-view>
     </main>
-    <Toast :message="commonStore.message" :type="commonStore.messageType" />
-    <Confirm
-      v-if="commonStore.isConfirm"
-      :messages="commonStore.messages"
-      :type="commonStore.confirmType"
-      :confirm="commonStore.confirmFunc"
-      :cancel="commonStore.cancelFunc"
-    />
+    <Toast :messages="commonStore.toast" />
+    <Confirm v-if="commonStore.isConfirm" :confirm="commonStore.confirm" />
   </div>
 </template>
 

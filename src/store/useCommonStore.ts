@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 
 type States = {
-  message: string;
-  messageType: "info" | "warn";
+  toast: {
+    message: string;
+    messageType: "info" | "warn";
+  };
   isConfirm: boolean;
-  messages: string[];
-  confirmType: "info" | "warn";
-  confirmFunc: Function;
-  cancelFunc: Function;
+  confirm: {
+    messages: string[];
+    confirmType: "info" | "warn";
+    confirmFunc: Function;
+    cancelFunc: Function;
+  };
 };
 
 // useStore could be anything like useUser, useCart
@@ -17,37 +21,45 @@ export const useCommonStore = defineStore("commonStore", {
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
-      message: "",
-      messageType: "info",
+      toast: {
+        message: "",
+        messageType: "info",
+      },
       isConfirm: false,
-      confirmType: "info",
-      messages: [],
-      confirmFunc: () => {},
-      cancelFunc: () => {},
+      confirm: {
+        messages: [],
+        confirmType: "info",
+        confirmFunc: () => {},
+        cancelFunc: () => {},
+      },
     };
   },
   actions: {
-    setToast(message: string, type: "info" | "warn") {
-      this.message = message;
-      this.messageType = type;
+    setToast(message: string, messageType: "info" | "warn") {
+      this.toast = {
+        message,
+        messageType,
+      };
     },
     setConfirm(
       messages: string[],
-      type: "info" | "warn",
-      confirmFunc: Function,
-      cancelFunc: Function
+      confirmType: "info" | "warn",
+      confirm: Function,
+      cancel: Function
     ) {
-      this.messages = messages;
-      this.confirmType = type;
+      this.confirm = {
+        messages,
+        confirmType,
+        confirmFunc: () => {
+          confirm();
+          this.isConfirm = false;
+        },
+        cancelFunc: () => {
+          cancel();
+          this.isConfirm = false;
+        },
+      };
       this.isConfirm = true;
-      this.confirmFunc = () => {
-        confirmFunc();
-        this.isConfirm = false;
-      };
-      this.cancelFunc = () => {
-        cancelFunc();
-        this.isConfirm = false;
-      };
     },
   },
 });

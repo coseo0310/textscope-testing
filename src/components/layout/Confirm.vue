@@ -2,36 +2,38 @@
 import Button from "@/components/shared/Button.vue";
 
 type Props = {
-  messages: string[];
-  type: "warn" | "info";
-  confirm: Function;
-  cancel: Function;
+  confirm: {
+    messages: string[];
+    confirmType: "info" | "warn";
+    confirmFunc: Function;
+    cancelFunc: Function;
+  };
 };
 
 const props = defineProps<Props>();
 
 const onCancel = () => {
-  props.cancel();
+  props.confirm.cancelFunc();
 };
 
 const onConfirm = () => {
-  props.confirm();
+  props.confirm.confirmFunc();
 };
 </script>
 
 <template>
   <div class="modal">
     <div class="confirm">
-      <div class="text" :class="{ [`${props.type}`]: true }">
-        <p v-for="m in props.messages">{{ m }}</p>
+      <div class="text" :class="{ [`${props.confirm.confirmType}`]: true }">
+        <p v-for="m in props.confirm.messages">{{ m }}</p>
       </div>
       <div class="btn-wrap">
         <Button class="btn outline extra-bold" @click="onCancel">취소</Button>
         <Button
           class="btn primary extra-bold"
           :class="{
-            [`color-red`]: props.type === 'warn',
-            [`color-blue`]: props.type === 'info',
+            [`color-red`]: props.confirm.confirmType === 'warn',
+            [`color-blue`]: props.confirm.confirmType === 'info',
           }"
           @click="onConfirm"
           >삭제</Button

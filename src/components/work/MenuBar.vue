@@ -3,9 +3,11 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Filter from "@/components/work/Filter.vue";
-import { useAuthStore } from "@/store";
+import { useAuthStore, useCommonStore, useWorkStore } from "@/store";
 
 const authStore = useAuthStore();
+const commonStore = useCommonStore();
+const workStore = useWorkStore();
 const isFilter = ref<boolean>(false);
 
 const onFilter = () => {
@@ -17,7 +19,20 @@ const onReload = () => {
 };
 
 const onDelete = () => {
-  alert("준비중...");
+  if (workStore.selected.length > 0) {
+    commonStore.setConfirm(
+      ["삭제된 데이터는 복구할 수 없습니다.", "정말 삭제하시겠습니까?"],
+      "warn",
+      () => {
+        // TODO: COnfirm Func
+      },
+      () => {
+        // TODO: Cancel Func
+      }
+    );
+  } else {
+    commonStore.setToast("삭제 할 수 없습니다.", "warn");
+  }
 };
 
 const onDownload = () => {
