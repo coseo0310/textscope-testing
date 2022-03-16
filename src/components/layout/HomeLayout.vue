@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import MainMenu from "@/components/layout/MainMenu.vue";
 import Toast from "@/components/layout/Toast.vue";
+import Confirm from "@/components/layout/Confirm.vue";
 import { getMainMenu } from "@/router";
 import { useAuthStore, useCommonStore } from "@/store";
 
@@ -28,6 +29,13 @@ const onExtend = (e: MouseEvent) => {
       <router-view></router-view>
     </main>
     <Toast :message="commonStore.message" :type="commonStore.messageType" />
+    <Confirm
+      v-if="commonStore.isConfirm"
+      :messages="commonStore.messages"
+      :type="commonStore.confirmType"
+      :confirm="commonStore.confirmFunc"
+      :cancel="commonStore.cancelFunc"
+    />
   </div>
 </template>
 
