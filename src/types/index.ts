@@ -86,3 +86,14 @@ export type MenuItem = {
 };
 
 export type MenuList = MenuItem[];
+
+export type FilterKeys = "category" | "type" | "save" | "inspection" | "ocr";
+
+export type FilterItem = {
+  name: string;
+  checked: boolean;
+};
+
+export type FilterLists = {
+  [k in FilterKeys]: FilterItem[];
+};

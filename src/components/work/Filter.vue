@@ -3,99 +3,21 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
 import Calendar from "@/components/shared/Calendar.vue";
-
-type Keys = "category" | "type" | "save" | "inspection" | "ocr";
-
-type Item = {
-  name: string;
-  checked: boolean;
-};
-
-type CList = {
-  [k in Keys]: Item[];
-};
+import { useWorkStore } from "@/store";
+import { FilterLists, FilterKeys } from "@/types";
 
 const date = new Date();
 const year = String(date.getFullYear());
 const month = String(date.getMonth() + 1);
 const day = String(date.getDate());
 
+const workStore = useWorkStore();
+
 const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
 const startDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
 const endDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
-const lists = ref<CList>({
-  category: [
-    {
-      name: "실손 의료비 영수증",
-      checked: false,
-    },
-    {
-      name: "온라인 뱅킹 가입 신청서",
-      checked: false,
-    },
-    {
-      name: "통장 사본",
-      checked: false,
-    },
-    {
-      name: "가계 대출 신청서",
-      checked: false,
-    },
-    {
-      name: "진료비 계산서",
-      checked: false,
-    },
-  ],
-  type: [
-    {
-      name: "템플릿 OCR",
-      checked: false,
-    },
-    {
-      name: "정형",
-      checked: false,
-    },
-    {
-      name: "비정형",
-      checked: false,
-    },
-  ],
-  save: [
-    {
-      name: "저장",
-      checked: false,
-    },
-    {
-      name: "저장 안함",
-      checked: false,
-    },
-  ],
-  ocr: [
-    {
-      name: "시스템",
-      checked: false,
-    },
-    {
-      name: "수동",
-      checked: false,
-    },
-    {
-      name: "대기",
-      checked: false,
-    },
-  ],
-  inspection: [
-    {
-      name: "변경",
-      checked: false,
-    },
-    {
-      name: "변경 안함",
-      checked: false,
-    },
-  ],
-});
+const lists = ref<FilterLists>(workStore.filterLists);
 
 const isAllDefault = computed(() => ({
   category:
@@ -142,7 +64,7 @@ const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
   }
 };
 
-const onAllChecked = (key: Keys) => {
+const onAllChecked = (key: FilterKeys) => {
   if (!!lists.value[key].find((f) => f.checked === false)) {
     lists.value[key] = lists.value[key].map((c) => {
       c.checked = true;
@@ -155,8 +77,7 @@ const onAllChecked = (key: Keys) => {
     });
   }
 };
-
-const onChange = (name: string, v: boolean, key: Keys) => {
+const onChange = (name: string, v: boolean, key: FilterKeys) => {
   const list = lists.value[key];
   list.forEach((c) => {
     if (c.name == name) {
@@ -164,7 +85,10 @@ const onChange = (name: string, v: boolean, key: Keys) => {
     }
   });
 };
-
+const onReset = () => {
+  workStore.resetFilterLists();
+  lists.value = workStore.filterLists;
+};
 const onClosest = (e: MouseEvent) => {
   const el = e.target as HTMLElement;
   if (!el) {
@@ -193,7 +117,7 @@ onUnmounted(() => {
   <div class="filter">
     <div class="filter__header">
       <div class="title">검색 필터 설정</div>
-      <div class="reset">초기화</div>
+      <div class="reset" @click="onReset">초기화</div>
     </div>
     <div class="filter__main">
       <div class="category">

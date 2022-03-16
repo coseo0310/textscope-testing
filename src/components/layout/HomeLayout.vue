@@ -3,11 +3,12 @@ import { ref } from "vue";
 import MainMenu from "@/components/layout/MainMenu.vue";
 import Toast from "@/components/layout/Toast.vue";
 import { getMainMenu } from "@/router";
-import { useStore } from "@/store";
+import { useAuthStore, useCommonStore } from "@/store";
 
 const menuList = ref(getMainMenu());
 
-const store = useStore();
+const authStore = useAuthStore();
+const commonStore = useCommonStore();
 const extend = ref<boolean>(false);
 
 const onExtend = (e: MouseEvent) => {
@@ -18,15 +19,15 @@ const onExtend = (e: MouseEvent) => {
 <template>
   <div
     class="main-container"
-    :class="{ separation: !!store.accessToken, extend }"
+    :class="{ separation: !!authStore.accessToken, extend }"
   >
-    <aside v-if="!!store.accessToken" class="aside" :class="{ extend }">
+    <aside v-if="!!authStore.accessToken" class="aside" :class="{ extend }">
       <MainMenu :extend="extend" :onExtend="onExtend" :menuList="menuList" />
     </aside>
     <main class="main">
       <router-view></router-view>
     </main>
-    <Toast :message="store.message" :type="store.messageType" />
+    <Toast :message="commonStore.message" :type="commonStore.messageType" />
   </div>
 </template>
 

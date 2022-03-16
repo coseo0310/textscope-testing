@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { watch, onMounted } from "vue";
 import HomeLayout from "@/components/layout/HomeLayout.vue";
-import { useStore } from "@/store";
+import { useAuthStore } from "@/store";
 
-const store = useStore();
+const authStore = useAuthStore();
 
-watch(store, async () => {
-  if (store.accessToken && !store.user) {
-    await store.getUser(store.accessToken);
+watch(authStore, async () => {
+  if (authStore.accessToken && !authStore.user) {
+    await authStore.getUser(authStore.accessToken);
   }
 });
 
 onMounted(async () => {
-  if (store.accessToken) {
-    await store.getUser(store.accessToken);
+  if (authStore.accessToken) {
+    await authStore.getUser(authStore.accessToken);
   }
 });
 </script>

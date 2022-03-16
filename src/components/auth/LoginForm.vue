@@ -5,14 +5,14 @@ import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { IconType } from "@/types";
-import { useStore } from "@/store";
+import { useAuthStore } from "@/store";
 import * as R from "@/router/index";
 
 const icon = ref<IconType>("hide");
 const email = ref<string>("");
 const password = ref<string>("");
 const loader = ref<boolean>(false);
-const store = useStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const emailValidate = ref<boolean>(false);
 const passwordValidate = ref<boolean>(false);
@@ -45,7 +45,7 @@ const onLogin = async () => {
     return;
   }
   loader.value = true;
-  const login = await store.onLogin(email.value, password.value);
+  const login = await authStore.onLogin(email.value, password.value);
   if (!login) {
     passwordValidate.value = true;
     loader.value = false;
@@ -57,7 +57,7 @@ const onLogin = async () => {
 
 const onSingleSignOne = async () => {
   loader.value = true;
-  const sso = await store.onSingleSignOne();
+  const sso = await authStore.onSingleSignOne();
   if (!sso) {
     return;
   }

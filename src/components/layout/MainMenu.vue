@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import Icons from "@/components/shared/Icons.vue";
 import Badge from "@/components/shared/Badge.vue";
 import Avatar from "@/components/shared/Avatar.vue";
-import { useStore } from "@/store";
+import { useAuthStore } from "@/store";
 import { constants } from "@/router";
 import { MenuList } from "@/types";
 
@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isTab = ref<boolean>(false);
-const store = useStore();
+const authStore = useAuthStore();
 const routes = useRoute();
 const router = useRouter();
 
@@ -41,7 +41,7 @@ const onClosest = (e: MouseEvent) => {
 };
 
 const onLogout = async () => {
-  await store.onLogout();
+  await authStore.onLogout();
   router.push(constants.logout.routeRecordRaw.path);
 };
 
@@ -90,10 +90,10 @@ onUnmounted(() => {
       </div>
       <div class="info">
         <span class="name">
-          {{ store.user?.name || "Anonymous" }}
+          {{ authStore.user?.name || "Anonymous" }}
         </span>
         <span class="job">
-          {{ store.user?.division }}, {{ store.user?.job_position }}
+          {{ authStore.user?.division }}, {{ authStore.user?.job_position }}
         </span>
       </div>
     </div>
