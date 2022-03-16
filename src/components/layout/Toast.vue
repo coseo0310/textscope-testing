@@ -31,7 +31,7 @@ watch(props, () => {
       el.classList.add("up");
       setTimeout(() => {
         el.remove();
-      }, 500);
+      }, 300);
     }, 1000);
   });
 });
@@ -72,10 +72,10 @@ watch(props, () => {
     }
 
     &.start {
-      animation: start 0.8s ease-in-out;
+      animation: start 0.3s ease-in-out;
     }
     &.up {
-      animation: up 0.5s ease-in-out;
+      animation: up 0.3s ease-in-out;
     }
 
     @keyframes start {
