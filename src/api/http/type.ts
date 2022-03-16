@@ -16,6 +16,8 @@ export type User = {
   phone_number: string;
   authority: string;
   extension_number: string;
+  profile_img: string;
+  team?: User[];
 };
 
 export type Token = {

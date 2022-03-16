@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
-import { getCookie, setCookie, eraseCookie } from "@/utils";
-import { postAuthToken, deleteAuthToken } from "@/api/http/auth";
-import { TOKEN } from "@/constants";
-import { User } from "@/api/http/type";
-import { FilterLists } from "@/types";
+import { Work } from "@/types";
+import { Grid } from "@/types";
 
 type States = {
-  filterLists: FilterLists;
+  filterLists: Work.FilterLists;
+  selected: Grid.Selected[];
+  workColumns: Grid.Columns;
+  workList: Grid.GridList;
 };
 
 // useStore could be anything like useUser, useCart
@@ -17,16 +17,111 @@ export const useWorkStore = defineStore("workStore", {
     return {
       // all these properties will have their type inferred automatically
       filterLists: getFilterLists(),
+      workColumns: getWorkColumns(),
+      selected: [],
+      workList: getWorkList(),
+      // workList: [],
     };
   },
   actions: {
     resetFilterLists() {
       this.filterLists = getFilterLists();
     },
+    async getGridList() {
+      try {
+        let tmp = [];
+        //TODO: Get Grid list
+        for (let i = 0; i < 14; i++) {
+          const id = `${Date.now() + i}`;
+
+          if (i % 3 === 0) {
+            this.selected.push({ id });
+          }
+          const obj = {
+            id,
+            checked: false,
+            task: `abcs-${134 - i}`,
+            category: `Category-${i + 1}`,
+            types: `type-${i + 1}`,
+            name: `document-${i + 1}`,
+            ocr: `orc-${i + 1}`,
+            inspection: i % 5 === 0 ? "save" : i % 3 ? `완료-${i + 1}` : "-",
+            accuracy: `${100 - i}%`,
+            date: `${Date.now()}`,
+          };
+          tmp.push(obj);
+        }
+        this.workList = tmp;
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
   },
 });
 
-function getFilterLists() {
+function getWorkColumns(): Grid.Columns {
+  return [
+    {
+      width: 100,
+      text: "Task ID",
+      align: "center",
+      sortable: false,
+      value: "task",
+    },
+    {
+      width: 210,
+      text: "카테고리",
+      align: "center",
+      sortable: false,
+      value: "category",
+    },
+    {
+      width: 264,
+      text: "문서 유형",
+      align: "center",
+      sortable: false,
+      value: "types",
+    },
+    {
+      width: 401,
+      text: "문서명",
+      align: "center",
+      sortable: false,
+      value: "name",
+    },
+    {
+      width: 120,
+      text: "OCR",
+      align: "center",
+      sortable: false,
+      value: "ocr",
+    },
+    {
+      width: 116,
+      text: "검수",
+      align: "center",
+      sortable: false,
+      value: "inspection",
+    },
+    {
+      width: 124,
+      text: "정확도",
+      align: "center",
+      sortable: false,
+      value: "accuracy",
+    },
+    {
+      width: 178,
+      text: "작업 일자",
+      align: "center",
+      sortable: false,
+      value: "date",
+    },
+  ];
+}
+function getFilterLists(): Work.FilterLists {
   return {
     category: [
       {
@@ -99,4 +194,26 @@ function getFilterLists() {
       },
     ],
   };
+}
+function getWorkList(): Grid.GridList {
+  let tmp = [];
+  //TODO: Get Grid list
+  for (let i = 0; i < 14; i++) {
+    const id = `${Date.now() + i}`;
+
+    const obj = {
+      id,
+      checked: false,
+      task: `abcs-${134 - i}`,
+      category: `Category-${i + 1}`,
+      types: `type-${i + 1}`,
+      name: `document-${i + 1}`,
+      ocr: `orc-${i + 1}`,
+      inspection: i % 5 === 0 ? "save" : i % 3 ? `완료-${i + 1}` : "-",
+      accuracy: `${100 - i}%`,
+      date: `${Date.now()}`,
+    };
+    tmp.push(obj);
+  }
+  return tmp;
 }

@@ -12,7 +12,7 @@ import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
 import { Constants, MenuList, MenuItem } from "@/types";
-import { IconType } from "@/types";
+import { Icons } from "@/types";
 
 export const constants: Constants = {
   root: {
@@ -165,7 +165,7 @@ export const getMainMenu = (): MenuList => {
     .map(([_, v]): MenuItem => {
       return {
         path: v.routeRecordRaw.path,
-        icons: v.routeRecordRaw.meta!.icons as IconType,
+        icons: v.routeRecordRaw.meta!.icons as Icons.IconType,
         title: v.routeRecordRaw.meta!.title as string,
       };
     });
@@ -185,7 +185,7 @@ export const getSubMenu = (path: string): MenuList => {
   return find.routeRecordRaw.children.map((m): MenuItem => {
     return {
       path: `${find.routeRecordRaw.path}${m.path ? `/${m.path}` : ""}`,
-      icons: m.meta!.icons as IconType,
+      icons: m.meta!.icons as Icons.IconType,
       title: m.meta!.title as string,
     };
   });

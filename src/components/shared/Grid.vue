@@ -1,22 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
+import { Grid } from "@/types";
 
-export type Columns = {
-  text: string;
-  align: "start" | "center" | "end";
-  sortable: boolean;
-  width?: number;
-  value: string;
-}[];
-
-export type GridList = {
-  [k in string]: string | boolean;
-}[];
-
-export type Selected = {
-  id: string;
-};
+export type Columns = Grid.Columns;
+export type GridList = Grid.GridList;
+export type Selected = Grid.Selected;
 
 type Props = {
   columns: Columns;
@@ -94,7 +83,7 @@ const onAllSelected = (c: boolean) => {
     </div>
     <div class="grid__columns" :class="{ none: list.length === 0 }">
       <div v-for="g in list" class="row" :class="{ selected: !!g.checked }">
-        <div class="col">
+        <div class="col center">
           <CheckBox
             :default="!!g.checked"
             @change="onSelected(g.id as string)"
@@ -119,6 +108,7 @@ const onAllSelected = (c: boolean) => {
 <style lang="scss" scoped>
 .grid {
   width: 100%;
+  overflow: hidden;
 
   .grid__headers {
     display: grid;

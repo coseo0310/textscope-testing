@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { svgs } from "@/assets/svg";
-import { IconType } from "@/types";
+import { Icons } from "@/types";
+
+export type IconType = Icons.IconType;
 
 type Props = {
   icons: IconType;

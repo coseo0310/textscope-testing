@@ -20,8 +20,7 @@ import GridForm from "@/components/work/GridForm.vue";
 <style lang="scss" scoped>
 .work-page {
   width: 100%;
-  padding: 40px;
-
+  padding: 30px 40px;
   .work-page__grid {
     padding-top: 30px;
   }

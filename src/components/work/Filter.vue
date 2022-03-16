@@ -4,7 +4,10 @@ import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
 import Calendar from "@/components/shared/Calendar.vue";
 import { useWorkStore } from "@/store";
-import { FilterLists, FilterKeys } from "@/types";
+import { Work } from "@/types";
+
+export type FilterLists = Work.FilterLists;
+export type FilterKeys = Work.FilterKeys;
 
 const date = new Date();
 const year = String(date.getFullYear());
@@ -84,6 +87,7 @@ const onChange = (name: string, v: boolean, key: FilterKeys) => {
       c.checked = v;
     }
   });
+  console.log(">>", workStore.filterLists.category[0]);
 };
 const onReset = () => {
   workStore.resetFilterLists();
