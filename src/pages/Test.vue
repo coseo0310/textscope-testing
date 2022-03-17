@@ -58,10 +58,10 @@ onMounted(() => {
       <Button class="primary" @click="onZoomIn">zoom in</Button>
       <Button class="primary" @click="onZoomOut">zoom out</Button>
       <Button class="primary" @click="onZoomClear">zoom init</Button>
-      <Button class="primary" @click="onRotate(-90)">left rotate</Button>
-      <Button class="primary" @click="onRotate(90)">right rotate</Button>
+      <Button class="primary" @click="onRotate(-90)">90deg left rotate</Button>
+      <Button class="primary" @click="onRotate(90)">90deg right rotate</Button>
       <Button class="primary" @click="onRotate(-1)">1deg left rotate</Button>
-      <Button class="primary" @click="onRotate(1)">1def right rotate</Button>
+      <Button class="primary" @click="onRotate(1)">1deg right rotate</Button>
       <Button class="primary" @click="onRotate(0)">init rotate</Button>
     </div>
   </div>
