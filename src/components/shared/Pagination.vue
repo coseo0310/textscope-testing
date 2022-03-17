@@ -125,6 +125,7 @@ const onPage = (n: number) => {
 
       &.current {
         color: $point-blue;
+        font-weight: 700;
       }
 
       &:hover {
