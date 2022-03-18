@@ -29,6 +29,11 @@ button {
   border: 0;
   background-color: $d1;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: default;
+  }
 }
 
 .loader {

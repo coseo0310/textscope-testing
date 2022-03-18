@@ -7,6 +7,7 @@ import { HTTP } from "@/types";
 type States = {
   accessToken: string;
   user: HTTP.User | null;
+  isPasswordModal: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -18,6 +19,7 @@ export const useAuthStore = defineStore("authStore", {
       // all these properties will have their type inferred automatically
       accessToken: getCookie(TOKEN) || "",
       user: null,
+      isPasswordModal: false,
     };
   },
   actions: {
@@ -49,9 +51,8 @@ export const useAuthStore = defineStore("authStore", {
         // TODO: GET USER
         // const userData = await getAuthToken(token);
         // this.user = userData.user;
-        const id = `${Date.now()}`;
         this.user = {
-          id,
+          id: "yh@test.ai",
           name: `영희`,
           division: `검수 1팀`,
           job_position: `부장`,
@@ -61,7 +62,7 @@ export const useAuthStore = defineStore("authStore", {
           profile_img: `https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80`,
           team: [
             {
-              id,
+              id: "yh@test.ai",
               name: `영희`,
               division: `검수 1팀`,
               job_position: `부장`,
@@ -71,7 +72,7 @@ export const useAuthStore = defineStore("authStore", {
               profile_img: `https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80`,
             },
             {
-              id: `${Date.now() + 2}`,
+              id: "jh@test.ai",
               name: `장화`,
               division: `검수 1팀`,
               job_position: `차장`,
@@ -81,7 +82,7 @@ export const useAuthStore = defineStore("authStore", {
               profile_img: `https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8d29tYW58ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60`,
             },
             {
-              id: `${Date.now() + 3}`,
+              id: "hr@test.ai",
               name: `홍련`,
               division: `검수 1팀`,
               job_position: `대리`,
@@ -91,7 +92,7 @@ export const useAuthStore = defineStore("authStore", {
               profile_img: `https://images.unsplash.com/photo-1601412436009-d964bd02edbc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fGh1bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60`,
             },
             {
-              id: `${Date.now() + 4}`,
+              id: "mr@test.ai",
               name: `이몽룡`,
               division: `검수 1팀`,
               job_position: `대리`,
@@ -101,7 +102,7 @@ export const useAuthStore = defineStore("authStore", {
               profile_img: `https://images.unsplash.com/photo-1501869150797-9bbb64f782fd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDB8fGh1bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60`,
             },
             {
-              id: `${Date.now() + 4}`,
+              id: "sc@test.ai",
               name: `심청`,
               division: `검수 1팀`,
               job_position: `사원`,
@@ -130,6 +131,16 @@ export const useAuthStore = defineStore("authStore", {
         this.accessToken = "";
         this.user = null;
         eraseCookie(TOKEN);
+      }
+    },
+
+    async onChangePassword(nowPassword: string, confirmPassword: string) {
+      try {
+        //TODO: PASSWORD CHANGE
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
       }
     },
   },
