@@ -39,7 +39,14 @@ const svg = computed(() => svgs[props.icons]);
         :fill-rule="p.fillRule ? p.fillRule : 'evenodd'"
         :clip-rule="p.clipRule || 3"
         :d="p.d"
-        :fill="svg.rect ? p.fill : p.fill === 'none' ? 'none' : 'currentColor'"
+        :fill="
+          svg.rect
+            ? p.fill
+            : p.fill === 'none' || !p.fill
+            ? 'none'
+            : 'currentColor'
+        "
+        :stroke="p.stroke ? `currentColor` : 'none'"
         :stroke-width="p.strokeWidth"
         :stroke-linecap="p.strokeLinecap ? p.strokeLinecap : 'round'"
         :stroke-linejoin="p.strokeLinejoin ? p.strokeLinejoin : 'round'"

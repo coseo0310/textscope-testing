@@ -89,7 +89,8 @@ export declare module Icons {
     | "chevron-down"
     | "logout"
     | "save"
-    | "reload";
+    | "reload"
+    | "group";
 
   type SvgType = {
     width: string;

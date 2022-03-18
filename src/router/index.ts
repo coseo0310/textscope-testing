@@ -6,7 +6,7 @@ import DashboardPage from "@/pages/dashboard/DashboardPage.vue";
 import SettingsPage from "@/pages/settings/SettingsPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
-import HolidaysPage from "@/pages/settings/HolidaysPage.vue";
+import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
@@ -81,13 +81,13 @@ export const constants: Constants = {
         },
 
         {
-          path: "holidays",
-          name: "holidays",
-          component: HolidaysPage,
+          path: "group",
+          name: "group",
+          component: GroupPage,
           meta: {
             requiresAuth: true,
-            title: "연차",
-            icons: "calendar",
+            title: "조직",
+            icons: "group",
           },
         },
 
