@@ -7,6 +7,7 @@ const authStore = useAuthStore();
 const avatar = ref<string>(`url('${authStore.user?.profile_img}')` || "");
 
 const onAvatarChange = () => {
+  // TODO: AVATAR CHANGE
   alert("준비중...");
 };
 
