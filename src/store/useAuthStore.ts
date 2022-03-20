@@ -109,7 +109,7 @@ export const useAuthStore = defineStore("authStore", {
               phone_number: `000-0000-000`,
               authority: `super`,
               extension_number: `000`,
-              profile_img: `https://images.unsplash.com/photo-1501869150797-9bbb64f782fd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDB8fGh1bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60`,
+              profile_img: ``,
             },
             {
               id: "em@test.ai",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { HTTP } from "@/types";
+import Frame from "@/assets/img/frame.png";
 
 type Props = {
   user: HTTP.User;
@@ -7,7 +8,9 @@ type Props = {
 };
 
 const props = defineProps<Props>();
-const url = `url('${props.user.profile_img}')`;
+const url = props.user.profile_img
+  ? `url('${props.user.profile_img}')`
+  : `url('${Frame}')`;
 </script>
 
 <template>
