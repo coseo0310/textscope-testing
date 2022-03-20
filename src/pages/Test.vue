@@ -91,7 +91,7 @@ onMounted(() => {
   testEl.value?.appendChild(viewer.getViewer());
   setTimeout(() => {
     viewer.draw();
-  });
+  }, 1000);
 });
 </script>
 
