@@ -4,6 +4,7 @@ import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Filter from "@/components/work/Filter.vue";
 import { useAuthStore, useCommonStore, useWorkStore } from "@/store";
+import Frame from "@/assets/img/frame.png";
 
 const authStore = useAuthStore();
 const commonStore = useCommonStore();
@@ -106,12 +107,15 @@ onUnmounted(() => {
           <div
             class="img"
             :style="{
-              backgroundImage: `url('${t.profile_img}')`,
+              backgroundImage: t.profile_img
+                ? `url('${t.profile_img}')`
+                : `url('${Frame}')`,
               transform: `translateX(-${idx * 10}px)`,
               left: `${idx * 48}px`,
             }"
             @mouseenter="mouseenter"
           >
+            <!-- {{ Frame }} -->
             <div
               class="bubble"
               :class="{ [`bubble-${idx}`]: true }"
@@ -207,7 +211,7 @@ onUnmounted(() => {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background-color: $point-blue;
+          background-color: $d3;
           background-position: center center;
           background-repeat: no-repeat;
           background-size: 100%;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import Frame from "@/assets/img/frame.png";
 
 interface Props {
   uri: string;
@@ -7,7 +8,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const url = computed(() => `url(${props.uri})`);
+const url = computed(() =>
+  props.uri ? `url('${props.uri}')` : `url('${Frame}')`
+);
 </script>
 
 <template>

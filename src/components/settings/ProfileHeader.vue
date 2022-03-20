@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAuthStore } from "@/store";
+import Frame from "@/assets/img/frame.png";
 
 const authStore = useAuthStore();
 
-const avatar = ref<string>(`url('${authStore.user?.profile_img}')` || "");
+const avatar = ref<string>(
+  authStore.user?.profile_img
+    ? `url('${authStore.user?.profile_img}')`
+    : `url('${Frame}')`
+);
 
 const onAvatarChange = () => {
   // TODO: AVATAR CHANGE
