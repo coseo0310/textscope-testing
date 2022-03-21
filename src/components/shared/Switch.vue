@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-interface Props {
+type Props = {
   default: boolean;
-}
+  labels?: {
+    on: string;
+    off: string;
+  };
+};
 
 const props = withDefaults(defineProps<Props>(), {
   default: false,
@@ -24,8 +28,10 @@ const onCheck = () => {};
 <template>
   <div class="switch-wrap" @click="onClick">
     <div id="switch" :class="{ active: state }"></div>
-    <div id="on" :class="{ active: state }">ON</div>
-    <div id="off" :class="{ active: !state }">OFF</div>
+    <div id="on" :class="{ active: state }">{{ props.labels?.on || "ON" }}</div>
+    <div id="off" :class="{ active: !state }">
+      {{ props.labels?.off || "OFF" }}
+    </div>
   </div>
 </template>
 
@@ -50,21 +56,40 @@ const onCheck = () => {};
     font-weight: 400;
     color: $d5;
     transition: color 0.3s ease-in-out;
+
     &.active {
       color: $d1;
     }
   }
 
   #on {
-    top: 50%;
-    left: 0;
-    transform: translate(425%, -50%);
+    border: 0;
+    border-radius: 20px;
+    /* background-color: $point-blue; */
+    max-height: 40px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   #off {
-    top: 50%;
+    border: 0;
+    border-radius: 20px;
+    /* background-color: $point-blue; */
+    max-height: 40px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
     left: 0;
-    transform: translate(75%, -50%);
+    top: 0;
   }
 
   #switch {
@@ -82,7 +107,7 @@ const onCheck = () => {};
 
     &.active {
       color: $d1;
-      transform: translateX(83px);
+      transform: translateX(80px);
     }
   }
 }
