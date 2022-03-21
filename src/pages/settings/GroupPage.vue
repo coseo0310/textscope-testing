@@ -19,7 +19,7 @@ const authStore = useAuthStore();
 </template>
 
 <style lang="scss" scoped>
-.group-container {
+.group-page {
   width: 100%;
   height: 100vh;
   color: $d5;
