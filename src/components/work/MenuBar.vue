@@ -11,6 +11,8 @@ const commonStore = useCommonStore();
 const workStore = useWorkStore();
 const isFilter = ref<boolean>(false);
 
+const defaultImg = `url('${Frame}')`;
+
 const onFilter = () => {
   isFilter.value = !isFilter.value;
 };
@@ -109,13 +111,12 @@ onUnmounted(() => {
             :style="{
               backgroundImage: t.profile_img
                 ? `url('${t.profile_img}')`
-                : `url('${Frame}')`,
+                : defaultImg,
               transform: `translateX(-${idx * 10}px)`,
               left: `${idx * 48}px`,
             }"
             @mouseenter="mouseenter"
           >
-            <!-- {{ Frame }} -->
             <div
               class="bubble"
               :class="{ [`bubble-${idx}`]: true }"

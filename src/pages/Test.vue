@@ -120,7 +120,7 @@ onMounted(() => {
         <div class="input">
           <span>dx:</span>
           <Input type="text" id="dx" :value="dx" @keyup="onKeyup" />
-          <span>dx:</span>
+          <span>dy:</span>
           <Input type="text" id="dy" :value="dy" @keyup="onKeyup" />
           <span>dWidth:</span>
           <Input type="text" id="width" :value="dWidth" @keyup="onKeyup" />
