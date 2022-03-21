@@ -229,6 +229,7 @@ onUnmounted(() => {
           justify-content: flex-start;
           align-items: center;
           white-space: normal;
+          font-weight: 600;
         }
 
         &:hover {
