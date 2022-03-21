@@ -230,6 +230,7 @@ onUnmounted(() => {
           align-items: center;
           white-space: normal;
           font-weight: 600;
+          font-size: 18px;
         }
 
         &:hover {
