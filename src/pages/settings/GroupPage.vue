@@ -6,7 +6,7 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-  <div class="group-container">
+  <div class="group-page">
     <div class="title">
       {{ authStore.user?.division }} ({{ authStore.user?.team?.length }})
     </div>
