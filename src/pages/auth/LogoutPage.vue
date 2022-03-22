@@ -4,6 +4,7 @@ import WaveForm from "@/components/layout/WaveForm.vue";
 import AlertForm from "@/components/auth/AlertForm.vue";
 import Button from "@/components/shared/Button.vue";
 import * as Router from "@/router/index";
+import CopyRight from "@/components/layout/CopyRight.vue";
 
 const router = useRouter();
 const toLogin = () => {
@@ -28,6 +29,7 @@ const toLogin = () => {
       </template>
     </AlertForm>
   </WaveForm>
+  <CopyRight />
 </template>
 
 <style lang="scss" scoped></style>
