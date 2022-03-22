@@ -39,7 +39,7 @@ onMounted(() => {
         {
           data: [
             18000, 12000, 18000, 21000, 16000, 11000, 22000, 28000, 25000,
-            24000, 26000, 29000, 24000, 22000, 26000, 30000, 32000,
+            24000, 26000, 27000, 21000, 22000, 26000, 28000, 29000,
           ],
           borderColor: "rgb(75, 192, 192)",
           //   backgroundColor: "rgba(255, 164, 37, 1)",
@@ -88,8 +88,6 @@ onMounted(() => {
           grid: {
             display: false,
           },
-          //   min: 20000,
-          //   max: 90000,
           suggestedMin: 0,
           suggestedMax: 30000,
           ticks: {
@@ -97,6 +95,7 @@ onMounted(() => {
               const v = Number(value);
               return v >= 1000 ? `${(v / 1000).toFixed(0)}M` : v;
             },
+            stepSize: 10000,
             color: "#5b5a81",
             font: {
               family: "'Pretendard', 'sans-serif'",
