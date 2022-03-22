@@ -57,7 +57,7 @@ function getWorkColumns(): Grid.Columns {
       value: "category",
     },
     {
-      width: 264,
+      width: 120,
       text: "문서 유형",
       align: "center",
       sortable: false,
@@ -72,10 +72,24 @@ function getWorkColumns(): Grid.Columns {
     },
     {
       width: 120,
-      text: "OCR",
+      text: "등록담당자",
       align: "center",
       sortable: false,
-      value: "ocr",
+      value: "user1",
+    },
+    {
+      width: 120,
+      text: "등록일",
+      align: "center",
+      sortable: false,
+      value: "date1",
+    },
+    {
+      width: 120,
+      text: "검수담당자",
+      align: "center",
+      sortable: false,
+      value: "user2",
     },
     {
       width: 116,
@@ -85,7 +99,7 @@ function getWorkColumns(): Grid.Columns {
       value: "inspection",
     },
     {
-      width: 124,
+      width: 100,
       text: "정확도",
       align: "center",
       sortable: false,
@@ -96,7 +110,7 @@ function getWorkColumns(): Grid.Columns {
       text: "작업 일자",
       align: "center",
       sortable: false,
-      value: "date",
+      value: "date2",
     },
   ];
 }
@@ -176,6 +190,18 @@ function getFilterLists(): Work.FilterLists {
 }
 function getWorkList(): Grid.GridList {
   let tmp = [];
+  const users = [
+    "영희",
+    "장화",
+    "린",
+    "홍련",
+    "심청",
+    "성춘향",
+    "그레이스",
+    "이난나",
+    "에일리",
+    "혜리",
+  ];
   //TODO: Get Grid list
   for (let i = 0; i < 14; i++) {
     const id = `${Date.now() + i}`;
@@ -186,11 +212,13 @@ function getWorkList(): Grid.GridList {
       task: `abcs-${134 - i}`,
       category: `Category-${i + 1}`,
       types: `type-${i + 1}`,
-      name: `document-${i + 1}`,
-      ocr: `orc-${i + 1}`,
+      name: `document-${i + 1} (${(i % 10) + 1})`,
+      user1: users[i % 10],
+      user2: users[i % 10],
       inspection: i % 5 === 0 ? "save" : i % 3 ? `완료-${i + 1}` : "-",
       accuracy: `${100 - i}%`,
-      date: `${Date.now()}`,
+      date1: `2022-03-${String(i + 1).padStart(2, "0")}`,
+      date2: `2022-03-${String(i + 2).padStart(2, "0")}`,
     };
     tmp.push(obj);
   }

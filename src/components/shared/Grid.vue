@@ -111,9 +111,6 @@ watch(props, () => {
 
 <style lang="scss" scoped>
 .grid {
-  width: 100%;
-  overflow: hidden;
-
   .grid__headers {
     display: grid;
     grid-template-columns: v-bind("gridTemplateColumns");

@@ -22,7 +22,9 @@ import GridForm from "@/components/work/GridForm.vue";
   width: 100%;
   padding: 30px 40px;
   .work-page__grid {
+    width: 100%;
     padding-top: 30px;
+    overflow: scroll;
   }
 }
 </style>
