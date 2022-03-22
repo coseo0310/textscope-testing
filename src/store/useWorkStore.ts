@@ -26,11 +26,11 @@ export const useWorkStore = defineStore("workStore", {
     resetFilterLists() {
       this.filterLists = getFilterLists();
     },
-    async getGridList() {
+    async getGridList(n: number) {
       try {
         //TODO: Get Grid list
 
-        this.workList = getWorkList();
+        this.workList = getWorkList(n);
         return true;
       } catch (error) {
         console.error(error);
@@ -188,7 +188,7 @@ function getFilterLists(): Work.FilterLists {
     ],
   };
 }
-function getWorkList(): Grid.GridList {
+function getWorkList(c: number = 1): Grid.GridList {
   let tmp = [];
   const users = [
     "영희",
@@ -202,6 +202,7 @@ function getWorkList(): Grid.GridList {
     "에일리",
     "혜리",
   ];
+
   //TODO: Get Grid list
   for (let i = 0; i < 14; i++) {
     const id = `${Date.now() + i}`;
@@ -209,14 +210,14 @@ function getWorkList(): Grid.GridList {
     const obj = {
       id,
       checked: false,
-      task: `abcs-${134 - i}`,
-      category: `Category-${i + 1}`,
-      types: `type-${i + 1}`,
-      name: `document-${i + 1} (${(i % 10) + 1})`,
+      task: `s-${c}-${134 - i}`,
+      category: `Category-${c}-${i + 1}`,
+      types: `type-${c}-${i + 1}`,
+      name: `document-${c}-${i + 1} (${(i % 10) + 1})`,
       user1: users[i % 10],
       user2: users[i % 10],
       inspection: i % 5 === 0 ? "save" : i % 3 ? `완료-${i + 1}` : "-",
-      accuracy: `${100 - i}%`,
+      accuracy: `${Math.ceil(Math.random() * 10) + 90}%`,
       date1: `2022-03-${String(i + 1).padStart(2, "0")}`,
       date2: `2022-03-${String(i + 2).padStart(2, "0")}`,
     };

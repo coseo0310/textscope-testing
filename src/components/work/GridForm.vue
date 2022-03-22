@@ -8,11 +8,17 @@ import { useWorkStore } from "@/store";
 const workStore = useWorkStore();
 const columns = ref(workStore.workColumns);
 const selected = ref(workStore.selected);
+const currentPage = ref<number>(1);
 
 const onSelected = (list: GridList) => {
   workStore.selected = list
     .filter((item) => !!item.checked)
     .map((item) => ({ id: item.id as string }));
+};
+
+const onPageChange = (current: number) => {
+  currentPage.value = current;
+  workStore.getGridList(currentPage.value);
 };
 
 onMounted(() => {});
@@ -45,7 +51,7 @@ onUnmounted(() => {});
       </div>
     </div>
     <div v-if="workStore.workList.length > 0" class="grid-form__pagination">
-      <Pagination :current="13" />
+      <Pagination :current="currentPage" @change="onPageChange" />
     </div>
   </div>
 </template>
