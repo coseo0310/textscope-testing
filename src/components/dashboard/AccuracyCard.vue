@@ -54,7 +54,7 @@ import Switch from "@/components/shared/Switch.vue";
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding-top: 50px;
+    height: 100%;
     .date {
       color: $point-blue;
       font-weight: 400;

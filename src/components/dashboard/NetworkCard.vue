@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Chart from "chart.js/auto";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
-const c = ref<unknown>(null);
-onMounted(() => {
-  if (!canvas.value) {
-    return;
+const destroy = ref<Function | null>(null);
+
+const setChart = (canvas: HTMLCanvasElement) => {
+  if (destroy.value) {
+    destroy.value();
   }
-  const ctx = canvas.value.getContext("2d");
-  const gradientFill = ctx!.createLinearGradient(1500, 0, 10, 0);
+  const width = document.body.clientWidth - 400;
+
+  const ctx = canvas.getContext("2d");
+  const gradientFill = ctx!.createLinearGradient(width, 0, 10, 0);
   gradientFill.addColorStop(0, "rgba(255, 164, 37, 0)");
   gradientFill.addColorStop(1, "rgba(255, 164, 37, 0.9)");
 
-  c.value = new Chart(canvas.value, {
+  const c = new Chart(canvas, {
     type: "line",
     data: {
       labels: [
@@ -107,13 +110,47 @@ onMounted(() => {
       },
     },
   });
+  destroy.value = () => c.destroy();
+};
+
+const onResize = () => {
+  if (!canvas.value) {
+    return;
+  }
+
+  const width = document.querySelector(".network-card")?.clientWidth || 0;
+  const height = document.querySelector(".network-card")?.clientHeight || 0;
+  canvas.value.width = width;
+  canvas.value.height = height - 60;
+  setChart(canvas.value);
+};
+
+onMounted(() => {
+  if (!canvas.value) {
+    return;
+  }
+
+  const width = document.querySelector(".network-card")?.clientWidth || 0;
+  const height = document.querySelector(".network-card")?.clientHeight || 0;
+  canvas.value.width = width;
+  canvas.value.height = height - 60;
+  setChart(canvas.value);
+  window.addEventListener("resize", onResize);
+});
+
+onUnmounted(() => {
+  if (!destroy.value) {
+    return;
+  }
+  destroy.value();
+  window.removeEventListener("resize", onResize);
 });
 </script>
 
 <template>
   <div class="network-card">
     <div class="title">네트워크 이용내역</div>
-    <canvas ref="canvas" height="509px"></canvas>
+    <canvas ref="canvas"></canvas>
   </div>
 </template>
 
@@ -142,7 +179,6 @@ onMounted(() => {
   canvas {
     position: relative;
     width: 100%;
-    height: 509px;
     padding: 30px 20px 0px 20px;
   }
 }

@@ -30,18 +30,17 @@ import NetworkCard from "@/components/dashboard/NetworkCard.vue";
   padding: 50px 80px;
   width: 100%;
   display: grid;
-  grid-template-columns: 456px 501px 539px;
-  grid-template-rows: 324px 509px;
+  grid-template-columns: minmax(456px, 0.8fr) minmax(501px, 0.9fr) minmax(
+      539px,
+      1.3fr
+    );
+  grid-template-rows: minmax(324px, 0.8fr) minmax(509px, 1.2fr);
   gap: 30px;
-
-  .s-card {
-    height: 324px;
-  }
 
   .b-card {
     margin-top: 10px;
-    width: 1556px;
-    height: 509px;
+    width: 100%;
+    height: 100%;
     grid-column: 1 / 4;
   }
 }

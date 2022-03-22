@@ -21,7 +21,8 @@ const authStore = useAuthStore();
 <style lang="scss" scoped>
 .group-page {
   width: 100%;
-  max-width: 1640px;
+  /* max-width: 1640px; */
+  width: 100%;
   height: 100vh;
   color: $d5;
   padding: 60px 42px;
