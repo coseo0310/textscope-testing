@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="menubar-container">문서 분류 학습</div>
+  <div class="menubar-container"></div>
 </template>
 
 <style lang="scss" scoped>

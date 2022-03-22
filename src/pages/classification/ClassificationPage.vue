@@ -6,6 +6,7 @@ import MenuBar from "@/components/classification/MenuBar.vue";
 <template>
   <MainLayoutVue>
     <div class="classification-page">
+      보류
       <MenuBar />
     </div>
   </MainLayoutVue>
