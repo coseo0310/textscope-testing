@@ -13,6 +13,7 @@ export type Constant =
   | "root"
   | "login"
   | "dashboard"
+  | "classification"
   | "work"
   | "settings"
   | "logout"

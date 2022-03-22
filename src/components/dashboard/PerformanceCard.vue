@@ -65,6 +65,7 @@
       display: flex;
       justify-content: flex-end;
       font-weight: 400;
+      padding-top: 1px;
     }
 
     &.content {
@@ -76,6 +77,8 @@
     .unit {
       font-weight: 400;
       font-size: 18px;
+      display: flex;
+      padding: 2px 0 0 3px;
     }
   }
 }

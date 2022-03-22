@@ -4,6 +4,7 @@ import LogoutPage from "@/pages/auth/LogoutPage.vue";
 import NotFound from "@/pages/auth/404.vue";
 import DashboardPage from "@/pages/dashboard/DashboardPage.vue";
 import SettingsPage from "@/pages/settings/SettingsPage.vue";
+import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
@@ -46,6 +47,19 @@ export const constants: Constants = {
         requiresAuth: true,
         title: "대시보드",
         icons: "dashboard",
+      },
+    },
+  },
+  classification: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/classification",
+      name: "classification",
+      component: ClassificationPage,
+      meta: {
+        requiresAuth: true,
+        title: "문서 분류",
+        icons: "classification",
       },
     },
   },
@@ -141,7 +155,7 @@ export const constants: Constants = {
       meta: {
         requiresAuth: false,
         title: "테스트",
-        icons: "classification",
+        icons: "template",
       },
     },
   },
