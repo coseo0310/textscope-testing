@@ -4,7 +4,6 @@ import Chart from "chart.js/auto";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 const c = ref<unknown>(null);
-
 onMounted(() => {
   if (!canvas.value) {
     return;
@@ -20,27 +19,33 @@ onMounted(() => {
       labels: [
         "",
         "10:00",
+        "",
         "12:00",
+        "",
         "14:00",
+        "",
         "16:00",
+        "",
         "18:00",
+        "",
         "20:00",
+        "",
         "22:00",
+        "",
         "24:00",
         "",
       ],
       datasets: [
         {
-          label: "My First Dataset",
           data: [
-            80000, 65000, 59000, 70000, 81000, 56000, 55000, 45000, 80000,
-            80000,
+            18000, 12000, 18000, 21000, 16000, 11000, 22000, 28000, 25000,
+            24000, 26000, 29000, 24000, 22000, 26000, 30000, 32000,
           ],
           borderColor: "rgb(75, 192, 192)",
           //   backgroundColor: "rgba(255, 164, 37, 1)",
           backgroundColor: gradientFill,
-          tension: 0.3,
-          pointRadius: 8,
+          tension: 0.4,
+          pointRadius: [0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0],
           pointBorderWidth: 3,
           pointBackgroundColor: "rgb(255, 255, 255)",
           fill: true,
@@ -54,6 +59,9 @@ onMounted(() => {
         },
         datalabels: {
           display: false,
+        },
+        tooltip: {
+          enabled: false,
         },
       },
       scales: {
@@ -71,18 +79,23 @@ onMounted(() => {
               size: 18,
               weight: "400",
             },
+            major: {
+              enabled: true,
+            },
           },
         },
         y: {
           grid: {
             display: false,
           },
-          min: 20000,
-          max: 90000,
+          //   min: 20000,
+          //   max: 90000,
+          suggestedMin: 0,
+          suggestedMax: 30000,
           ticks: {
             callback: function (value) {
               const v = Number(value);
-              return v >= 1000 ? `${v / 1000}M` : v;
+              return v >= 1000 ? `${(v / 1000).toFixed(0)}M` : v;
             },
             color: "#5b5a81",
             font: {
