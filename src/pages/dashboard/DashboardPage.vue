@@ -3,6 +3,7 @@ import MainLayout from "@/components/layout/MainLayout.vue";
 import AccuracyCard from "@/components/dashboard/AccuracyCard.vue";
 import PerformanceCard from "@/components/dashboard/PerformanceCard.vue";
 import WorkCard from "@/components/dashboard/WorkCard.vue";
+import NetworkCard from "@/components/dashboard/NetworkCard.vue";
 </script>
 
 <template>
@@ -17,7 +18,9 @@ import WorkCard from "@/components/dashboard/WorkCard.vue";
       <div class="s-card card">
         <WorkCard />
       </div>
-      <div class="b-card card"></div>
+      <div class="b-card card">
+        <NetworkCard />
+      </div>
     </div>
   </MainLayout>
 </template>
@@ -37,10 +40,9 @@ import WorkCard from "@/components/dashboard/WorkCard.vue";
 
   .b-card {
     margin-top: 10px;
-    width: 100%;
-    height: 100%;
+    width: 1556px;
+    height: 509px;
     grid-column: 1 / 4;
-    background-color: lightcoral;
   }
 }
 </style>

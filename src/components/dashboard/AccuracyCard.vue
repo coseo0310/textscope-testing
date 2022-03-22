@@ -7,7 +7,7 @@ import Switch from "@/components/shared/Switch.vue";
     <div class="header">
       <div class="title">인식률 정확도</div>
       <div class="switch-wrap">
-        <Switch :labels="{ on: '전체', off: '오늘' }" />
+        <Switch :default="false" :labels="{ on: '전체', off: '오늘' }" />
       </div>
     </div>
     <div class="content-wrap">
