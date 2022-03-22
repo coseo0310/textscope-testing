@@ -26,7 +26,7 @@ export const useWorkStore = defineStore("workStore", {
     resetFilterLists() {
       this.filterLists = getFilterLists();
     },
-    async getGridList(n: number) {
+    async getGridList(n: number = 1) {
       try {
         //TODO: Get Grid list
 
