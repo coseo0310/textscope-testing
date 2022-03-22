@@ -181,7 +181,7 @@ onUnmounted(() => {
     top: 0;
     width: 100%;
     height: 100%;
-    padding: 30px 20px 0px 20px;
+    padding: 20px 20px 20px 20px;
   }
 }
 </style>
