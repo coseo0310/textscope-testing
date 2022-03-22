@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Chart from "chart.js/auto";
 
+let chart: Chart<"line", number[], string> | null = null;
 const canvas = ref<HTMLCanvasElement | null>(null);
 const destroy = ref<Function | null>(null);
 
@@ -10,7 +11,6 @@ const setChart = (canvas: HTMLCanvasElement) => {
     destroy.value();
   }
   const width = document.body.clientWidth - 400;
-
   const ctx = canvas.getContext("2d");
   const gradientFill = ctx!.createLinearGradient(width, 0, 10, 0);
   gradientFill.addColorStop(0, "rgba(255, 164, 37, 0)");
@@ -44,8 +44,7 @@ const setChart = (canvas: HTMLCanvasElement) => {
             18000, 12000, 18000, 21000, 16000, 11000, 22000, 28000, 25000,
             24000, 26000, 27000, 21000, 22000, 26000, 28000, 29000,
           ],
-          borderColor: "rgb(75, 192, 192)",
-          //   backgroundColor: "rgba(255, 164, 37, 1)",
+          borderColor: "rgba(75, 192, 192, 1)",
           backgroundColor: gradientFill,
           tension: 0.4,
           pointRadius: [0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0],
@@ -111,6 +110,7 @@ const setChart = (canvas: HTMLCanvasElement) => {
     },
   });
   destroy.value = () => c.destroy();
+  chart = c;
 };
 
 const onResize = () => {
@@ -118,11 +118,14 @@ const onResize = () => {
     return;
   }
 
-  const width = document.querySelector(".network-card")?.clientWidth || 0;
-  const height = document.querySelector(".network-card")?.clientHeight || 0;
-  canvas.value.width = width;
-  canvas.value.height = height - 60;
-  setChart(canvas.value);
+  if (chart) {
+    const width = document.body.clientWidth - 400;
+    const ctx = canvas.value.getContext("2d");
+    const gradientFill = ctx!.createLinearGradient(width, 0, 10, 0);
+    gradientFill.addColorStop(0, "rgba(255, 164, 37, 0)");
+    gradientFill.addColorStop(1, "rgba(255, 164, 37, 0.9)");
+    chart.data.datasets[0].backgroundColor = gradientFill;
+  }
 };
 
 onMounted(() => {
@@ -130,10 +133,6 @@ onMounted(() => {
     return;
   }
 
-  const width = document.querySelector(".network-card")?.clientWidth || 0;
-  const height = document.querySelector(".network-card")?.clientHeight || 0;
-  canvas.value.width = width;
-  canvas.value.height = height - 60;
   setChart(canvas.value);
   window.addEventListener("resize", onResize);
 });
@@ -150,7 +149,7 @@ onUnmounted(() => {
 <template>
   <div class="network-card">
     <div class="title">네트워크 이용내역</div>
-    <canvas ref="canvas"></canvas>
+    <canvas ref="canvas" height="100%"></canvas>
   </div>
 </template>
 
@@ -164,7 +163,7 @@ onUnmounted(() => {
   box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
   color: $d5;
   font-size: 18px;
-  padding: 60px 40px;
+  padding: 90px 40px 0 40px;
 
   .title {
     position: absolute;
@@ -173,12 +172,15 @@ onUnmounted(() => {
     font-size: 18px;
     font-weight: 700;
     color: $d5;
-    padding: 40px 30px;
+    padding: 40px 50px;
   }
 
   canvas {
     position: relative;
+    left: 0;
+    top: 0;
     width: 100%;
+    height: 100%;
     padding: 30px 20px 0px 20px;
   }
 }

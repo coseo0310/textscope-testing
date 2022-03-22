@@ -39,9 +39,8 @@ import NetworkCard from "@/components/dashboard/NetworkCard.vue";
 
   .b-card {
     margin-top: 10px;
-    width: 100%;
-    height: 100%;
     grid-column: 1 / 4;
+    grid-row: 2 / 3;
   }
 }
 </style>
