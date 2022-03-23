@@ -2,25 +2,20 @@
 import { ref } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
+import ErrorForm from "@/components/shared/ErrorForm.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import { useAuthStore, useCommonStore } from "@/store";
-
-const regEx = /^[a-zA-Z0-9]*$/;
+import { useForm } from "@/hooks";
 
 const authStore = useAuthStore();
 const commonStore = useCommonStore();
+const { handleSubmit, register, getValues, errors, formState } = useForm();
 
 const nowIcon = ref<IconType>("hide");
 const newIcon = ref<IconType>("hide");
 const confirmIcon = ref<IconType>("hide");
 
-const nowPassword = ref<string>("");
-const newPassword = ref<string>("");
-const confirmPassword = ref<string>("");
-
 const nowErrorMsg = ref<string>("");
-const newErrorMsg = ref<string>("");
-const confirmErrorMsg = ref<string>("");
 const isValide = ref<boolean>(true);
 
 const onShow = (type: "now" | "new" | "confirm") => {
@@ -39,69 +34,9 @@ const onShow = (type: "now" | "new" | "confirm") => {
   }
 };
 
-const onValidate = () => {
-  if (nowPassword.value.length === 0) {
-    nowErrorMsg.value = `현재 비밀번호를 입력해주세요`;
-  } else {
-    nowErrorMsg.value = ``;
-  }
-
-  if (newPassword.value.length === 0) {
-    newErrorMsg.value = `새 비밀번호를 입력해주세요`;
-  } else if (
-    newPassword.value.length < 8 ||
-    !regEx.test(newPassword.value as string)
-  ) {
-    newErrorMsg.value = `비밀번호는 숫자와 영어 8자리 이상으로 입력해주세요`;
-  } else if (newPassword.value === nowPassword.value) {
-    newErrorMsg.value = `현재 사용중이신 비밀번호는 사용할 수 없습니다.`;
-  } else {
-    newErrorMsg.value = ``;
-  }
-
-  if (confirmPassword.value.length === 0) {
-    confirmErrorMsg.value = `새 비밀번호 확인를 입력해주세요`;
-  } else if (newPassword.value !== confirmPassword.value) {
-    confirmErrorMsg.value = `새 비밀번호와 일치하지 않습니다.`;
-  } else {
-    confirmErrorMsg.value = ``;
-  }
-  isValide.value =
-    !!nowErrorMsg.value || !!newErrorMsg.value || !!confirmErrorMsg.value;
-  return isValide.value;
-};
-
-const onNowPasswordKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  nowPassword.value = el.value;
-  setTimeout(() => {
-    onValidate();
-  });
-};
-
-const onNewPasswordKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  newPassword.value = el.value;
-  setTimeout(() => {
-    onValidate();
-  });
-};
-const onConfirmPasswordKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  confirmPassword.value = el.value;
-  setTimeout(() => {
-    onValidate();
-  });
-};
 const onSubmit = async () => {
-  if (onValidate()) {
-    commonStore.setToast("변경사항을 저장할 수 없습니다.", "warn");
-    return;
-  }
-  const ok = await authStore.onChangePassword(
-    nowPassword.value,
-    confirmPassword.value
-  );
+  const { nowPassword, confirmPassword } = getValues();
+  const ok = await authStore.onChangePassword(nowPassword, confirmPassword);
 
   if (ok) {
     commonStore.setToast("변경사항이 저장되었습니다", "info");
@@ -109,7 +44,6 @@ const onSubmit = async () => {
   } else {
     nowErrorMsg.value = `현재 비밀번호와 일치하지 않습니다.`;
     commonStore.setToast("변경사항을 저장할 수 없습니다.", "warn");
-    authStore.isPasswordModal = false;
   }
 };
 
@@ -135,9 +69,20 @@ const onCancel = (e: MouseEvent) => {
               id="now"
               :type="nowIcon === 'hide' ? 'password' : 'text'"
               placeholder="현재 비밀번호를 입력해주세요"
-              :value="nowPassword"
-              :class="{ error: !!nowErrorMsg }"
-              @keyup="onNowPasswordKeyup"
+              name="nowPassword"
+              :ref="
+                register({
+                  required: true,
+                  notMatch: 'newPassword',
+                })
+              "
+              :class="{ error: errors.nowPassword?.type || !!nowErrorMsg }"
+              maxlength="20"
+              @keyup="
+                () => {
+                  nowErrorMsg = '';
+                }
+              "
             />
             <Icons
               :icons="nowIcon"
@@ -150,7 +95,15 @@ const onCancel = (e: MouseEvent) => {
         <div class="input-wrap">
           <div class="text"></div>
           <div class="input">
-            <p>{{ nowErrorMsg }}</p>
+            <ErrorForm>{{
+              errors.nowPassword?.type === "required"
+                ? `현재 비밀번호를 입력해주세요`
+                : errors.nowPassword?.type === "notMatch"
+                ? "현재 사용중이신 비밀번호는 사용할 수 없습니다"
+                : !!nowErrorMsg
+                ? nowErrorMsg
+                : ""
+            }}</ErrorForm>
           </div>
         </div>
         <div class="input-wrap">
@@ -160,9 +113,16 @@ const onCancel = (e: MouseEvent) => {
               id="new"
               :type="newIcon === 'hide' ? 'password' : 'text'"
               placeholder="새로운 비밀번호를 입력해주세요"
-              :value="newPassword"
-              :class="{ error: !!newErrorMsg }"
-              @keyup="onNewPasswordKeyup"
+              name="newPassword"
+              :ref="
+                register({
+                  required: true,
+                  pattern: /^[a-zA-Z0-9]*$/,
+                  minLength: 8,
+                })
+              "
+              :class="{ error: errors.newPassword?.type }"
+              maxlength="20"
             />
             <Icons
               :icons="newIcon"
@@ -174,7 +134,14 @@ const onCancel = (e: MouseEvent) => {
         <div class="input-wrap">
           <div class="text"></div>
           <div class="input">
-            <p>{{ newErrorMsg }}</p>
+            <ErrorForm>{{
+              errors.newPassword?.type === "required"
+                ? "새 비밀번호를 입력해주세요"
+                : errors.newPassword?.type === "minLength" ||
+                  errors.newPassword?.type === "pattern"
+                ? "비밀번호는 숫자와 영어 8자리 이상으로 입력해주세요"
+                : ""
+            }}</ErrorForm>
           </div>
         </div>
         <div class="input-wrap">
@@ -184,9 +151,15 @@ const onCancel = (e: MouseEvent) => {
               id="confirm"
               :type="confirmIcon === 'hide' ? 'password' : 'text'"
               placeholder="새로운 비밀번호를 다시 입력해주세요"
-              :value="confirmPassword"
-              :class="{ error: !!confirmErrorMsg }"
-              @keyup="onConfirmPasswordKeyup"
+              name="confirmPassword"
+              :ref="
+                register({
+                  required: true,
+                  match: 'newPassword',
+                })
+              "
+              maxlength="20"
+              :class="{ error: errors.confirmPassword?.type }"
             />
             <Icons
               :icons="confirmIcon"
@@ -198,16 +171,22 @@ const onCancel = (e: MouseEvent) => {
         <div class="input-wrap">
           <div class="text"></div>
           <div class="input">
-            <p>{{ confirmErrorMsg }}</p>
+            <ErrorForm>{{
+              errors.confirmPassword?.type === "required"
+                ? "새 비밀번호 확인를 입력해주세요"
+                : errors.confirmPassword?.type === "match"
+                ? "새 비밀번호와 일치하지 않습니다"
+                : ""
+            }}</ErrorForm>
           </div>
         </div>
       </div>
       <div class="btn-wrap">
         <Button class="outline semi-bold" @click="onCancel">취소</Button>
         <Button
-          :disabled="isValide"
+          :disabled="!formState.isValid || !!nowErrorMsg"
           class="primary semi-bold disabled"
-          @click="onSubmit"
+          @click="handleSubmit(onSubmit)"
           >변경</Button
         >
       </div>

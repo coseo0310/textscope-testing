@@ -1,12 +1,20 @@
 import { ref, DefineComponent } from "vue";
 
-export type ErrorTypes = "required" | "maxLength" | "minLength" | "pattern";
+export type ErrorTypes =
+  | "required"
+  | "maxLength"
+  | "minLength"
+  | "pattern"
+  | "match"
+  | "notMatch";
 
 export type RegisterOptions = {
   required?: boolean;
   maxLength?: number;
   minLength?: number;
   pattern?: RegExp;
+  match?: string;
+  notMatch?: string;
 };
 
 export type Register = {
@@ -70,12 +78,29 @@ export default function useForm() {
       }
       if (!!o?.maxLength) {
         errors.value[el.name] = {
-          type: el.value.length < o.maxLength ? "maxLength" : null,
+          type: el.value.length > o.maxLength ? "maxLength" : null,
         };
         if (errors.value[el.name]?.type) {
           flag = false;
           continue;
         }
+      }
+      if (!!o?.match) {
+        const check = registers.value.find(
+          (f) => f.ref.$el.name === o.match && f.ref.$el.value !== el.value
+        );
+        errors.value[el.name] = {
+          type: check ? "match" : null,
+        };
+      }
+
+      if (!!o?.notMatch) {
+        const check = registers.value.find(
+          (f) => f.ref.$el.name === o.notMatch && f.ref.$el.value === el.value
+        );
+        errors.value[el.name] = {
+          type: check ? "notMatch" : null,
+        };
       }
     }
 
