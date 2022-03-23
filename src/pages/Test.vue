@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Input from "@/components/shared/Input.vue";
 import { Viewer } from "@/services";
+import admission1 from "@/assets/sample/admission/temp1.jpg";
+import admission_json1 from "@/assets/sample/admission/temp1.json";
 
 const testEl = ref<HTMLElement | null>(null);
 const deg = ref<number>(0);
@@ -13,9 +15,6 @@ const dWidth = ref<string>("200");
 const dHeight = ref<string>("50");
 
 const viewer = new Viewer();
-viewer.setImgURL(
-  "https://images.unsplash.com/photo-1459156212016-c812468e2115?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Njh8fGJhY2tncm91bmR8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60"
-);
 
 const onDraw = () => {
   viewer.draw();
@@ -88,10 +87,21 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 
 onMounted(() => {
+  viewer.setImgURL(admission1);
   testEl.value?.appendChild(viewer.getViewer());
-  setTimeout(() => {
-    viewer.draw();
-  }, 1000);
+  for (const d of admission_json1.prediction.key_values) {
+    viewer.setRectangle({
+      id: d.id,
+      dx: d.bbox.x,
+      dy: d.bbox.y,
+      dWidth: d.bbox.w,
+      dHeight: d.bbox.h,
+      type: "stroke",
+      color: `rgba(220, 118, 118, 1)`,
+      lineWidth: 5,
+    });
+  }
+  viewer.draw();
 });
 </script>
 

@@ -7,6 +7,7 @@ type Rectangle = {
   dHeight: number;
   type: "fill" | "stroke";
   color: string;
+  lineWidth?: number;
 };
 
 interface IRenderer {}
@@ -63,16 +64,18 @@ export default class Renderer implements IRenderer {
     const image = new Image();
     image.src = url;
     this.imgEl = image;
-
     this.nWidth = this.imgEl.naturalWidth;
     this.nHeight = this.imgEl.naturalHeight;
+
+    this.imgEl.onload = () => {
+      this.draw();
+    };
   }
 
   setZoomInOut(command: ZoomCommand) {
     if (command === "out" && this.depth >= this.maxDepth * -1) {
       // OUT
       this.depth -= 1;
-      console.log("??", command);
     } else if (command === "in" && this.depth < this.maxDepth) {
       // IN
       this.depth += 1;
@@ -113,7 +116,6 @@ export default class Renderer implements IRenderer {
     this.canvasEl.height = this.nHeight * scale;
 
     this.ctx.scale(scale, scale);
-
     this.ctx.drawImage(
       this.imgEl,
       this.sx,
@@ -131,11 +133,10 @@ export default class Renderer implements IRenderer {
         this.ctx.fillStyle = r.color;
         this.ctx.fillRect(r.dx, r.dy, r.dWidth, r.dHeight);
       } else if (r.type === "stroke") {
+        this.ctx.lineWidth = r.lineWidth ? r.lineWidth : 1;
         this.ctx.strokeStyle = r.color;
         this.ctx.strokeRect(r.dx, r.dy, r.dWidth, r.dHeight);
       }
     }
   }
-
-  rectangle() {}
 }
