@@ -1,57 +1,36 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import { useAuthStore } from "@/store";
-import * as R from "@/router/index";
+import { useForm } from "@/hooks";
+import { constants } from "@/router";
 
 const icon = ref<IconType>("hide");
-const email = ref<string>("");
-const password = ref<string>("");
 const loader = ref<boolean>(false);
 const authStore = useAuthStore();
 const router = useRouter();
-const emailValidate = ref<boolean>(false);
 const passwordValidate = ref<boolean>(false);
+
+const { handleSubmit, register, getValues, errors, formState } = useForm();
 
 const onShow = () => {
   icon.value = icon.value === "hide" ? "show" : "hide";
 };
 
-watch(email, () => {
-  const regex =
-    /^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$/;
-  emailValidate.value = !regex.test(email.value) ? true : false;
-});
-
-watch(password, () => {
-  passwordValidate.value = password.value === "" ? true : false;
-});
-
-const onValidate = () => {
-  return (
-    emailValidate.value ||
-    passwordValidate.value ||
-    email.value === "" ||
-    password.value === ""
-  );
-};
-
 const onLogin = async () => {
-  if (onValidate()) {
-    return;
-  }
+  const { email, password } = getValues();
   loader.value = true;
-  const login = await authStore.onLogin(email.value, password.value);
+  const login = await authStore.onLogin(email, password);
   if (!login) {
     passwordValidate.value = true;
     loader.value = false;
     return;
   }
 
-  router.push(R.constants.dashboard.routeRecordRaw.path);
+  router.push(constants.dashboard.routeRecordRaw.path);
 };
 
 const onSingleSignOne = async () => {
@@ -61,24 +40,11 @@ const onSingleSignOne = async () => {
     return;
   }
 
-  router.push(R.constants.dashboard.routeRecordRaw.path);
+  router.push(constants.dashboard.routeRecordRaw.path);
 };
 
-const onEmailKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  email.value = el.value;
-  if (e.code === "Enter") {
-    onLogin();
-  }
-};
-
-const onPasswordKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  password.value = el.value;
-  passwordValidate.value = false;
-  if (e.code === "Enter") {
-    onLogin();
-  }
+const onEnter = () => {
+  handleSubmit(onLogin);
 };
 
 const test = false;
@@ -91,34 +57,58 @@ const test = false;
       <p>AI 기반 문서 인식 솔루션</p>
     </div>
     <div class="input email" :class="{ validate: test }"></div>
-    <div class="input email" :class="{ validate: emailValidate }">
+    <div class="input email" :class="{ validate: errors.email?.type }">
       <label>ID</label>
-      <Input type="text" :value="email" @keyup="onEmailKeyup" />
+      <Input
+        type="text"
+        name="email"
+        :ref="
+          register({
+            required: true,
+            pattern:
+              /^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$/,
+          })
+        "
+        maxlength="20"
+        @keyup.enter="onEnter"
+      />
       <p>
-        <span v-if="emailValidate">아이디는 이메일 형식으로 입력해주세요</span>
+        <span v-if="errors.email?.type"
+          >아이디는 이메일 형식으로 입력해주세요</span
+        >
         <span v-else></span>
       </p>
     </div>
-    <div class="input pasword" :class="{ validate: passwordValidate }">
+    <div class="input pasword" :class="{ validate: errors.password?.type }">
       <label>Passwrod</label>
       <Input
         :type="icon === 'hide' ? 'password' : 'text'"
-        v-model="password"
-        @keyup="onPasswordKeyup"
+        name="password"
+        :ref="
+          register({
+            required: true,
+          })
+        "
+        maxlength="20"
+        @keyup.enter="onEnter"
       />
       <Icons :icons="icon" :class="{ on: icon === 'show' }" @click="onShow" />
       <p>
-        <span v-if="passwordValidate && password !== ''"
+        <!-- <span v-if="errors.password?.type"
           >입력된 비밀번호가 올바르지 않습니다.</span
-        >
-        <span v-else-if="passwordValidate && password === ''">
-          패스워드를 입력해주세요
-        </span>
+        > -->
+        <span v-if="errors.password?.type"> 패스워드를 입력해주세요 </span>
         <span v-else></span>
       </p>
     </div>
     <div class="btn">
-      <Button class="primary" :loader="loader" @click="onLogin">로그인</Button>
+      <Button
+        class="primary"
+        :disabled="!formState.isValid"
+        :loader="loader"
+        @click="handleSubmit(onLogin)"
+        >로그인</Button
+      >
     </div>
     <div class="sso" @click="onSingleSignOne">SSO (Single Sign One) 로그인</div>
   </div>

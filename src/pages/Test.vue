@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Input from "@/components/shared/Input.vue";
+import Form from "@/components/shared/Form.vue";
 import { Viewer } from "@/services";
 
 const testEl = ref<HTMLElement | null>(null);
@@ -97,6 +98,7 @@ onMounted(() => {
 
 <template>
   <div class="test">
+    <Form> </Form>
     <div class="viewer-wrap" ref="testEl"></div>
     <div class="btn-wrap">
       <div class="info zoom">{{ `ZOOM: ${zoom} %` }}</div>
