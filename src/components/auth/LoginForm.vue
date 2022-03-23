@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
+import ErrorForm from "@/components/shared/ErrorForm.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import { useAuthStore } from "@/store";
 import { useForm } from "@/hooks";
@@ -72,12 +73,12 @@ const test = false;
         maxlength="20"
         @keyup.enter="onEnter"
       />
-      <p>
+      <ErrorForm>
         <span v-if="errors.email?.type"
           >아이디는 이메일 형식으로 입력해주세요</span
         >
         <span v-else></span>
-      </p>
+      </ErrorForm>
     </div>
     <div class="input pasword" :class="{ validate: errors.password?.type }">
       <label>Passwrod</label>
@@ -93,13 +94,13 @@ const test = false;
         @keyup.enter="onEnter"
       />
       <Icons :icons="icon" :class="{ on: icon === 'show' }" @click="onShow" />
-      <p>
+      <ErrorForm>
         <!-- <span v-if="errors.password?.type"
           >입력된 비밀번호가 올바르지 않습니다.</span
         > -->
         <span v-if="errors.password?.type"> 패스워드를 입력해주세요 </span>
         <span v-else></span>
-      </p>
+      </ErrorForm>
     </div>
     <div class="btn">
       <Button
@@ -144,11 +145,6 @@ const test = false;
       margin: 10px 0 5px 0;
     }
 
-    p {
-      color: $point-red;
-      margin: 5px 0;
-      height: 14px;
-    }
     &.validate {
       input {
         border-color: $point-red;
