@@ -1,4 +1,4 @@
-import { ref, onMounted, DefineComponent } from "vue";
+import { ref, DefineComponent } from "vue";
 
 export type ErrorTypes = "required" | "maxLength" | "minLength" | "pattern";
 
@@ -123,6 +123,10 @@ export default function useForm() {
     fn();
   };
 
+  const setValidate = () => {
+    formState.value.isValid = onValidate();
+  };
+
   const getValues = () => {
     return registers.value.reduce((acc: Values, cur) => {
       acc[cur.ref.$el.name] = cur.ref.$el.value;
@@ -130,5 +134,5 @@ export default function useForm() {
     }, {});
   };
 
-  return { handleSubmit, register, getValues, errors, formState };
+  return { handleSubmit, register, getValues, errors, formState, setValidate };
 }

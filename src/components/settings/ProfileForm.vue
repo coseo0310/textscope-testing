@@ -1,26 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Radio from "@/components/shared/Radio.vue";
 import Button from "@/components/shared/Button.vue";
+import ErrorForm from "@/components/shared/ErrorForm.vue";
 import { useAuthStore } from "@/store";
+import { useForm } from "@/hooks";
 
 const authStore = useAuthStore();
+const { handleSubmit, register, getValues, errors, formState, setValidate } =
+  useForm();
 
 const isAdmin = ref<boolean>(
   authStore.user?.authority === "super" ? true : false
 );
 const isMember = ref<boolean>(false);
-const isNameErrorMsg = ref<boolean>(false);
-const isDivisionErrorMsg = ref<boolean>(false);
-const isPositionErrorMsg = ref<boolean>(false);
-const isPhoneErrorMsg = ref<boolean>(false);
-const isCellphoneErrorMsg = ref<boolean>(false);
-const name = ref<string>(authStore.user?.name || "");
-const division = ref<string>(authStore.user?.division || "");
-const position = ref<string>(authStore.user?.job_position || "");
-const phone = ref<string>(authStore.user?.phone_number || "");
-const cellphone = ref<string>(authStore.user?.extension_number || "");
 
 const onAuth = (v: boolean, type: "super" | "member") => {
   if (type === "super") {
@@ -35,46 +29,17 @@ const onAuth = (v: boolean, type: "super" | "member") => {
   }
 };
 
-const isValide = computed(
-  () =>
-    isNameErrorMsg.value ||
-    isDivisionErrorMsg.value ||
-    isPositionErrorMsg.value ||
-    // isPhoneErrorMsg.value ||
-    isCellphoneErrorMsg.value
-);
-
-const onNameKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  name.value = el.value;
-  isNameErrorMsg.value = name.value ? false : true;
-};
-const onDivisionKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  division.value = el.value;
-  isDivisionErrorMsg.value = division.value ? false : true;
-};
-const onPositionKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  position.value = el.value;
-  isPhoneErrorMsg.value = position.value ? false : true;
-};
-const onPhoneKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  phone.value = el.value;
-  // isPhoneErrorMsg.value = phone.value ? false : true;
-};
-const onCellphoneKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  cellphone.value = el.value;
-  isCellphoneErrorMsg.value = cellphone.value ? false : true;
-};
-
 const onSubmit = () => {
-  alert("준비중...");
+  const { name, division, position, phone, cellphone } = getValues();
 
+  console.log(name, division, position, phone, cellphone);
+  alert("준비중...");
   // TODO: 프로필 변경
 };
+
+onMounted(() => {
+  setValidate();
+});
 </script>
 
 <template>
@@ -108,66 +73,82 @@ const onSubmit = () => {
     </div>
     <div class="profile-form__name form">
       <div class="text">이름*</div>
-      <div class="input">
+      <div class="input" :class="{ validate: errors.name?.type }">
         <Input
           type="text"
           placeholder="이름을 입력해주세요"
-          :value="name"
-          @keyup="onNameKeyup"
+          name="name"
+          :ref="register({ required: true })"
+          :defaultValue="authStore.user?.name"
         />
-        <p>{{ isNameErrorMsg ? "이름을 입력해주세요" : "" }}</p>
+        <ErrorForm>{{
+          errors.name?.type ? "이름을 입력해주세요" : ""
+        }}</ErrorForm>
       </div>
     </div>
     <div class="profile-form__division form">
       <div class="text">부서*</div>
-      <div class="input">
+      <div class="input" :class="{ validate: errors.division?.type }">
         <Input
           type="text"
           placeholder="부서를 입력해주세요"
-          :value="division"
-          @keyup="onDivisionKeyup"
+          name="division"
+          :ref="register({ required: true })"
+          :defaultValue="authStore.user?.division"
         />
-        <p>{{ isDivisionErrorMsg ? "부서를 입력해주세요" : "" }}</p>
+        <ErrorForm>{{
+          errors.division?.type ? "부서를 입력해주세요" : ""
+        }}</ErrorForm>
       </div>
     </div>
     <div class="profile-form__job-position form">
       <div class="text">직급 / 직책*</div>
-      <div class="input">
+      <div class="input" :class="{ validate: errors.position?.type }">
         <Input
           type="text"
           placeholder="직급 / 직책을 입력해주세요"
-          :value="position"
-          @keyup="onPositionKeyup"
+          name="position"
+          :ref="register({ required: true })"
+          :defaultValue="authStore.user?.job_position"
         />
-        <p>{{ isPositionErrorMsg ? "직급 / 직책을 입력해주세요" : "" }}</p>
+        <ErrorForm>{{
+          errors.position?.type ? "직급 / 직책을 입력해주세요" : ""
+        }}</ErrorForm>
       </div>
     </div>
     <div class="profile-form__phone form">
       <div class="text">내선번호</div>
-      <div class="input">
+      <div class="input" :class="{ validate: errors.phone?.type }">
         <Input
           type="text"
           placeholder="전화번호는 '-' 없이 숫자만 입력해주세요"
-          :value="phone"
-          @keyup="onPhoneKeyup"
+          name="phone"
+          :ref="register({})"
+          :defaultValue="authStore.user?.phone_number"
         />
-        <p></p>
+        <ErrorForm></ErrorForm>
       </div>
     </div>
     <div class="profile-form__cellphone form">
       <div class="text">휴대폰번호*</div>
-      <div class="input">
+      <div class="input" :class="{ validate: errors.cellphone?.type }">
         <Input
           type="text"
           placeholder="전화번호는 '-' 없이 숫자만 입력해주세요"
-          :value="cellphone"
-          @keyup="onCellphoneKeyup"
+          name="cellphone"
+          :ref="register({ required: true })"
+          :defaultValue="authStore.user?.extension_number"
         />
-        <p>{{ isCellphoneErrorMsg ? "휴대폰번호를 입력해주세요" : "" }}</p>
+        <ErrorForm>{{
+          errors.cellphone?.type ? "휴대폰번호를 입력해주세요" : ""
+        }}</ErrorForm>
       </div>
     </div>
     <div class="btn-wrap">
-      <Button class="primary extra-bold" :disabled="isValide" @click="onSubmit"
+      <Button
+        class="primary extra-bold"
+        :disabled="!formState.isValid"
+        @click="handleSubmit(onSubmit)"
         >변경사항 저장</Button
       >
     </div>
@@ -195,6 +176,12 @@ const onSubmit = () => {
       width: 500px;
       position: relative;
 
+      &.validate {
+        input {
+          border-color: $point-red;
+        }
+      }
+
       &.error {
         input {
           border: 1px solid $point-red;
@@ -203,7 +190,7 @@ const onSubmit = () => {
 
       p {
         position: absolute;
-        bottom: -20px;
+        bottom: -25px;
         width: 500px;
         height: 17px;
         color: $point-red;
