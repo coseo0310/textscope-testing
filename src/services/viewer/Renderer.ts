@@ -125,7 +125,7 @@ export default class Renderer implements IRenderer {
     this.fields = this.fields.filter((f) => f.id !== id);
   }
 
-  removesFields() {
+  removeFields() {
     this.fields = [];
   }
 

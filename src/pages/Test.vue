@@ -110,6 +110,7 @@ const onRotate = (d: number) => {
 const createRect = (type: "stroke" | "fill") => {
   viewer.setField({
     id: `${Date.now()}`,
+    text: `create text`,
     dx: Number(dx.value),
     dy: Number(dy.value),
     dWidth: Number(dWidth.value),
@@ -216,7 +217,7 @@ onMounted(() => {
         <Button class="primary" @click="createRect('fill')">
           Fill Rectangle
         </Button>
-        <Button class="outline clear" @click="viewer.removeRectangles()"
+        <Button class="outline clear" @click="viewer.removeFields()"
           >Clear</Button
         >
       </div>
