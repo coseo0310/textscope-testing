@@ -10,6 +10,30 @@ type Rectangle = {
   lineWidth?: number;
 };
 
+type Arc = {
+  id: string;
+  x: number;
+  y: number;
+  radius: number;
+  startAngle: number;
+  endAngle: number;
+  type: "fill" | "stroke";
+  color: string;
+  lineWidth?: number;
+};
+
+type Field = {
+  id: string;
+  text: string;
+  dx: number;
+  dy: number;
+  dWidth: number;
+  dHeight: number;
+  type: "fill" | "stroke";
+  color: string;
+  lineWidth?: number;
+};
+
 interface IRenderer {}
 
 export default class Renderer implements IRenderer {
@@ -25,7 +49,7 @@ export default class Renderer implements IRenderer {
   private maxDepth: number;
   private minDepth: number;
   private deg: number;
-  private rectangles: Rectangle[];
+  private fields: Field[];
 
   constructor() {
     this.canvasEl = document.createElement("canvas");
@@ -39,9 +63,9 @@ export default class Renderer implements IRenderer {
     this.imgEl = null;
     this.maxDepth = 7;
     this.minDepth = -7;
-    this.depth = 0;
+    this.depth = -7;
     this.deg = 0;
-    this.rectangles = [];
+    this.fields = [];
   }
 
   getViewer() {
@@ -93,19 +117,16 @@ export default class Renderer implements IRenderer {
     this.canvasEl.style.transform = rotate;
   }
 
-  setRectangle(rectangle: Rectangle) {
-    this.rectangles.push(rectangle);
-    this.draw();
+  setField(field: Field) {
+    this.fields.push(field);
   }
 
-  removeRectangle(rectangle: Rectangle) {
-    this.rectangles = this.rectangles.filter((r) => r.id !== rectangle.id);
-    this.draw();
+  removeField(id: string) {
+    this.fields = this.fields.filter((f) => f.id !== id);
   }
 
-  removeRectangles() {
-    this.rectangles = [];
-    this.draw();
+  removesFields() {
+    this.fields = [];
   }
 
   getScale() {
@@ -135,15 +156,32 @@ export default class Renderer implements IRenderer {
       scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight
     );
 
-    for (const r of this.rectangles) {
-      if (r.type === "fill") {
-        this.ctx.fillStyle = r.color;
-        this.ctx.fillRect(r.dx, r.dy, r.dWidth, r.dHeight);
-      } else if (r.type === "stroke") {
-        this.ctx.lineWidth = r.lineWidth ? r.lineWidth : 1;
-        this.ctx.strokeStyle = r.color;
-        this.ctx.strokeRect(r.dx, r.dy, r.dWidth, r.dHeight);
+    const radius = 30;
+    for (const f of this.fields) {
+      if (f.type === "fill") {
+        // Rectangle
+        this.ctx.fillStyle = f.color;
+        this.ctx.fillRect(f.dx, f.dy, f.dWidth, f.dHeight);
+        // Circle
+        // this.ctx.beginPath();
+        // this.ctx.fillStyle = f.color;
+        // this.ctx.arc(f.dx + radius, f.dy - radius - 10, radius, 0, 2 * Math.PI);
+        // this.ctx.fill();
+      } else if (f.type === "stroke") {
+        // Rectangle
+        this.ctx.lineWidth = f.lineWidth ? f.lineWidth : 1;
+        this.ctx.strokeStyle = f.color;
+        this.ctx.strokeRect(f.dx, f.dy, f.dWidth, f.dHeight);
+        // Circle
+        // this.ctx.beginPath();
+        // this.ctx.lineWidth = f.lineWidth ? f.lineWidth : 1;
+        // this.ctx.strokeStyle = f.color;
+        // this.ctx.arc(f.dx + radius, f.dy - radius - 10, radius, 0, 2 * Math.PI);
+        // this.ctx.stroke();
       }
+      this.ctx.font = "48px serif";
+      this.ctx.fillStyle = `blue`;
+      this.ctx.fillText(`${f.id}: ${f.text}`, f.dx, f.dy - 10);
     }
   }
 }

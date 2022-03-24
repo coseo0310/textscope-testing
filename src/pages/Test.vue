@@ -96,7 +96,7 @@ const onZoomOut = () => {
 };
 const onZoomClear = () => {
   viewer.setZoomInOut("init");
-  zoom.value = 100;
+  zoom.value = Math.floor(viewer.getScale() * 100);
 };
 
 const onRotate = (d: number) => {
@@ -108,7 +108,7 @@ const onRotate = (d: number) => {
 };
 
 const createRect = (type: "stroke" | "fill") => {
-  viewer.setRectangle({
+  viewer.setField({
     id: `${Date.now()}`,
     dx: Number(dx.value),
     dy: Number(dy.value),
@@ -153,8 +153,9 @@ const onDraw = (url: string, json: any) => {
       ? json.prediction.key_values
       : json.prediction.texts;
   for (const d of loop) {
-    viewer.setRectangle({
+    viewer.setField({
       id: d.id,
+      text: d.text,
       dx: d.bbox.x,
       dy: d.bbox.y,
       dWidth: d.bbox.w,
@@ -167,13 +168,14 @@ const onDraw = (url: string, json: any) => {
 };
 
 const onControl = (type: string) => {
-  viewer.removeRectangles();
+  viewer.removesFields();
   onDraw(items[type].img, items[type].json);
 };
 
 onMounted(() => {
   testEl.value?.appendChild(viewer.getViewer());
   onControl("admission1");
+  zoom.value = Math.floor(viewer.getScale() * 100);
 });
 </script>
 
