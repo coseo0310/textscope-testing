@@ -11,15 +11,16 @@ import { MenuList } from "@/types";
 type Props = {
   menuList: MenuList;
   extend?: boolean;
-  onExtend?: (e: MouseEvent) => void;
+  onExtend?: (b: boolean) => void;
 };
 
 const props = withDefaults(defineProps<Props>(), {
   extend: false,
-  onExtend: (e: MouseEvent) => {},
+  onExtend: (b: boolean) => {},
 });
 
 const isTab = ref<boolean>(false);
+const timeout = ref<NodeJS.Timeout | null>(null);
 const authStore = useAuthStore();
 const routes = useRoute();
 const router = useRouter();
@@ -45,6 +46,24 @@ const onLogout = async () => {
   router.push(constants.logout.routeRecordRaw.path);
 };
 
+const onMouseenter = () => {
+  timeout.value = setTimeout(() => {
+    props.onExtend(true);
+  }, 1000);
+};
+
+const onMouseleave = () => {
+  if (!timeout.value) {
+    return;
+  }
+  clearTimeout(timeout.value);
+  props.onExtend(false);
+};
+
+const toDashboard = () => {
+  router.push(constants.dashboard.routeRecordRaw.path);
+};
+
 onMounted(() => {
   window.addEventListener("click", onClosest);
 });
@@ -55,13 +74,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    class="navigation"
-    :class="{ active: extend }"
-    @mouseenter="props.onExtend"
-    @mouseleave="props.onExtend"
-  >
-    <div class="logo">
+  <div class="navigation" :class="{ active: extend }">
+    <div
+      class="logo"
+      @click="toDashboard"
+      @mouseenter="onMouseenter"
+      @mouseleave="onMouseleave"
+    >
       <img src="../../assets/logo/textscope-logo.png" />
     </div>
     <ul>
@@ -69,6 +88,8 @@ onUnmounted(() => {
         v-for="m in props.menuList"
         class="list"
         :class="{ active: routes.path.includes(m.path) }"
+        @mouseenter="onMouseenter"
+        @mouseleave="onMouseleave"
       >
         <router-link :to="m.path">
           <b></b>

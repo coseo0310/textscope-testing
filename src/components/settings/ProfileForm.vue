@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Radio from "@/components/shared/Radio.vue";
 import Button from "@/components/shared/Button.vue";
+import Dropdown from "@/components/shared/Dropdown.vue";
 import ErrorForm from "@/components/shared/ErrorForm.vue";
 import { useAuthStore } from "@/store";
 import { useForm } from "@/hooks";
@@ -87,29 +88,37 @@ onMounted(() => {
       </div>
     </div>
     <div class="profile-form__division form">
-      <div class="text">부서*</div>
+      <div class="text">부서</div>
       <div class="input" :class="{ validate: errors.division?.type }">
-        <Input
+        <!-- <Input
           type="text"
           placeholder="부서를 입력해주세요"
           name="division"
-          :ref="register({ required: true })"
+          :ref="register({ required: false })"
           :defaultValue="authStore.user?.division"
-        />
-        <ErrorForm>{{
-          errors.division?.type ? "부서를 입력해주세요" : ""
-        }}</ErrorForm>
+        /> -->
+        <div class="text">{{ authStore.user?.division }}</div>
+        <ErrorForm></ErrorForm>
       </div>
     </div>
     <div class="profile-form__job-position form">
       <div class="text">직급 / 직책*</div>
       <div class="input" :class="{ validate: errors.position?.type }">
-        <Input
+        <!-- <Input
           type="text"
           placeholder="직급 / 직책을 입력해주세요"
           name="position"
           :ref="register({ required: true })"
           :defaultValue="authStore.user?.job_position"
+        /> -->
+        <Dropdown
+          default="2"
+          :list="[
+            { id: '1', text: '부장', value: '1' },
+            { id: '2', text: '과장', value: '2' },
+            { id: '3', text: '대리', value: '3' },
+            { id: '4', text: '사원', value: '4' },
+          ]"
         />
         <ErrorForm>{{
           errors.position?.type ? "직급 / 직책을 입력해주세요" : ""
@@ -130,18 +139,16 @@ onMounted(() => {
       </div>
     </div>
     <div class="profile-form__cellphone form">
-      <div class="text">휴대폰번호*</div>
+      <div class="text">휴대폰번호</div>
       <div class="input" :class="{ validate: errors.cellphone?.type }">
         <Input
           type="text"
           placeholder="전화번호는 '-' 없이 숫자만 입력해주세요"
           name="cellphone"
-          :ref="register({ required: true })"
+          :ref="register({ required: false })"
           :defaultValue="authStore.user?.extension_number"
         />
-        <ErrorForm>{{
-          errors.cellphone?.type ? "휴대폰번호를 입력해주세요" : ""
-        }}</ErrorForm>
+        <ErrorForm></ErrorForm>
       </div>
     </div>
     <div class="btn-wrap">
@@ -175,6 +182,20 @@ onMounted(() => {
     .input {
       width: 500px;
       position: relative;
+
+      .text {
+        font-weight: 400;
+      }
+
+      input {
+        color: $d4;
+        border-color: $d4;
+
+        &:focus {
+          color: $d5;
+          border-color: $point-blue;
+        }
+      }
 
       &.validate {
         input {

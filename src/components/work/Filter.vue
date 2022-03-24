@@ -342,6 +342,13 @@ onUnmounted(() => {
       }
     }
 
+    .category {
+      .box {
+        display: grid;
+        grid-template-columns: 0.5fr 0.7fr 1fr;
+      }
+    }
+
     .date {
       .box {
         .time {

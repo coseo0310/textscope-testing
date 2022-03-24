@@ -12,8 +12,8 @@ const authStore = useAuthStore();
 const commonStore = useCommonStore();
 const extend = ref<boolean>(false);
 
-const onExtend = (e: MouseEvent) => {
-  extend.value = !extend.value;
+const onExtend = (b: boolean) => {
+  extend.value = b;
 };
 </script>
 

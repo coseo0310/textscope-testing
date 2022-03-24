@@ -118,23 +118,23 @@ function getFilterLists(): Work.FilterLists {
   return {
     category: [
       {
-        name: "실손 의료비 영수증",
+        name: "해외투자 신고서",
         checked: false,
       },
       {
-        name: "온라인 뱅킹 가입 신청서",
+        name: "해외투자 사업계획서",
         checked: false,
       },
       {
-        name: "통장 사본",
+        name: "Invoice",
         checked: false,
       },
       {
-        name: "가계 대출 신청서",
+        name: "Bill of Landing",
         checked: false,
       },
       {
-        name: "진료비 계산서",
+        name: "Purchase Order",
         checked: false,
       },
     ],
