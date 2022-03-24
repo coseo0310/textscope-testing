@@ -119,6 +119,7 @@ const createRect = (type: "stroke" | "fill") => {
     color:
       type === "fill" ? "rgba(220, 118, 118, 0.2)" : "rgba(220, 118, 118, 1)",
   });
+  viewer.draw();
 };
 
 const onKeyup = (e: KeyboardEvent) => {
@@ -166,10 +167,11 @@ const onDraw = (url: string, json: any) => {
       lineWidth: 5,
     });
   }
+  viewer.draw();
 };
 
 const onControl = (type: string) => {
-  viewer.removesFields();
+  viewer.removeFields();
   onDraw(items[type].img, items[type].json);
 };
 

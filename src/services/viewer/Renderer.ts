@@ -127,6 +127,7 @@ export default class Renderer implements IRenderer {
 
   removeFields() {
     this.fields = [];
+    this.draw();
   }
 
   getScale() {
