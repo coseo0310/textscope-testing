@@ -1,3 +1,3 @@
-import Viewer from "@/services/viewer/Renderer";
+import Viewer from "@/services/viewer/Viewer";
 
 export { Viewer };

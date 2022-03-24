@@ -1,3 +1,5 @@
+import DrawEvent from "./DrawEvent";
+
 type ZoomCommand = "in" | "out" | "init";
 
 type Field = {
@@ -12,9 +14,9 @@ type Field = {
   lineWidth?: number;
 };
 
-interface IRenderer {}
+interface IViewer {}
 
-export default class Renderer implements IRenderer {
+export default class Viewer extends DrawEvent implements IViewer {
   private canvasEl: HTMLCanvasElement;
   private canvasWrap: HTMLDivElement;
   private imgEl: HTMLImageElement | null;
@@ -25,6 +27,7 @@ export default class Renderer implements IRenderer {
   private fields: Field[];
 
   constructor() {
+    super();
     this.canvasEl = document.createElement("canvas");
     this.canvasWrap = document.createElement("div");
     this.canvasWrap.appendChild(this.canvasEl);
@@ -102,52 +105,6 @@ export default class Renderer implements IRenderer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
-  setRactangle(ctx: CanvasRenderingContext2D, field: Field) {
-    if (field.type === "fill") {
-      ctx.fillStyle = field.color;
-      ctx.fillRect(field.dx, field.dy, field.dWidth, field.dHeight);
-    } else if (field.type === "stroke") {
-      ctx.lineWidth = field.lineWidth ? field.lineWidth : 1;
-      ctx.strokeStyle = field.color;
-      ctx.strokeRect(field.dx, field.dy, field.dWidth, field.dHeight);
-    }
-  }
-
-  setArc(ctx: CanvasRenderingContext2D, field: Field) {
-    if (field.type === "fill") {
-      const radius = 30;
-      ctx.beginPath();
-      ctx.fillStyle = field.color;
-      ctx.arc(
-        field.dx + radius,
-        field.dy - radius - 10,
-        radius,
-        0,
-        2 * Math.PI
-      );
-      ctx.fill();
-    } else if (field.type === "stroke") {
-      const radius = 30;
-      ctx.beginPath();
-      ctx.lineWidth = field.lineWidth ? field.lineWidth : 1;
-      ctx.strokeStyle = field.color;
-      ctx.arc(
-        field.dx + radius,
-        field.dy - radius - 10,
-        radius,
-        0,
-        2 * Math.PI
-      );
-      ctx.stroke();
-    }
-  }
-
-  setText(ctx: CanvasRenderingContext2D, field: Field) {
-    ctx.font = "48px serif";
-    ctx.fillStyle = `blue`;
-    ctx.fillText(`${field.id}: ${field.text}`, field.dx, field.dy - 10);
-  }
-
   draw() {
     if (!this.imgEl) {
       return;
@@ -159,23 +116,45 @@ export default class Renderer implements IRenderer {
     this.canvasEl.height = this.imgEl.naturalHeight * scale;
     this.canvasEl.style.margin = `${this.imgEl.naturalWidth * scale * 0.15}px`;
 
-    ctx.scale(scale, scale);
-    ctx.drawImage(
-      this.imgEl,
-      0,
-      0,
-      scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
-      scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight,
-      0,
-      0,
-      scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
-      scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight
-    );
+    const width = scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth;
+    const height = scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight;
+
+    this.setScale(ctx, { x: scale, y: scale });
+    this.drawImage(ctx, {
+      img: this.imgEl,
+      sx: 0,
+      sy: 0,
+      sWidth: width,
+      sHeight: height,
+      dx: 0,
+      dy: 0,
+      dWidth: width,
+      dHeight: height,
+    });
 
     for (const f of this.fields) {
-      this.setRactangle(ctx, f);
-      this.setText(ctx, f);
-      // this.setArc(this.ctx, f);
+      const rectOption = {
+        dx: f.dx,
+        dy: f.dy,
+        dWidth: f.dWidth,
+        dHeight: f.dHeight,
+        color: f.color,
+        lineWidth: 5,
+      };
+      const textOption = {
+        dx: f.dx,
+        dy: f.dy,
+        text: `${f.id}: ${f.text}`,
+        font: "48px serif",
+        color: "blue",
+      };
+
+      if (f.type === "fill") {
+        this.fillRect(ctx, rectOption);
+      } else if (f.type === "stroke") {
+        this.strokeRect(ctx, rectOption);
+      }
+      this.fillText(ctx, textOption);
     }
   }
 }
