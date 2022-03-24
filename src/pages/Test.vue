@@ -8,7 +8,7 @@ import admission_json1 from "@/assets/sample/admission/temp1.json";
 
 const testEl = ref<HTMLElement | null>(null);
 const deg = ref<number>(0);
-const zoom = ref<number>(0);
+const zoom = ref<number>(100);
 const dx = ref<string>("10");
 const dy = ref<string>("10");
 const dWidth = ref<string>("200");
@@ -25,18 +25,15 @@ const onZoomIn = () => {
     return;
   }
   viewer.setZoomInOut("in");
-  zoom.value += 10;
+  zoom.value = Math.floor(viewer.getScale() * 100);
 };
 const onZoomOut = () => {
-  if (zoom.value === -80) {
-    return;
-  }
   viewer.setZoomInOut("out");
-  zoom.value -= 10;
+  zoom.value = Math.floor(viewer.getScale() * 100);
 };
 const onZoomClear = () => {
   viewer.setZoomInOut("init");
-  zoom.value = 0;
+  zoom.value = 100;
 };
 
 const onRotate = (d: number) => {
@@ -168,6 +165,7 @@ onMounted(() => {
     width: 100%;
     height: 100vh;
     background-color: rgba(240, 128, 128, 0.8);
+    overflow: scroll;
   }
 
   .info {
@@ -178,7 +176,8 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 500px;
+    width: 100%;
+    height: 100%;
     padding: 5px;
 
     .btn-box {

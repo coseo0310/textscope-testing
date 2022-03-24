@@ -25,6 +25,7 @@ export default class Renderer implements IRenderer {
   private imgEl: HTMLImageElement | null;
   private depth: number;
   private maxDepth: number;
+  private minDepth: number;
   private deg: number;
   private rectangles: Rectangle[];
 
@@ -40,13 +41,15 @@ export default class Renderer implements IRenderer {
     this.dx = 0;
     this.dy = 0;
     this.imgEl = null;
-    this.maxDepth = 8;
+    this.maxDepth = 7;
+    this.minDepth = -7;
     this.depth = 0;
     this.deg = 0;
     this.rectangles = [];
   }
 
   getViewer() {
+    const scale = this.getScale();
     const viewerEl = document.createElement("div");
     viewerEl.appendChild(this.canvasWrap);
     viewerEl.classList.add("viewer");
@@ -54,9 +57,9 @@ export default class Renderer implements IRenderer {
     viewerEl.style.height = `100%`;
     viewerEl.style.overflow = "scroll";
     viewerEl.style.display = "flex";
-    viewerEl.style.justifyContent = "center";
+    viewerEl.style.justifyContent = "flex-start";
     viewerEl.style.alignItems = "flex-start";
-    this.canvasEl.style.margin = `${this.nWidth * 0.2}px 0`;
+    this.canvasEl.style.margin = `${this.nWidth * scale * 0.15}px`;
     return viewerEl;
   }
 
@@ -73,6 +76,9 @@ export default class Renderer implements IRenderer {
   }
 
   setZoomInOut(command: ZoomCommand) {
+    if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
+      return;
+    }
     if (command === "out" && this.depth >= this.maxDepth * -1) {
       // OUT
       this.depth -= 1;
@@ -106,14 +112,19 @@ export default class Renderer implements IRenderer {
     this.draw();
   }
 
+  getScale() {
+    return Number((this.depth * 0.1 + 1).toFixed(1));
+  }
+
   draw() {
     if (!this.imgEl) {
       return;
     }
+    const scale = this.getScale();
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
-    const scale = this.depth * 0.1 + 1;
     this.canvasEl.width = this.nWidth * scale;
     this.canvasEl.height = this.nHeight * scale;
+    this.canvasEl.style.margin = `${this.nWidth * scale * 0.15}px`;
 
     this.ctx.scale(scale, scale);
     this.ctx.drawImage(

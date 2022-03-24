@@ -16,7 +16,6 @@ const newIcon = ref<IconType>("hide");
 const confirmIcon = ref<IconType>("hide");
 
 const nowErrorMsg = ref<string>("");
-const isValide = ref<boolean>(true);
 
 const onShow = (type: "now" | "new" | "confirm") => {
   switch (type) {
