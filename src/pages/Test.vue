@@ -5,8 +5,75 @@ import Input from "@/components/shared/Input.vue";
 import { Viewer } from "@/services";
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";
+import admission2 from "@/assets/sample/admission/temp2.jpg";
+import admission_json2 from "@/assets/sample/admission/temp2.json";
+import diagnosis1 from "@/assets/sample/diagnosis/temp1.jpg";
+import diagnosis_json1 from "@/assets/sample/diagnosis/temp1.json";
+import diagnosis2 from "@/assets/sample/diagnosis/temp2.jpg";
+import diagnosis_json2 from "@/assets/sample/diagnosis/temp2.json";
+import hospitalization1 from "@/assets/sample/hospitalization/temp1.jpg";
+import hospitalization_json1 from "@/assets/sample/hospitalization/temp1.json";
+import hospitalization2 from "@/assets/sample/hospitalization/temp2.jpg";
+import hospitalization_json2 from "@/assets/sample/hospitalization/temp2.json";
+import prescription1 from "@/assets/sample/prescription/temp1.jpg";
+import prescription_json1 from "@/assets/sample/prescription/temp1.json";
+import prescription2 from "@/assets/sample/prescription/temp2.jpeg";
+import prescription_json2 from "@/assets/sample/prescription/temp2.json";
+import surgery1 from "@/assets/sample/surgery/temp1.jpg";
+import surgery_json1 from "@/assets/sample/surgery/temp1.json";
+import surgery2 from "@/assets/sample/surgery/temp2.jpg";
+import surgery_json2 from "@/assets/sample/surgery/temp2.json";
 
-const testEl = ref<HTMLElement | null>(null);
+type Items = {
+  [k in string]: {
+    img: string;
+    json: any;
+  };
+};
+const items: Items = {
+  admission1: {
+    img: admission1,
+    json: admission_json1,
+  },
+  admission2: {
+    img: admission2,
+    json: admission_json2,
+  },
+  diagnosis1: {
+    img: diagnosis1,
+    json: diagnosis_json1,
+  },
+  diagnosis2: {
+    img: diagnosis2,
+    json: diagnosis_json2,
+  },
+  hospitalization1: {
+    img: hospitalization1,
+    json: hospitalization_json1,
+  },
+  hospitalization2: {
+    img: hospitalization2,
+    json: hospitalization_json2,
+  },
+  prescription1: {
+    img: prescription1,
+    json: prescription_json1,
+  },
+  prescription2: {
+    img: prescription2,
+    json: prescription_json2,
+  },
+  surgery1: {
+    img: surgery1,
+    json: surgery_json1,
+  },
+  surgery2: {
+    img: surgery2,
+    json: surgery_json2,
+  },
+};
+
+const testEl = ref<HTMLDivElement | null>(null);
 const deg = ref<number>(0);
 const zoom = ref<number>(100);
 const dx = ref<string>("10");
@@ -15,10 +82,6 @@ const dWidth = ref<string>("200");
 const dHeight = ref<string>("50");
 
 const viewer = new Viewer();
-
-const onDraw = () => {
-  viewer.draw();
-};
 
 const onZoomIn = () => {
   if (zoom.value === 80) {
@@ -83,10 +146,13 @@ const onKeyup = (e: KeyboardEvent) => {
   }
 };
 
-onMounted(() => {
-  viewer.setImgURL(admission1);
-  testEl.value?.appendChild(viewer.getViewer());
-  for (const d of admission_json1.prediction.key_values) {
+const onDraw = (url: string, json: any) => {
+  viewer.setImgURL(url);
+  const loop =
+    json.prediction.key_values.length > 0
+      ? json.prediction.key_values
+      : json.prediction.texts;
+  for (const d of loop) {
     viewer.setRectangle({
       id: d.id,
       dx: d.bbox.x,
@@ -98,7 +164,16 @@ onMounted(() => {
       lineWidth: 5,
     });
   }
-  viewer.draw();
+};
+
+const onControl = (type: string) => {
+  viewer.removeRectangles();
+  onDraw(items[type].img, items[type].json);
+};
+
+onMounted(() => {
+  testEl.value?.appendChild(viewer.getViewer());
+  onControl("admission1");
 });
 </script>
 
@@ -109,10 +184,8 @@ onMounted(() => {
       <div class="info zoom">{{ `ZOOM: ${zoom} %` }}</div>
       <div class="info deg">{{ `DEGREE: ${deg} deg` }}</div>
       <div class="btn-box">
-        <Button class="primary" @click="onDraw">draw</Button>
         <Button class="primary" @click="onZoomIn">zoom in</Button>
         <Button class="primary" @click="onZoomOut">zoom out</Button>
-        <Button class="outline" @click="onZoomClear">clear zoom</Button>
         <Button class="primary" @click="onRotate(-90)">
           90deg left rotate
         </Button>
@@ -121,6 +194,7 @@ onMounted(() => {
         </Button>
         <Button class="primary" @click="onRotate(-1)">1deg left rotate</Button>
         <Button class="primary" @click="onRotate(1)">1deg right rotate</Button>
+        <Button class="outline" @click="onZoomClear">clear zoom</Button>
         <Button class="outline" @click="onRotate(0)">clear rotate</Button>
       </div>
       <div class="rect-wrap">
@@ -142,6 +216,39 @@ onMounted(() => {
         </Button>
         <Button class="outline clear" @click="viewer.removeRectangles()"
           >Clear</Button
+        >
+      </div>
+      <p>Documents</p>
+      <div class="btn-box">
+        <Button class="primary" @click="onControl('admission1')"
+          >통원확인서1</Button
+        >
+        <Button class="primary" @click="onControl('admission2')"
+          >통원확인서2</Button
+        >
+        <Button class="primary" @click="onControl('diagnosis1')"
+          >진단서1</Button
+        >
+        <Button class="primary" @click="onControl('diagnosis2')"
+          >진단서2</Button
+        >
+        <Button class="primary" @click="onControl('hospitalization1')"
+          >입퇴원확인서1</Button
+        >
+        <Button class="primary" @click="onControl('hospitalization2')"
+          >입퇴원확인서2</Button
+        >
+        <Button class="primary" @click="onControl('prescription1')"
+          >처방전1</Button
+        >
+        <Button class="primary" @click="onControl('prescription2')"
+          >처방전2</Button
+        >
+        <Button class="primary" @click="onControl('surgery1')"
+          >수술확인서1</Button
+        >
+        <Button class="primary" @click="onControl('surgery2')"
+          >수술확인서2</Button
         >
       </div>
     </div>

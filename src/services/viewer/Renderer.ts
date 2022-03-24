@@ -16,8 +16,6 @@ export default class Renderer implements IRenderer {
   private canvasEl: HTMLCanvasElement;
   private canvasWrap: HTMLDivElement;
   private ctx: CanvasRenderingContext2D;
-  private nWidth: number;
-  private nHeight: number;
   private sx: number;
   private sy: number;
   private dx: number;
@@ -34,8 +32,6 @@ export default class Renderer implements IRenderer {
     this.canvasWrap = document.createElement("div");
     this.canvasWrap.appendChild(this.canvasEl);
     this.ctx = this.canvasEl.getContext("2d")!;
-    this.nWidth = 0;
-    this.nHeight = 0;
     this.sx = 0;
     this.sy = 0;
     this.dx = 0;
@@ -59,7 +55,9 @@ export default class Renderer implements IRenderer {
     viewerEl.style.display = "flex";
     viewerEl.style.justifyContent = "flex-start";
     viewerEl.style.alignItems = "flex-start";
-    this.canvasEl.style.margin = `${this.nWidth * scale * 0.15}px`;
+    this.canvasEl.style.margin = `${
+      this.imgEl?.naturalWidth || 0 * scale * 0.15
+    }px`;
     return viewerEl;
   }
 
@@ -67,8 +65,6 @@ export default class Renderer implements IRenderer {
     const image = new Image();
     image.src = url;
     this.imgEl = image;
-    this.nWidth = this.imgEl.naturalWidth;
-    this.nHeight = this.imgEl.naturalHeight;
 
     this.imgEl.onload = () => {
       this.draw();
@@ -122,21 +118,21 @@ export default class Renderer implements IRenderer {
     }
     const scale = this.getScale();
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
-    this.canvasEl.width = this.nWidth * scale;
-    this.canvasEl.height = this.nHeight * scale;
-    this.canvasEl.style.margin = `${this.nWidth * scale * 0.15}px`;
+    this.canvasEl.width = this.imgEl.naturalWidth * scale;
+    this.canvasEl.height = this.imgEl.naturalHeight * scale;
+    this.canvasEl.style.margin = `${this.imgEl.naturalWidth * scale * 0.15}px`;
 
     this.ctx.scale(scale, scale);
     this.ctx.drawImage(
       this.imgEl,
       this.sx,
       this.sy,
-      scale > 1 ? this.canvasEl.width : this.nWidth,
-      scale > 1 ? this.canvasEl.height : this.nHeight,
+      scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
+      scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight,
       this.dx,
       this.dy,
-      scale > 1 ? this.canvasEl.width : this.nWidth,
-      scale > 1 ? this.canvasEl.height : this.nHeight
+      scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
+      scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight
     );
 
     for (const r of this.rectangles) {
