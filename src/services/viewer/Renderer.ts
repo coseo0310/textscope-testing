@@ -1,26 +1,4 @@
 type ZoomCommand = "in" | "out" | "init";
-type Rectangle = {
-  id: string;
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  type: "fill" | "stroke";
-  color: string;
-  lineWidth?: number;
-};
-
-type Arc = {
-  id: string;
-  x: number;
-  y: number;
-  radius: number;
-  startAngle: number;
-  endAngle: number;
-  type: "fill" | "stroke";
-  color: string;
-  lineWidth?: number;
-};
 
 type Field = {
   id: string;
@@ -39,11 +17,6 @@ interface IRenderer {}
 export default class Renderer implements IRenderer {
   private canvasEl: HTMLCanvasElement;
   private canvasWrap: HTMLDivElement;
-  private ctx: CanvasRenderingContext2D;
-  private sx: number;
-  private sy: number;
-  private dx: number;
-  private dy: number;
   private imgEl: HTMLImageElement | null;
   private depth: number;
   private maxDepth: number;
@@ -55,11 +28,6 @@ export default class Renderer implements IRenderer {
     this.canvasEl = document.createElement("canvas");
     this.canvasWrap = document.createElement("div");
     this.canvasWrap.appendChild(this.canvasEl);
-    this.ctx = this.canvasEl.getContext("2d")!;
-    this.sx = 0;
-    this.sy = 0;
-    this.dx = 0;
-    this.dy = 0;
     this.imgEl = null;
     this.maxDepth = 7;
     this.minDepth = -7;
@@ -134,55 +102,80 @@ export default class Renderer implements IRenderer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
+  setRactangle(ctx: CanvasRenderingContext2D, field: Field) {
+    if (field.type === "fill") {
+      ctx.fillStyle = field.color;
+      ctx.fillRect(field.dx, field.dy, field.dWidth, field.dHeight);
+    } else if (field.type === "stroke") {
+      ctx.lineWidth = field.lineWidth ? field.lineWidth : 1;
+      ctx.strokeStyle = field.color;
+      ctx.strokeRect(field.dx, field.dy, field.dWidth, field.dHeight);
+    }
+  }
+
+  setArc(ctx: CanvasRenderingContext2D, field: Field) {
+    if (field.type === "fill") {
+      const radius = 30;
+      ctx.beginPath();
+      ctx.fillStyle = field.color;
+      ctx.arc(
+        field.dx + radius,
+        field.dy - radius - 10,
+        radius,
+        0,
+        2 * Math.PI
+      );
+      ctx.fill();
+    } else if (field.type === "stroke") {
+      const radius = 30;
+      ctx.beginPath();
+      ctx.lineWidth = field.lineWidth ? field.lineWidth : 1;
+      ctx.strokeStyle = field.color;
+      ctx.arc(
+        field.dx + radius,
+        field.dy - radius - 10,
+        radius,
+        0,
+        2 * Math.PI
+      );
+      ctx.stroke();
+    }
+  }
+
+  setText(ctx: CanvasRenderingContext2D, field: Field) {
+    ctx.font = "48px serif";
+    ctx.fillStyle = `blue`;
+    ctx.fillText(`${field.id}: ${field.text}`, field.dx, field.dy - 10);
+  }
+
   draw() {
     if (!this.imgEl) {
       return;
     }
     const scale = this.getScale();
-    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    const ctx = this.canvasEl.getContext("2d")!;
+    ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
     this.canvasEl.width = this.imgEl.naturalWidth * scale;
     this.canvasEl.height = this.imgEl.naturalHeight * scale;
     this.canvasEl.style.margin = `${this.imgEl.naturalWidth * scale * 0.15}px`;
 
-    this.ctx.scale(scale, scale);
-    this.ctx.drawImage(
+    ctx.scale(scale, scale);
+    ctx.drawImage(
       this.imgEl,
-      this.sx,
-      this.sy,
+      0,
+      0,
       scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
       scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight,
-      this.dx,
-      this.dy,
+      0,
+      0,
       scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth,
       scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight
     );
 
-    const radius = 30;
     for (const f of this.fields) {
-      if (f.type === "fill") {
-        // Rectangle
-        this.ctx.fillStyle = f.color;
-        this.ctx.fillRect(f.dx, f.dy, f.dWidth, f.dHeight);
-        // Circle
-        // this.ctx.beginPath();
-        // this.ctx.fillStyle = f.color;
-        // this.ctx.arc(f.dx + radius, f.dy - radius - 10, radius, 0, 2 * Math.PI);
-        // this.ctx.fill();
-      } else if (f.type === "stroke") {
-        // Rectangle
-        this.ctx.lineWidth = f.lineWidth ? f.lineWidth : 1;
-        this.ctx.strokeStyle = f.color;
-        this.ctx.strokeRect(f.dx, f.dy, f.dWidth, f.dHeight);
-        // Circle
-        // this.ctx.beginPath();
-        // this.ctx.lineWidth = f.lineWidth ? f.lineWidth : 1;
-        // this.ctx.strokeStyle = f.color;
-        // this.ctx.arc(f.dx + radius, f.dy - radius - 10, radius, 0, 2 * Math.PI);
-        // this.ctx.stroke();
-      }
-      this.ctx.font = "48px serif";
-      this.ctx.fillStyle = `blue`;
-      this.ctx.fillText(`${f.id}: ${f.text}`, f.dx, f.dy - 10);
+      this.setRactangle(ctx, f);
+      this.setText(ctx, f);
+      // this.setArc(this.ctx, f);
     }
   }
 }
