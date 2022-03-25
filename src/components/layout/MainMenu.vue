@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   onExtend: (b: boolean) => {},
 });
 
-const isTab = ref<boolean>(false);
+const isTab = ref<boolean>(true);
 const timeout = ref<NodeJS.Timeout | null>(null);
 const authStore = useAuthStore();
 const routes = useRoute();
@@ -102,26 +102,56 @@ onUnmounted(() => {
       </li>
     </ul>
     <div class="profile" @click="onTab">
-      <div class="avatar">
-        <Badge alarm="0" :border="true" :disable="!extend">
-          <Avatar :uri="authStore.user?.profile_img || ''" />
-        </Badge>
-      </div>
-      <div class="info">
-        <span class="name">
-          {{ authStore.user?.name || "Anonymous" }}
-        </span>
-        <span class="job">
-          {{ authStore.user?.division }}, {{ authStore.user?.job_position }}
-        </span>
-      </div>
+      <ul>
+        <li
+          class="list"
+          :class="{
+            active: routes.path.includes(constants.alarm.routeRecordRaw.path),
+          }"
+        >
+          <router-link :to="routes.path">
+            <b></b>
+            <b></b>
+            <span class="icon">
+              <div class="avatar">
+                <Badge alarm="0" :border="true" :disable="!extend">
+                  <Avatar :uri="authStore.user?.profile_img || ''" />
+                </Badge>
+              </div>
+            </span>
+            <span class="title">
+              <div class="info">
+                <span class="name">
+                  {{ authStore.user?.name || "Anonymous" }}
+                </span>
+                <span class="job">
+                  {{ authStore.user?.division }},
+                  {{ authStore.user?.job_position }}
+                </span>
+              </div>
+            </span>
+          </router-link>
+        </li>
+      </ul>
     </div>
   </div>
-  <div v-if="isTab" class="sub" :class="{ extend }" @click="onLogout">
-    <span class="icon">
-      <img src="@/assets/svg/logout.svg" alt="logout" />
-    </span>
-    <span class="title">로그아웃</span>
+  <div v-if="isTab" class="sub" :class="{ extend }">
+    <div class="item" @click="() => {}">
+      <router-link :to="constants.alarm.routeRecordRaw.path">
+        <span class="icon">
+          <Icons icons="bell" />
+        </span>
+        <span class="title">알림</span>
+      </router-link>
+    </div>
+    <div class="item" @click="onLogout">
+      <router-link :to="routes.path">
+        <span class="icon">
+          <Icons icons="logout" />
+        </span>
+        <span class="title">로그아웃</span>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -244,6 +274,7 @@ onUnmounted(() => {
           top: 27px;
           left: 70px;
           width: 140px;
+          height: 100%;
           height: inherit;
           overflow: hidden;
           display: flex;
@@ -252,6 +283,10 @@ onUnmounted(() => {
           white-space: normal;
           font-weight: 600;
           font-size: 18px;
+
+          .info {
+            position: relative;
+          }
         }
 
         &:hover {
@@ -285,21 +320,16 @@ onUnmounted(() => {
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+    ul {
+      width: 100%;
 
+      a {
+        color: $d5;
+      }
+    }
     .avatar {
       width: 55px;
       margin-left: 5px;
-    }
-    .info {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-      margin-left: 15px;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 24px;
-      color: $d5;
     }
   }
 }
@@ -307,12 +337,13 @@ onUnmounted(() => {
 .sub {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   position: absolute;
   bottom: 20px;
   left: 90px;
   width: 146px;
-  height: 68px;
+  padding: 10px 0;
   background-color: $d2;
   color: $d5;
   border-radius: 16px;
@@ -325,18 +356,37 @@ onUnmounted(() => {
     left: 230px;
   }
 
-  .icon {
-    display: flex;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .title {
-    display: flex;
-    margin-left: 10px;
-    font-size: 18px;
-    font-weight: 600;
+  .item {
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      padding: 0 10px;
+      color: $d5;
+
+      &:hover {
+        color: $point-blue;
+
+        .icon {
+          color: $point-blue;
+        }
+      }
+      .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $d5;
+        padding-top: 2px;
+        width: 36px;
+      }
+      .title {
+        display: flex;
+        margin-left: 10px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
   }
 }
 </style>

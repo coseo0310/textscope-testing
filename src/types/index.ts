@@ -16,6 +16,7 @@ export type Constant =
   | "classification"
   | "work"
   | "settings"
+  | "alarm"
   | "logout"
   | "errors"
   | "catch"

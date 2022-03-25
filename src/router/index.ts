@@ -9,6 +9,7 @@ import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
+import AlarmPage from "@/pages/alarm/AlarmPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
@@ -121,6 +122,19 @@ export const constants: Constants = {
         requiresAuth: true,
         title: "설정",
         icons: "setting",
+      },
+    },
+  },
+  alarm: {
+    isMenu: false,
+    routeRecordRaw: {
+      path: "/alarm",
+      name: "alarm",
+      component: AlarmPage,
+      meta: {
+        requiresAuth: true,
+        title: "alarm",
+        icons: "bell",
       },
     },
   },

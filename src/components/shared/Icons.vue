@@ -15,6 +15,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const svg = computed(() => svgs[props.icons]);
+
+console.log(svg.value, props.icons);
 </script>
 
 <template>
