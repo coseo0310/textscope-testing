@@ -123,11 +123,11 @@ export default class DrawEvent {
     );
   }
 
-  drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
-    const tx = option.dx + option.dWidth / 2;
-    const ty = option.dy + option.dHeight / 2;
-    ctx.translate(tx, ty);
-    ctx.rotate((option.deg * Math.PI) / 180);
-    ctx.translate(-tx, -ty);
-  }
+  // drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
+  //   const tx = option.dx + option.dWidth / 2;
+  //   const ty = option.dy + option.dHeight / 2;
+  //   ctx.translate(tx, ty);
+  //   ctx.rotate((option.deg * Math.PI) / 180);
+  //   ctx.translate(-tx, -ty);
+  // }
 }

@@ -36,7 +36,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.imgEl = null;
     this.maxDepth = 7;
     this.minDepth = -7;
-    this.depth = -7;
+    this.depth = 0;
     this.deg = 0;
     this.fields = [];
   }
@@ -75,7 +75,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     if (command === "out" && this.depth >= this.maxDepth * -1) {
       // OUT
       this.depth -= 1;
-    } else if (command === "in" && this.depth < this.maxDepth) {
+    } else if (command === "in" && this.depth <= this.maxDepth) {
       // IN
       this.depth += 1;
     } else if (command === "init") {
