@@ -122,8 +122,10 @@ export default class Viewer extends DrawEvent implements IViewer {
         ? `${this.canvasEl.width - this.canvasEl.height}px`
         : `${this.canvasEl.height - this.canvasEl.width}px`;
 
-    const width = scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth;
-    const height = scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight;
+    const width =
+      scale > 1 ? this.imgEl.naturalWidth * scale : this.imgEl.naturalWidth;
+    const height =
+      scale > 1 ? this.imgEl.naturalHeight * scale : this.imgEl.naturalHeight;
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
