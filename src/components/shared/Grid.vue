@@ -34,7 +34,9 @@ const getGridTemplateColumns = () => {
     .join(" ");
 };
 
-const gridTemplateColumns = ref<string>(`70px ${getGridTemplateColumns()}`);
+const gridTemplateColumns = ref<string>(
+  `${props.selected ? "70px " : ""}${getGridTemplateColumns()}`
+);
 
 const onSelected = (id: string) => {
   list.value = list.value.map((g) => {
@@ -69,7 +71,7 @@ watch(props, () => {
 <template>
   <div class="grid">
     <div class="grid__headers">
-      <div class="header center">
+      <div v-if="props.selected" class="header center">
         <CheckBox :default="allSelected" @change="onAllSelected" />
       </div>
       <div
@@ -87,7 +89,7 @@ watch(props, () => {
     </div>
     <div class="grid__columns" :class="{ none: list.length === 0 }">
       <div v-for="g in list" class="row" :class="{ selected: !!g.checked }">
-        <div class="col center">
+        <div v-if="props.selected" class="col center">
           <CheckBox
             :default="!!g.checked"
             @change="onSelected(g.id as string)"
@@ -111,6 +113,8 @@ watch(props, () => {
 
 <style lang="scss" scoped>
 .grid {
+  width: 100%;
+
   .grid__headers {
     display: grid;
     grid-template-columns: v-bind("gridTemplateColumns");
@@ -129,6 +133,7 @@ watch(props, () => {
       font-size: 18px;
       font-weight: 600;
       color: $d5;
+      padding: 0 20px;
 
       &.center {
         justify-content: center;
@@ -175,6 +180,18 @@ watch(props, () => {
         &.end {
           justify-content: flex-end;
         }
+      }
+    }
+  }
+
+  &.underline {
+    .grid__columns {
+      .row {
+        border-bottom: 2px solid $d4;
+      }
+
+      :last-child {
+        border-bottom: 0;
       }
     }
   }

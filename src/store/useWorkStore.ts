@@ -64,7 +64,6 @@ function getWorkColumns(): Grid.Columns {
       value: "types",
     },
     {
-      width: 401,
       text: "문서명",
       align: "center",
       sortable: false,

@@ -9,7 +9,7 @@ import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
-import AlarmPage from "@/pages/alarm/AlarmPage.vue";
+import AlarmPage from "@/pages/auth/AlarmPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";

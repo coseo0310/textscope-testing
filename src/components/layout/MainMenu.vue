@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   onExtend: (b: boolean) => {},
 });
 
-const isTab = ref<boolean>(true);
+const isTab = ref<boolean>(false);
 const timeout = ref<NodeJS.Timeout | null>(null);
 const authStore = useAuthStore();
 const routes = useRoute();
