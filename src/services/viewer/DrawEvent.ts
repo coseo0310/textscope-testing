@@ -38,6 +38,14 @@ export type ImgOption = {
   dHeight: number;
 };
 
+export type RotateOption = {
+  dx: number;
+  dy: number;
+  dWidth: number;
+  dHeight: number;
+  deg: number;
+};
+
 export type ScaleOption = {
   x: number;
   y: number;
@@ -114,4 +122,15 @@ export default class DrawEvent {
       option.dHeight
     );
   }
+
+  // drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
+  //   const tx = option.dx + option.dWidth / 2;
+  //   const ty = option.dy + option.dHeight / 2;
+
+  //   ctx.translate(tx, ty);
+
+  //   ctx.rotate((option.deg * Math.PI) / 180);
+
+  //   ctx.translate(-tx, -ty);
+  // }
 }

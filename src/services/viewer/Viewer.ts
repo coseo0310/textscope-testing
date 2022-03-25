@@ -18,6 +18,7 @@ interface IViewer {}
 
 export default class Viewer extends DrawEvent implements IViewer {
   private canvasEl: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
   private canvasWrap: HTMLDivElement;
   private imgEl: HTMLImageElement | null;
   private depth: number;
@@ -29,6 +30,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   constructor() {
     super();
     this.canvasEl = document.createElement("canvas");
+    this.ctx = this.canvasEl.getContext("2d")!;
     this.canvasWrap = document.createElement("div");
     this.canvasWrap.appendChild(this.canvasEl);
     this.imgEl = null;
@@ -86,6 +88,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.deg = deg;
     const rotate = `rotate(${this.deg}deg)`;
     this.canvasEl.style.transform = rotate;
+    this.draw();
   }
 
   setField(field: Field) {
@@ -110,17 +113,21 @@ export default class Viewer extends DrawEvent implements IViewer {
       return;
     }
     const scale = this.getScale();
-    const ctx = this.canvasEl.getContext("2d")!;
-    ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+
     this.canvasEl.width = this.imgEl.naturalWidth * scale;
     this.canvasEl.height = this.imgEl.naturalHeight * scale;
-    this.canvasEl.style.margin = `${this.imgEl.naturalWidth * scale * 0.15}px`;
+    this.canvasEl.style.margin =
+      this.canvasEl.width > this.canvasEl.height
+        ? `${this.canvasEl.width - this.canvasEl.height}px`
+        : `${this.canvasEl.height - this.canvasEl.width}px`;
 
     const width = scale > 1 ? this.canvasEl.width : this.imgEl.naturalWidth;
     const height = scale > 1 ? this.canvasEl.height : this.imgEl.naturalHeight;
 
-    this.setScale(ctx, { x: scale, y: scale });
-    this.drawImage(ctx, {
+    this.setScale(this.ctx, { x: scale, y: scale });
+
+    this.drawImage(this.ctx, {
       img: this.imgEl,
       sx: 0,
       sy: 0,
@@ -150,11 +157,11 @@ export default class Viewer extends DrawEvent implements IViewer {
       };
 
       if (f.type === "fill") {
-        this.fillRect(ctx, rectOption);
+        this.fillRect(this.ctx, rectOption);
       } else if (f.type === "stroke") {
-        this.strokeRect(ctx, rectOption);
+        this.strokeRect(this.ctx, rectOption);
       }
-      this.fillText(ctx, textOption);
+      this.fillText(this.ctx, textOption);
     }
   }
 }
