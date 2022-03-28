@@ -9,6 +9,7 @@ import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
+import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
 import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
@@ -61,6 +62,19 @@ export const constants: Constants = {
         requiresAuth: true,
         title: "문서 분류",
         icons: "classification",
+      },
+    },
+  },
+  inspection: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/inspection",
+      name: "inspection",
+      component: InspectionPage,
+      meta: {
+        requiresAuth: true,
+        title: "검수",
+        icons: "template",
       },
     },
   },
@@ -169,7 +183,7 @@ export const constants: Constants = {
       meta: {
         requiresAuth: false,
         title: "테스트",
-        icons: "template",
+        icons: "hide",
       },
     },
   },

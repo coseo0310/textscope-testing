@@ -88,7 +88,6 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.deg = deg;
     const rotate = `rotate(${this.deg}deg)`;
     this.canvasEl.style.transform = rotate;
-    this.draw();
   }
 
   setField(field: Field) {

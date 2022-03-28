@@ -20,6 +20,7 @@ export type Constant =
   | "logout"
   | "errors"
   | "catch"
+  | "inspection"
   | "test";
 
 export type Routes = {
