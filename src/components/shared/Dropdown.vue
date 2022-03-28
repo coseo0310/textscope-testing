@@ -153,5 +153,40 @@ onUnmounted(() => {
       }
     }
   }
+
+  &.minimal {
+    .current {
+      border: 0;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0 15px 0 0;
+      height: 30px;
+      justify-content: center;
+    }
+
+    .icon {
+      position: absolute;
+      top: 3px;
+      right: -10px;
+      transform: scale(1.1);
+      cursor: pointer;
+
+      &.active {
+        top: 1px;
+        color: $point-blue;
+        transform: rotate(180deg) scale(1.1);
+      }
+    }
+
+    .list {
+      top: 30px;
+      .item {
+        font-size: 14px;
+        font-weight: 600;
+        padding: 0 20px;
+        height: 30px;
+      }
+    }
+  }
 }
 </style>

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
+import Dropdown from "@/components/shared/Dropdown.vue";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
@@ -37,6 +38,11 @@ const onInit = () => {
   inspectionStore.viewer.setZoomInOut("init");
   //TODO: Data reset
 };
+
+const onComparison = () => {
+  // TODO: comparison
+  alert("준비중...");
+};
 </script>
 
 <template>
@@ -59,8 +65,18 @@ const onInit = () => {
             {{ inspectionStore.inspectionItem?.request.task_id }}
           </div>
           <div class="column category" role="button">
-            해외투자 사업계획서
-            <Icons icons="chevron-down" />
+            <!-- 해외투자 사업계획서
+            <Icons icons="chevron-down" /> -->
+            <Dropdown
+              default="2"
+              class="minimal"
+              :list="[
+                { id: '1', text: '해외사업계획서', value: '1' },
+                { id: '2', text: 'Purchase Order', value: '2' },
+                { id: '3', text: 'Bill of Landing', value: '3' },
+                { id: '4', text: 'Packing List', value: '4' },
+              ]"
+            />
           </div>
           <div class="column">
             {{ inspectionStore.inspectionItem?.image_metadata.filename }}
@@ -69,7 +85,7 @@ const onInit = () => {
           <div class="column">-</div>
           <div class="column">-</div>
           <div class="column">93.1%</div>
-          <div class="column icon" role="button">
+          <div class="column icon" role="button" @click="onComparison">
             <Icons icons="show" />보기
           </div>
           <div class="column">-</div>
@@ -177,6 +193,11 @@ const onInit = () => {
           border-right: 1px solid $d4;
 
           &.category {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+
             svg {
               color: $point-blue;
             }
