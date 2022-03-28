@@ -20,7 +20,16 @@ onMounted(async () => {
   }
   viewEl.value.appendChild(inspectionStore.viewer.getViewer());
   inspectionStore.viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
-  inspectionStore.inspectionItem?.prediction.texts.forEach((d) => {
+
+  const items =
+    inspectionStore.inspectionItem?.prediction.key_values.length || 0 > 0
+      ? inspectionStore.inspectionItem?.prediction.key_values
+      : inspectionStore.inspectionItem?.prediction.texts;
+
+  if (!items) {
+    return;
+  }
+  items.forEach((d) => {
     inspectionStore.viewer.setField({
       id: d.id,
       text: d.text,

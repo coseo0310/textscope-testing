@@ -70,12 +70,12 @@ type Prediction = {
     is_hint_used: boolean;
     name: string;
   };
-  key_value: {
+  key_values: {
     bbox: {
       x: number;
       y: number;
-      width: number;
-      height: number;
+      w: number;
+      h: number;
     };
     id: string;
     key: string;
