@@ -2,13 +2,6 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
-import { InspectionData } from "@/types";
-
-type Props = {
-  items: InspectionData.Inspection[];
-};
-
-const props = defineProps<Props>();
 
 let MAX_STEP = 0;
 
@@ -31,11 +24,6 @@ const onPrevNext = (type: "prev" | "next") => {
 const positionTo = computed(() => {
   return `${step.value * -184}px`;
 });
-
-const onSelected = (item: InspectionData.Inspection) => {
-  inspectionStore.inspectionItem = item;
-};
-
 const onResize = () => {
   if (!previewEl.value) {
     return;
@@ -43,7 +31,7 @@ const onResize = () => {
   const eHeight = previewEl.value.clientHeight;
   const cHeight = 260;
   const cardCnt = Math.floor((eHeight - 50) / cHeight);
-  MAX_STEP = Math.floor(props.items.length / cardCnt);
+  MAX_STEP = Math.floor(inspectionStore.inspectionItems.length / cardCnt);
   if (MAX_STEP < step.value) {
     step.value = 0;
   }
@@ -77,9 +65,9 @@ onUnmounted(() => {
     </div>
     <div class="thumbnail-wrap" ref="thumbnailEl">
       <div
-        v-for="item in props.items"
+        v-for="item in inspectionStore.inspectionItems"
         class="thumbnail-card"
-        @click="onSelected(item)"
+        @click="inspectionStore.setInspectionItem(item)"
       >
         <div class="img" :style="{ backgroundImage: `url('${item.img}')` }" />
         <div class="info">

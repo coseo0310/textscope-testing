@@ -5,9 +5,6 @@ import PreviewMenu from "@/components/inspection/PreviewMenu.vue";
 import TopMenu from "@/components/inspection/TopMenu.vue";
 import SynonymForm from "@/components/inspection/SynonymForm.vue";
 import { useInspectionStore } from "@/store";
-import { Viewer } from "@/services";
-
-const viewer = new Viewer();
 
 const inspectionStore = useInspectionStore();
 
@@ -21,24 +18,22 @@ onMounted(async () => {
   if (!viewEl.value) {
     return;
   }
-  viewEl.value.appendChild(viewer.getViewer());
-  viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
+  viewEl.value.appendChild(inspectionStore.viewer.getViewer());
+  inspectionStore.viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
 });
 </script>
 
 <template>
   <div class="inspection-page">
     <div class="top-menu-wrap">
-      <TopMenu :item="inspectionStore.inspectionItem" />
+      <TopMenu :item="inspectionStore.inspectionItem || null" />
     </div>
     <div class="content">
       <div class="view" ref="viewEl"></div>
-      <div class="synonym-wrap">
-        <SynonymForm />
-      </div>
+      <div class="synonym-wrap"><SynonymForm /></div>
     </div>
     <div class="preview-wrap" :class="{ active: isPreview }">
-      <PreviewMenu :items="inspectionStore.inspectionItems" />
+      <PreviewMenu />
       <div
         role="button"
         class="toggle"
@@ -63,7 +58,6 @@ onMounted(async () => {
   .top-menu-wrap {
     width: 100%;
     height: 124px;
-    background-color: lightcoral;
   }
 
   .content {
@@ -73,7 +67,6 @@ onMounted(async () => {
     .view {
       width: calc(100vw - 540px);
       height: calc(100vh - 124px);
-      /* overflow: scroll; */
     }
     .synonym-wrap {
       width: 540px;

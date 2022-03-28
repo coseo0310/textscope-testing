@@ -87,14 +87,20 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.imgEl.onload = async () => {
       await this.setCalculatedDepth();
       await this.draw();
-      await this.viewerEl?.scrollBy(this.getMarginSize(), this.getMarginSize());
+      await this.viewerEl?.scrollBy({
+        top: this.getMarginSize(),
+        left: this.getMarginSize(),
+        // behavior: "smooth",
+      });
     };
   }
 
-  setZoomInOut(command: ZoomCommand) {
+  async setZoomInOut(command: ZoomCommand) {
     if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
       return;
     }
+
+    this.viewerEl.scrollTo(0, 0);
     if (command === "out" && this.depth >= this.maxDepth * -1) {
       // OUT
       this.depth -= 1;
@@ -102,9 +108,15 @@ export default class Viewer extends DrawEvent implements IViewer {
       // IN
       this.depth += 1;
     } else if (command === "init") {
-      this.depth = 0;
+      // this.depth = 0;
+      this.setCalculatedDepth();
     }
-    this.draw();
+    await this.draw();
+    await this.viewerEl?.scrollBy({
+      top: this.getMarginSize(),
+      left: this.getMarginSize(),
+      // behavior: "smooth",
+    });
   }
 
   setRotate(deg: number) {
@@ -130,7 +142,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
-  draw() {
+  async draw() {
     if (!this.imgEl) {
       return;
     }
