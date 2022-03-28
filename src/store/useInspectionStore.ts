@@ -92,8 +92,8 @@ type Prediction = {
     bbox: {
       x: number;
       y: number;
-      width: number;
-      height: number;
+      w: number;
+      h: number;
     };
     id: string;
     confidence: number;

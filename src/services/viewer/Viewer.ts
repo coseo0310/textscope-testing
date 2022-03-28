@@ -2,7 +2,7 @@ import DrawEvent from "./DrawEvent";
 
 type ZoomCommand = "in" | "out" | "init";
 
-type Field = {
+export type Field = {
   id: string;
   text: string;
   dx: number;
@@ -135,7 +135,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
   removeFields() {
     this.fields = [];
-    this.draw();
   }
 
   getScale() {
@@ -194,7 +193,7 @@ export default class Viewer extends DrawEvent implements IViewer {
       } else if (f.type === "stroke") {
         this.strokeRect(this.ctx, rectOption);
       }
-      this.fillText(this.ctx, textOption);
+      // this.fillText(this.ctx, textOption);
     }
   }
 }

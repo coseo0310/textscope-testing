@@ -20,6 +20,20 @@ onMounted(async () => {
   }
   viewEl.value.appendChild(inspectionStore.viewer.getViewer());
   inspectionStore.viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
+  inspectionStore.inspectionItem?.prediction.texts.forEach((d) => {
+    inspectionStore.viewer.setField({
+      id: d.id,
+      text: d.text,
+      dx: d.bbox.x,
+      dy: d.bbox.y,
+      dWidth: d.bbox.w,
+      dHeight: d.bbox.h,
+      type: "stroke",
+      color: `rgba(220, 118, 118, 1)`,
+      lineWidth: 5,
+    });
+  });
+  inspectionStore.viewer.draw();
 });
 </script>
 
