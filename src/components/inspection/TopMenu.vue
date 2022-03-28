@@ -58,7 +58,10 @@ const onInit = () => {
           <div class="column">
             {{ inspectionStore.inspectionItem?.request.task_id }}
           </div>
-          <div class="column">해외투자 사업계획서</div>
+          <div class="column category" role="button">
+            해외투자 사업계획서
+            <Icons icons="chevron-down" />
+          </div>
           <div class="column">
             {{ inspectionStore.inspectionItem?.image_metadata.filename }}
           </div>
@@ -66,7 +69,9 @@ const onInit = () => {
           <div class="column">-</div>
           <div class="column">-</div>
           <div class="column">93.1%</div>
-          <div class="column"><Icons icons="show" />보기</div>
+          <div class="column icon" role="button">
+            <Icons icons="show" />보기
+          </div>
           <div class="column">-</div>
         </div>
       </div>
@@ -170,6 +175,22 @@ const onInit = () => {
           font-size: 14px;
           font-weight: 600;
           border-right: 1px solid $d4;
+
+          &.category {
+            svg {
+              color: $point-blue;
+            }
+          }
+
+          &.icon {
+            color: $point-blue;
+            text-decoration: underline;
+            cursor: pointer;
+
+            svg {
+              width: 22px;
+            }
+          }
         }
       }
 
@@ -208,7 +229,8 @@ const onInit = () => {
       height: 100%;
       display: grid;
       grid-template-columns: 0.8fr 1.4fr 0.8fr;
-      padding: 1px;
+      padding: 0 1px 1px 0;
+      margin: 0 0 0 1px;
       gap: 1px;
       background-color: $d4;
 
