@@ -2,6 +2,13 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
+import { InspectionData } from "@/types";
+
+type Props = {
+  items: InspectionData.Inspection[];
+};
+
+const props = defineProps<Props>();
 
 let MAX_STEP = 0;
 
@@ -25,6 +32,10 @@ const positionTo = computed(() => {
   return `${step.value * -184}px`;
 });
 
+const onSelected = (item: InspectionData.Inspection) => {
+  inspectionStore.inspectionItem = item;
+};
+
 const onResize = () => {
   if (!previewEl.value) {
     return;
@@ -32,14 +43,13 @@ const onResize = () => {
   const eHeight = previewEl.value.clientHeight;
   const cHeight = 260;
   const cardCnt = Math.floor((eHeight - 50) / cHeight);
-  MAX_STEP = Math.floor(inspectionStore.inspectionList.length / cardCnt);
+  MAX_STEP = Math.floor(props.items.length / cardCnt);
   if (MAX_STEP < step.value) {
     step.value = 0;
   }
 };
 
 onMounted(async () => {
-  await inspectionStore.getInspectionList();
   onResize();
   window.addEventListener("resize", onResize);
 });
@@ -67,15 +77,13 @@ onUnmounted(() => {
     </div>
     <div class="thumbnail-wrap" ref="thumbnailEl">
       <div
-        v-for="inspection in inspectionStore.inspectionList"
+        v-for="item in props.items"
         class="thumbnail-card"
+        @click="onSelected(item)"
       >
-        <div
-          class="img"
-          :style="{ backgroundImage: `url('${inspection.img}')` }"
-        />
+        <div class="img" :style="{ backgroundImage: `url('${item.img}')` }" />
         <div class="info">
-          <div class="text">{{ inspection.prediction.doc_type.name }}</div>
+          <div class="text">{{ item.prediction.doc_type.name }}</div>
           <div class="type">문서 : 비정형</div>
           <div class="status">검수 : 대기 <span class="progress"></span></div>
         </div>
@@ -140,6 +148,7 @@ onUnmounted(() => {
       position: relative;
       left: 0;
       margin: 20px 0;
+      cursor: pointer;
 
       .img {
         width: 100%;

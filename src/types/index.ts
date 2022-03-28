@@ -170,3 +170,93 @@ export declare module HTTP {
     response_metadata: ResponseMetadata;
   };
 }
+
+export declare module InspectionData {
+  type ResponseMetadata = {
+    request_datetime: string;
+    response_datetime: string;
+    time_elapsed: string;
+  };
+
+  type RequestData = {
+    detection_rezise_ratio: number;
+    detection_score_threshold: number;
+    hint: {
+      doc_type: {
+        use: boolean;
+        trust: boolean;
+        doc_type: string;
+      };
+      key_value: {
+        use: boolean;
+        trust: boolean;
+        key: string;
+        value: string;
+      };
+    };
+    idcard_version: string;
+    image_id: string;
+    page: number;
+    rectify: {
+      rotation_90n: boolean;
+      rotation_fine: boolean;
+    };
+    task_id: string;
+  };
+
+  type ImageMetadata = {
+    filename: string;
+    format: string;
+    height: number;
+    upload_datetime: string;
+    width: number;
+  };
+
+  type Prediction = {
+    doc_type: {
+      code: string;
+      confidence: number;
+      is_hint_trusted: boolean;
+      is_hint_used: boolean;
+      name: string;
+    };
+    key_value: {
+      bbox: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      };
+      id: string;
+      key: string;
+      text: string;
+      confidence: number;
+      is_hint_trusted: boolean;
+      is_hint_used: boolean;
+      text_ids: string[];
+    }[];
+    rectification: {
+      rotated: number;
+    };
+    texts: {
+      bbox: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      };
+      id: string;
+      confidence: number;
+      text: string;
+      kv_ids: string[];
+    }[];
+  };
+
+  type Inspection = {
+    img: string;
+    image_metadata: ImageMetadata;
+    prediction: Prediction;
+    request: RequestData;
+    response_metadata: ResponseMetadata;
+  };
+}

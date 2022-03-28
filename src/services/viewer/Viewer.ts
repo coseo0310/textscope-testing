@@ -20,6 +20,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   private canvasEl: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private canvasWrap: HTMLDivElement;
+  private viewerEl: HTMLDivElement;
   private imgEl: HTMLImageElement | null;
   private depth: number;
   private maxDepth: number;
@@ -33,6 +34,8 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.ctx = this.canvasEl.getContext("2d")!;
     this.canvasWrap = document.createElement("div");
     this.canvasWrap.appendChild(this.canvasEl);
+    this.viewerEl = document.createElement("div");
+    this.viewerEl.appendChild(this.canvasWrap);
     this.imgEl = null;
     this.maxDepth = 7;
     this.minDepth = -7;
@@ -43,19 +46,37 @@ export default class Viewer extends DrawEvent implements IViewer {
 
   getViewer() {
     const scale = this.getScale();
-    const viewerEl = document.createElement("div");
-    viewerEl.appendChild(this.canvasWrap);
-    viewerEl.classList.add("viewer");
-    viewerEl.style.width = `100%`;
-    viewerEl.style.height = `100%`;
-    viewerEl.style.overflow = "scroll";
-    viewerEl.style.display = "flex";
-    viewerEl.style.justifyContent = "flex-start";
-    viewerEl.style.alignItems = "flex-start";
+    this.viewerEl.classList.add("viewer");
+    this.viewerEl.style.width = `100%`;
+    this.viewerEl.style.height = `100%`;
+    this.viewerEl.style.overflow = "scroll";
+    this.viewerEl.style.display = "flex";
+    this.viewerEl.style.justifyContent = "flex-start";
+    this.viewerEl.style.alignItems = "flex-start";
     this.canvasEl.style.margin = `${
       this.imgEl?.naturalWidth || 0 * scale * 0.15
     }px`;
-    return viewerEl;
+    return this.viewerEl;
+  }
+
+  getImgSize() {
+    return {
+      w: this.imgEl?.naturalWidth || 0,
+      h: this.imgEl?.naturalHeight || 0,
+    };
+  }
+
+  getMarginSize() {
+    return this.canvasEl.width > this.canvasEl.height
+      ? this.canvasEl.width - this.canvasEl.height
+      : this.canvasEl.height - this.canvasEl.width;
+  }
+
+  setCalculatedDepth() {
+    const ratio = Math.ceil(
+      (this.imgEl?.naturalWidth || 0) / this.viewerEl?.clientWidth
+    );
+    this.depth = ratio * 2 * -1;
   }
 
   setImgURL(url: string) {
@@ -63,8 +84,10 @@ export default class Viewer extends DrawEvent implements IViewer {
     image.src = url;
     this.imgEl = image;
 
-    this.imgEl.onload = () => {
-      this.draw();
+    this.imgEl.onload = async () => {
+      await this.setCalculatedDepth();
+      await this.draw();
+      await this.viewerEl?.scrollBy(this.getMarginSize(), this.getMarginSize());
     };
   }
 
@@ -116,10 +139,7 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.canvasEl.width = this.imgEl.naturalWidth * scale;
     this.canvasEl.height = this.imgEl.naturalHeight * scale;
-    this.canvasEl.style.margin =
-      this.canvasEl.width > this.canvasEl.height
-        ? `${this.canvasEl.width - this.canvasEl.height}px`
-        : `${this.canvasEl.height - this.canvasEl.width}px`;
+    this.canvasEl.style.margin = `${this.getMarginSize()}px`;
 
     const width =
       scale > 1 ? this.imgEl.naturalWidth * scale : this.imgEl.naturalWidth;

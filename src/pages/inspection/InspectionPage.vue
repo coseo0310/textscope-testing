@@ -1,17 +1,44 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
 import PreviewMenu from "@/components/inspection/PreviewMenu.vue";
+import TopMenu from "@/components/inspection/TopMenu.vue";
+import SynonymForm from "@/components/inspection/SynonymForm.vue";
+import { useInspectionStore } from "@/store";
+import { Viewer } from "@/services";
 
-const isPreview = ref<boolean>(true);
+const viewer = new Viewer();
+
+const inspectionStore = useInspectionStore();
+
+const isPreview = ref<boolean>(false);
+const viewEl = ref<HTMLDivElement | null>(null);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
+
+onMounted(async () => {
+  await inspectionStore.getInspectionItems();
+  if (!viewEl.value) {
+    return;
+  }
+  viewEl.value.appendChild(viewer.getViewer());
+  viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
+});
 </script>
 
 <template>
   <div class="inspection-page">
+    <div class="top-menu-wrap">
+      <TopMenu :item="inspectionStore.inspectionItem" />
+    </div>
+    <div class="content">
+      <div class="view" ref="viewEl"></div>
+      <div class="synonym-wrap">
+        <SynonymForm />
+      </div>
+    </div>
     <div class="preview-wrap" :class="{ active: isPreview }">
-      <PreviewMenu />
+      <PreviewMenu :items="inspectionStore.inspectionItems" />
       <div
         role="button"
         class="toggle"
@@ -21,7 +48,6 @@ const onPreview = () => (isPreview.value = !isPreview.value);
         <Icons icons="chevron-down" />
       </div>
     </div>
-    <div>??</div>
   </div>
 </template>
 
@@ -32,6 +58,29 @@ const onPreview = () => (isPreview.value = !isPreview.value);
   background-color: $d2;
   position: relative;
   display: flex;
+  flex-direction: column;
+
+  .top-menu-wrap {
+    width: 100%;
+    height: 124px;
+    background-color: lightcoral;
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+
+    .view {
+      width: calc(100vw - 540px);
+      height: calc(100vh - 124px);
+      /* overflow: scroll; */
+    }
+    .synonym-wrap {
+      width: 540px;
+      height: calc(100vh - 124px);
+      background-color: lightgreen;
+    }
+  }
 
   .preview-wrap {
     position: absolute;
