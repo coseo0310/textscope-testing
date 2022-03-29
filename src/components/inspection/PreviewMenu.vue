@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
 
@@ -50,18 +51,18 @@ onUnmounted(() => {
 <template>
   <div class="preview" ref="previewEl">
     <div class="pagination">
-      <div role="button" class="prev btn" @click="onPrevNext('prev')">
+      <Button class="prev btn" @click="onPrevNext('prev')">
         <div class="icon">
           <Icons icons="chevron-down" />
         </div>
         <div class="text">이전</div>
-      </div>
-      <div role="button" class="next btn" @click="onPrevNext('next')">
+      </Button>
+      <Button class="next btn" @click="onPrevNext('next')">
         <div class="text">다음</div>
         <div class="icon">
           <Icons icons="chevron-down" />
         </div>
-      </div>
+      </Button>
     </div>
     <div class="thumbnail-wrap" ref="thumbnailEl">
       <div
@@ -101,7 +102,7 @@ onUnmounted(() => {
       color: $point-blue;
       font-size: 14px;
       font-weight: 600;
-      cursor: pointer;
+      background-color: $d3;
 
       &.prev {
         .icon {

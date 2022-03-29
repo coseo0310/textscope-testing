@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
+import Button from "@/components/shared/Button.vue";
 import PreviewMenu from "@/components/inspection/PreviewMenu.vue";
 import TopMenu from "@/components/inspection/TopMenu.vue";
 import SynonymForm from "@/components/inspection/SynonymForm.vue";
@@ -8,7 +9,7 @@ import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
 
-const isPreview = ref<boolean>(true);
+const isPreview = ref<boolean>(false);
 const viewEl = ref<HTMLDivElement | null>(null);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
@@ -57,14 +58,9 @@ onMounted(async () => {
     </div>
     <div class="preview-wrap" :class="{ active: isPreview }">
       <PreviewMenu />
-      <div
-        role="button"
-        class="toggle"
-        :class="{ active: isPreview }"
-        @click="onPreview"
-      >
+      <Button class="toggle" :class="{ active: isPreview }" @click="onPreview">
         <Icons icons="chevron-down" />
-      </div>
+      </Button>
     </div>
   </div>
 </template>
@@ -123,12 +119,12 @@ onMounted(async () => {
       cursor: pointer;
 
       svg {
-        transform: rotate(-90deg);
+        transform: rotate(-90deg) scale(2);
       }
 
       &.active {
         svg {
-          transform: rotate(90deg);
+          transform: rotate(90deg) scale(2);
         }
       }
     }

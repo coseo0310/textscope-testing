@@ -56,9 +56,12 @@ const onCancel = () => {};
       </div>
       <div class="input">
         <Input
+          :id="`value-${props.idx}`"
+          type="text"
           :defaultValue="props.text"
           :class="{ ['color-red']: !confirm }"
         />
+        <label :for="`value-${props.idx}`">t</label>
         <div class="confirm">
           <div class="ok" @click="onConfirm">
             <Icons icons="confirm" />
@@ -157,6 +160,15 @@ const onCancel = () => {};
       position: relative;
       height: 50%;
       color: $d5;
+
+      label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        font-size: 1px;
+        opacity: 0;
+        font-weight: 100;
+      }
 
       .confirm {
         display: none;

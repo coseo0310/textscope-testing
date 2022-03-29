@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import Icons from "@/components/shared/Icons.vue";
 import Badge from "@/components/shared/Badge.vue";
 import Avatar from "@/components/shared/Avatar.vue";
+import Logo from "@/assets/logo/textscope-logo.png";
 import { useAuthStore } from "@/store";
 import { constants } from "@/router";
 import { MenuList } from "@/types";
@@ -81,7 +82,7 @@ onUnmounted(() => {
       @mouseenter="onMouseenter"
       @mouseleave="onMouseleave"
     >
-      <img src="../../assets/logo/textscope-logo.png" width="178" height="40" />
+      <img :src="Logo" alt="logo" />
     </div>
     <ul>
       <li
@@ -193,7 +194,8 @@ onUnmounted(() => {
     cursor: pointer;
 
     img {
-      height: 40px;
+      height: 46px;
+      transform: scale(0.9) translateX(-15px);
     }
 
     &::before {
@@ -204,6 +206,7 @@ onUnmounted(() => {
       width: 160px;
       height: 40px;
       background-color: $d3;
+      z-index: 1;
     }
   }
 

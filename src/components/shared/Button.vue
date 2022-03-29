@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <button id="btn">
+  <button type="button" class="btn" aria-hidden="true" tabindex="-1">
     <slot />
 
     <div class="loader" v-show="props.loader">

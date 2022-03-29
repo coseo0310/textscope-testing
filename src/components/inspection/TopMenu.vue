@@ -50,7 +50,7 @@ const onComparison = () => {
   <div class="top-menu">
     <div class="info">
       <div class="logo">
-        <img :src="Logo" alt="logo" width="144" height="35" />
+        <img :src="Logo" alt="logo" />
       </div>
       <div class="grid">
         <div class="header">
@@ -68,9 +68,7 @@ const onComparison = () => {
           <div class="column">
             {{ inspectionStore.inspectionItem?.request.task_id }}
           </div>
-          <div class="column category" role="button">
-            <!-- 해외투자 사업계획서
-            <Icons icons="chevron-down" /> -->
+          <Button class="column category">
             <Dropdown
               default="2"
               class="minimal"
@@ -81,7 +79,7 @@ const onComparison = () => {
                 { id: '4', text: 'Packing List', value: '4' },
               ]"
             />
-          </div>
+          </Button>
           <div class="column">
             {{ inspectionStore.inspectionItem?.image_metadata.filename }}
           </div>
@@ -89,9 +87,9 @@ const onComparison = () => {
           <div class="column">-</div>
           <div class="column">-</div>
           <div class="column">93.1%</div>
-          <div class="column icon" role="button" @click="onComparison">
+          <Button class="column icon" @click="onComparison">
             <Icons icons="show" />보기
-          </div>
+          </Button>
           <div class="column">-</div>
         </div>
       </div>
@@ -110,17 +108,29 @@ const onComparison = () => {
         <div class="box">크기</div>
         <div class="box">회전</div>
         <div class="box">초기화</div>
-        <div class="box icon" role="button">
-          <Icons icons="plus" @click="onZoomInOut('in')" />
-          <Icons icons="minus" @click="onZoomInOut('out')" />
+        <div class="box icon">
+          <Button @click="onZoomInOut('in')">
+            <Icons icons="plus" />
+          </Button>
+          <Button @click="onZoomInOut('out')">
+            <Icons icons="minus" />
+          </Button>
         </div>
-        <div class="box icon" role="button">
-          <Icons icons="rotate-left" @click="onRotate('left')" />
-          <Icons icons="rotate-right" @click="onRotate('right')" />
-          <Icons icons="reload" @click="onRotate('90')" />
+        <div class="box icon">
+          <Button @click="onRotate('left')">
+            <Icons icons="rotate-left" />
+          </Button>
+          <Button @click="onRotate('right')">
+            <Icons icons="rotate-right" />
+          </Button>
+          <Button @click="onRotate('90')">
+            <Icons icons="reload" />
+          </Button>
         </div>
-        <div class="box icon" role="button">
-          <Icons icons="init" @click="onInit" />
+        <div class="box icon">
+          <Button @click="onInit">
+            <Icons icons="init" />
+          </Button>
         </div>
       </div>
       <div class="btn-wrap">
@@ -182,6 +192,10 @@ const onComparison = () => {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      img {
+        height: 30px;
+      }
     }
 
     .grid {
@@ -260,7 +274,6 @@ const onComparison = () => {
     justify-content: flex-start;
 
     .control-box {
-      width: 257px;
       height: 100%;
       display: grid;
       grid-template-columns: 0.8fr 1.4fr 0.8fr;
@@ -281,18 +294,21 @@ const onComparison = () => {
 
         &.icon {
           background-color: $d2;
-          color: $point-blue;
-          cursor: pointer;
-
-          svg:last-child {
-            width: 32px;
+          button {
+            background-color: $d2;
+            color: $point-blue;
+          }
+          button:last-child {
+            svg {
+              width: 32px;
+            }
           }
         }
       }
     }
 
     .btn-wrap {
-      width: calc(100% - 257px);
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
