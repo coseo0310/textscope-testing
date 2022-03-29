@@ -71,9 +71,9 @@ onUnmounted(() => {
     </div>
     <div class="thumbnail-wrap" ref="thumbnailEl">
       <div
-        v-for="item in inspectionStore.inspectionItems"
+        v-for="(item, idx) in inspectionStore.inspectionItems"
         class="thumbnail-card"
-        @click="inspectionStore.setInspectionItem(item)"
+        @click="inspectionStore.setInspectionItem(item, idx)"
       >
         <div class="img" :style="{ backgroundImage: `url('${item.img}')` }" />
         <div class="info">

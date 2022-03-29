@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import SynonymCard from "@/components/inspection/SynonymCard.vue";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
 
-const current = ref<number>(1);
-
 const onPage = (n: number) => {
-  current.value = n;
+  inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n], n);
 };
 
 const getItems = computed(() => {
@@ -19,6 +17,8 @@ const getItems = computed(() => {
       : inspectionStore.inspectionItem?.prediction.texts;
   return items;
 });
+
+const getCurrent = computed(() => inspectionStore.currentIdx);
 </script>
 
 <template>
@@ -26,9 +26,9 @@ const getItems = computed(() => {
     <div class="pagination-wrap">
       <Pagination
         class="inspection"
-        :limit="4"
-        :total="4"
-        :current="current"
+        :limit="inspectionStore.total"
+        :total="inspectionStore.total"
+        :current="getCurrent"
         @change="onPage"
       />
     </div>

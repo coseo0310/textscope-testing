@@ -115,6 +115,8 @@ type States = {
   inspectionItem: Inspection | null;
   isInspection: boolean;
   viewer: Viewer;
+  currentIdx: number;
+  total: number;
 };
 
 // useStore could be anything like useUser, useCart
@@ -128,6 +130,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       inspectionItem: null,
       isInspection: false,
       viewer: new Viewer(),
+      currentIdx: 1,
+      total: 0,
     };
   },
   actions: {
@@ -136,14 +140,17 @@ export const useInspectionStore = defineStore("inspectionStore", {
         // TODO: Get inspection list
         this.inspectionItems = await setInspectionList();
         this.inspectionItem = this.inspectionItems[0];
+        this.total = this.inspectionItems.length;
         return true;
       } catch (error) {
         console.error(error);
         return false;
       }
     },
-    async setInspectionItem(item: Inspection) {
+    async setInspectionItem(item: Inspection, idx: number) {
       this.inspectionItem = item;
+      this.viewer.setImgURL(item.img);
+      this.currentIdx = idx;
     },
     async onStartInspection() {
       alert("준비중...");

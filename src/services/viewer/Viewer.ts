@@ -87,6 +87,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.imgEl.onload = async () => {
       await this.setCalculatedDepth();
       await this.draw();
+      await this.viewerEl.scrollTo(0, 0);
       await this.viewerEl?.scrollBy({
         top: this.getMarginSize(),
         left: this.getMarginSize(),
