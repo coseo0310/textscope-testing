@@ -10,7 +10,7 @@ const menuList = ref(getMainMenu());
 
 const authStore = useAuthStore();
 const commonStore = useCommonStore();
-const extend = ref<boolean>(true);
+const extend = ref<boolean>(false);
 
 const onExtend = (b: boolean) => {
   extend.value = b;
