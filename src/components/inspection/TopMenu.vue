@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Dropdown from "@/components/shared/Dropdown.vue";
+import Logo from "@/assets/logo/textscope-logo.png";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
@@ -48,6 +49,9 @@ const onComparison = () => {
 <template>
   <div class="top-menu">
     <div class="info">
+      <div class="logo">
+        <img :src="Logo" alt="logo" width="144" />
+      </div>
       <div class="grid">
         <div class="header">
           <div class="column">Task ID</div>
@@ -169,6 +173,17 @@ const onComparison = () => {
     align-items: center;
     width: 100%;
 
+    .logo {
+      min-width: 183px;
+      height: 63px;
+      margin-top: 3px;
+      border-top: 1px solid $d4;
+      border-bottom: 1px solid $d4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .grid {
       width: 100%;
       height: 60px;
@@ -178,7 +193,7 @@ const onComparison = () => {
         width: 100%;
         display: grid;
         grid-template-columns:
-          minmax(180px, 1.6fr) minmax(200px, 0.7fr) minmax(300px, 3fr)
+          minmax(180px, 1.6fr) minmax(200px, 0.7fr) minmax(280px, 3fr)
           minmax(80px, 0.5fr) minmax(80px, 0.5fr) minmax(120px, 0.7fr)
           minmax(80px, 0.5fr) minmax(80px, 0.5fr) minmax(180px, 1fr);
 
@@ -240,7 +255,6 @@ const onComparison = () => {
   .control-wrap {
     width: 100%;
     height: 60px;
-    margin-top: 2px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
