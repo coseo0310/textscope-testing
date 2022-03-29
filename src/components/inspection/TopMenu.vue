@@ -50,7 +50,7 @@ const onComparison = () => {
   <div class="top-menu">
     <div class="info">
       <div class="logo">
-        <img :src="Logo" alt="logo" width="144" />
+        <img :src="Logo" alt="logo" width="144" height="35" />
       </div>
       <div class="grid">
         <div class="header">

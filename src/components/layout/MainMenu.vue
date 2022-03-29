@@ -81,7 +81,7 @@ onUnmounted(() => {
       @mouseenter="onMouseenter"
       @mouseleave="onMouseleave"
     >
-      <img src="../../assets/logo/textscope-logo.png" />
+      <img src="../../assets/logo/textscope-logo.png" width="178" height="40" />
     </div>
     <ul>
       <li
