@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
+import Icons from "@/components/shared/Icons.vue";
 
 type Props = {
   idx: number;
-  key: string;
+  keyText: string;
   text: string;
   confirm?: boolean;
 };
@@ -12,6 +13,9 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   confirm: true,
 });
+
+const onConfirm = () => {};
+const onCancel = () => {};
 </script>
 
 <template>
@@ -45,7 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
     </div>
     <div class="form">
       <div class="menu">
-        <div class="key">{{ props.key }}</div>
+        <div class="key">{{ props.keyText }}</div>
         <div class="btn">
           <Button class="primary semi-bold">유의어</Button>
         </div>
@@ -56,44 +60,11 @@ const props = withDefaults(defineProps<Props>(), {
           :class="{ ['color-red']: !confirm }"
         />
         <div class="confirm">
-          <div class="ok">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7 11.75L10.75 15.5L17 8"
-                stroke="#47ADB5"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+          <div class="ok" @click="onConfirm">
+            <Icons icons="confirm" />
           </div>
-          <div class="cancel">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.46484 8.46484L15.5359 15.5359"
-                stroke="#FF7777"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <path
-                d="M15.5352 8.46484L8.46409 15.5359"
-                stroke="#FF7777"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
+          <div class="cancel" @click="onCancel">
+            <Icons icons="cancel" />
           </div>
         </div>
       </div>
@@ -190,14 +161,28 @@ const props = withDefaults(defineProps<Props>(), {
       .confirm {
         display: none;
         position: absolute;
-        right: 3px;
-        top: 3px;
+        right: 0px;
+        top: -2px;
         border-radius: 5px;
         padding: 5px 5px 0 5px;
 
         .ok,
         .cancel {
           cursor: pointer;
+        }
+
+        .ok {
+          color: $point-blue;
+          svg {
+            width: 24px;
+          }
+        }
+
+        .cancel {
+          color: $point-red;
+          svg {
+            width: 30px;
+          }
         }
       }
 

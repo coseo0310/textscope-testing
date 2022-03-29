@@ -482,4 +482,46 @@ export const svgs: Icons.Svgs = {
       },
     ],
   },
+  confirm: {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 32 32",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    path: [
+      {
+        d: "M9.33398 16.6665L15.334 22.6665L25.334 10.6665",
+        stroke: "#6779D7",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none",
+      },
+    ],
+  },
+  cancel: {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 32 32",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    path: [
+      {
+        d: "M11.2852 11.2861L20.7132 20.7142",
+        stroke: "#6779D7",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none",
+      },
+      {
+        d: "M20.7148 11.2861L11.2868 20.7142",
+        stroke: "#6779D7",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        fill: "none",
+      },
+    ],
+  },
 };

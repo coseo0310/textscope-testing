@@ -34,11 +34,11 @@ const getItems = computed(() => {
     </div>
     <div class="label">인식결과</div>
     <div class="card-list">
-      <SynonymCard :idx="1" key="test" :text="``" :confirm="false" />
+      <SynonymCard :idx="1" key-text="test" :text="``" :confirm="false" />
       <SynonymCard
         v-for="(item, idx) in getItems"
         :idx="idx + 2"
-        :key="item.id"
+        :key-text="item.id"
         :text="item.text"
       />
     </div>

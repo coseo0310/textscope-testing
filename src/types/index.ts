@@ -98,7 +98,9 @@ export declare module Icons {
     | "minus"
     | "rotate-left"
     | "rotate-right"
-    | "init";
+    | "init"
+    | "confirm"
+    | "cancel";
 
   type SvgType = {
     width: string;
