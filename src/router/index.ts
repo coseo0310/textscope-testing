@@ -129,16 +129,6 @@ export const constants: Constants = {
             icons: "bell",
           },
         },
-        // {
-        //   path: "notice",
-        //   name: "notice",
-        //   component: NoticePage,
-        //   meta: {
-        //     requiresAuth: true,
-        //     title: "공지사항",
-        //     icons: "notice",
-        //   },
-        // },
       ],
 
       meta: {
