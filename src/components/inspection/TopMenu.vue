@@ -49,9 +49,7 @@ const onComparison = () => {
 <template>
   <div class="top-menu">
     <div class="info">
-      <div class="logo">
-        <img :src="Logo" alt="logo" />
-      </div>
+      <div class="logo" :style="{ backgroundImage: `url('${Logo}')` }"></div>
       <div class="grid">
         <div class="header">
           <div class="column">Task ID</div>
@@ -192,10 +190,9 @@ const onComparison = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-
-      img {
-        height: 30px;
-      }
+      background-repeat: no-repeat;
+      background-position: 15px center;
+      background-size: 150px;
     }
 
     .grid {
