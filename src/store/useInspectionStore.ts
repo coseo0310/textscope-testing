@@ -139,8 +139,9 @@ export const useInspectionStore = defineStore("inspectionStore", {
       try {
         // TODO: Get inspection list
         this.inspectionItems = await setInspectionList();
-        this.inspectionItem = this.inspectionItems[0];
+        this.setInspectionItem(this.inspectionItems[0], 0);
         this.total = this.inspectionItems.length;
+
         return true;
       } catch (error) {
         console.error(error);
@@ -150,7 +151,26 @@ export const useInspectionStore = defineStore("inspectionStore", {
     async setInspectionItem(item: Inspection, idx: number) {
       this.inspectionItem = item;
       this.viewer.setImgURL(item.img);
-      this.currentIdx = idx;
+      const items =
+        item?.prediction.key_values.length || 0 > 0
+          ? item?.prediction.key_values
+          : item?.prediction.texts;
+      this.viewer.removeFields();
+      items.forEach((d) => {
+        this.viewer.setField({
+          id: d.id,
+          text: d.text,
+          dx: d.bbox.x,
+          dy: d.bbox.y,
+          dWidth: d.bbox.w,
+          dHeight: d.bbox.h,
+          type: "stroke",
+          color: `rgba(220, 118, 118, 1)`,
+          lineWidth: 5,
+        });
+      });
+      this.currentIdx = idx + 1;
+      this.viewer.draw();
     },
     async onStartInspection() {
       alert("준비중...");

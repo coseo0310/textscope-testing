@@ -20,30 +20,6 @@ onMounted(async () => {
     return;
   }
   viewEl.value.appendChild(inspectionStore.viewer.getViewer());
-  inspectionStore.viewer.setImgURL(inspectionStore.inspectionItem?.img || "");
-
-  const items =
-    inspectionStore.inspectionItem?.prediction.key_values.length || 0 > 0
-      ? inspectionStore.inspectionItem?.prediction.key_values
-      : inspectionStore.inspectionItem?.prediction.texts;
-
-  if (!items) {
-    return;
-  }
-  items.forEach((d) => {
-    inspectionStore.viewer.setField({
-      id: d.id,
-      text: d.text,
-      dx: d.bbox.x,
-      dy: d.bbox.y,
-      dWidth: d.bbox.w,
-      dHeight: d.bbox.h,
-      type: "stroke",
-      color: `rgba(220, 118, 118, 1)`,
-      lineWidth: 5,
-    });
-  });
-  inspectionStore.viewer.draw();
 });
 </script>
 
