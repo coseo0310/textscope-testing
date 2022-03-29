@@ -15,5 +15,9 @@ input {
   padding: 13px 8px;
   color: $d5;
   outline: none;
+
+  &.color-red {
+    background-color: rgba(255, 82, 82, 0.3);
+  }
 }
 </style>
