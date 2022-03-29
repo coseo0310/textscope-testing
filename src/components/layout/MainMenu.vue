@@ -81,9 +81,8 @@ onUnmounted(() => {
       @click="toDashboard"
       @mouseenter="onMouseenter"
       @mouseleave="onMouseleave"
-    >
-      <img :src="Logo" alt="logo" />
-    </div>
+      :style="{ backgroundImage: `url(${Logo})` }"
+    ></div>
     <ul>
       <li
         v-for="m in props.menuList"
@@ -191,20 +190,18 @@ onUnmounted(() => {
     position: relative;
     display: flex;
     padding: 50px 0 0 14px;
+    background-position: 14px center;
+    background-repeat: no-repeat;
+    background-size: 170px 40px;
     cursor: pointer;
-
-    img {
-      height: 46px;
-      transform: scale(0.9) translateX(-15px);
-    }
 
     &::before {
       content: "";
       position: absolute;
-      left: 60px;
+      left: 55px;
       display: flex;
       width: 160px;
-      height: 40px;
+      height: 50px;
       background-color: $d3;
       z-index: 1;
     }

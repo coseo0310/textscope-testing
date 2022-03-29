@@ -220,6 +220,7 @@ const onComparison = () => {
           font-size: 14px;
           font-weight: 600;
           border-right: 1px solid $d4;
+          background-color: $d2;
 
           &.category {
             display: flex;
