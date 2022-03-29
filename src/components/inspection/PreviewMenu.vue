@@ -17,10 +17,8 @@ const onPrevNext = (type: "prev" | "next") => {
   }
   if (type === "prev") {
     step.value = step.value === 0 ? 0 : step.value - 1;
-    console.log("prev", step.value);
   } else if (type === "next") {
     step.value = MAX_STEP === step.value ? MAX_STEP : step.value + 1;
-    console.log("next", step.value);
   }
 };
 
@@ -30,7 +28,7 @@ const positionTo = computed(() => {
 
 const onResize = () => {
   if (!previewEl.value) {
-    return;
+    return 0;
   }
   const eHeight = previewEl.value.clientHeight;
   const cHeight = 260;
