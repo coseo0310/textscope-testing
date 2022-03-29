@@ -41,7 +41,7 @@ const onResize = () => {
   }
 };
 
-watch(inspectionStore.inspectionItems, () => {
+watch(inspectionStore, () => {
   onResize();
 });
 
