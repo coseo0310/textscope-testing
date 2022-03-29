@@ -7,7 +7,6 @@ import SettingsPage from "@/pages/settings/SettingsPage.vue";
 import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
-import NoticePage from "@/pages/settings/NoticePage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
@@ -130,7 +129,6 @@ export const constants: Constants = {
           },
         },
       ],
-
       meta: {
         requiresAuth: true,
         title: "설정",
