@@ -20,8 +20,7 @@ export type Constant =
   | "logout"
   | "errors"
   | "catch"
-  | "inspection"
-  | "test";
+  | "inspection";
 
 export type Routes = {
   isMenu: boolean;

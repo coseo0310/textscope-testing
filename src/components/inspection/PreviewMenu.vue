@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
@@ -17,14 +17,17 @@ const onPrevNext = (type: "prev" | "next") => {
   }
   if (type === "prev") {
     step.value = step.value === 0 ? 0 : step.value - 1;
+    console.log("prev", step.value);
   } else if (type === "next") {
     step.value = MAX_STEP === step.value ? MAX_STEP : step.value + 1;
+    console.log("next", step.value);
   }
 };
 
 const positionTo = computed(() => {
   return `${step.value * -184}px`;
 });
+
 const onResize = () => {
   if (!previewEl.value) {
     return;
@@ -37,6 +40,10 @@ const onResize = () => {
     step.value = 0;
   }
 };
+
+watch(inspectionStore, () => {
+  onResize();
+});
 
 onMounted(async () => {
   onResize();

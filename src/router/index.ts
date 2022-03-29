@@ -11,7 +11,7 @@ import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
-import Test from "@/pages/Test.vue";
+// import Test from "@/pages/Test.vue";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
 import { Constants, MenuList, MenuItem } from "@/types";
@@ -171,19 +171,19 @@ export const constants: Constants = {
       },
     },
   },
-  test: {
-    isMenu: true,
-    routeRecordRaw: {
-      path: "/test",
-      name: "test",
-      component: Test,
-      meta: {
-        requiresAuth: false,
-        title: "테스트",
-        icons: "hide",
-      },
-    },
-  },
+  // test: {
+  //   isMenu: true,
+  //   routeRecordRaw: {
+  //     path: "/test",
+  //     name: "test",
+  //     component: Test,
+  //     meta: {
+  //       requiresAuth: false,
+  //       title: "테스트",
+  //       icons: "hide",
+  //     },
+  //   },
+  // },
   catch: {
     isMenu: false,
     routeRecordRaw: {

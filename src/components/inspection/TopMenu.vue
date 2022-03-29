@@ -49,7 +49,7 @@ const onComparison = () => {
 <template>
   <div class="top-menu">
     <div class="info">
-      <div class="logo" :style="{ backgroundImage: `url('${Logo}')` }"></div>
+      <div class="logo" :style="{ backgroundImage: `url(${Logo})` }"></div>
       <div class="grid">
         <div class="header">
           <div class="column">Task ID</div>
