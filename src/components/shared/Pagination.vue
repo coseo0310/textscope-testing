@@ -10,7 +10,7 @@ type Props = {
 const props = withDefaults(defineProps<Props>(), {
   limit: 10,
   total: 35,
-  current: 23,
+  current: 1,
 });
 
 const emits = defineEmits<{
@@ -130,6 +130,43 @@ const onPage = (n: number) => {
 
       &:hover {
         color: $point-blue;
+      }
+    }
+  }
+
+  &.inspection {
+    padding: 10px 10px;
+    justify-content: flex-start;
+
+    .first,
+    .prev,
+    .next,
+    .last {
+      display: none;
+    }
+
+    .paging {
+      .page {
+        padding: 0 10px;
+        width: 27px;
+        height: 33px;
+        background-color: $d4;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 5px;
+
+        &.current {
+          color: $d1;
+          background-color: $d5;
+        }
+
+        &:hover {
+          color: $point-blue;
+        }
       }
     }
   }

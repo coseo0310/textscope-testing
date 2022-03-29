@@ -94,7 +94,6 @@ onMounted(async () => {
     .synonym-wrap {
       width: 540px;
       height: calc(100vh - 124px);
-      background-color: lightgreen;
     }
   }
 
