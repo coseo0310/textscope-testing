@@ -11,6 +11,7 @@ type Props = {
   columns: Columns;
   gridList: GridList;
   selected?: Selected[];
+  accordion?: string;
 };
 
 const props = defineProps<Props>();
@@ -88,25 +89,35 @@ watch(props, () => {
       </div>
     </div>
     <div class="grid__columns" :class="{ none: list.length === 0 }">
-      <div v-for="g in list" class="row" :class="{ selected: !!g.checked }">
-        <div v-if="props.selected" class="col center">
-          <CheckBox
-            :default="!!g.checked"
-            @change="onSelected(g.id as string)"
-          />
+      <template v-for="g in list">
+        <div
+          class="row"
+          :class="{ selected: !!g.checked, accordion: props.accordion }"
+        >
+          <div v-if="props.selected" class="col center">
+            <CheckBox
+              :default="!!g.checked"
+              @change="onSelected(g.id as string)"
+            />
+          </div>
+          <div
+            v-for="c in props.columns"
+            class="col"
+            :class="{
+              center: c.align === 'center',
+              start: c.align === 'start',
+              end: c.align === 'end',
+            }"
+          >
+            <slot :name="c.value" :item="g">{{ g[c.value] }}</slot>
+          </div>
         </div>
         <div
-          v-for="c in props.columns"
-          class="col"
-          :class="{
-            center: c.align === 'center',
-            start: c.align === 'start',
-            end: c.align === 'end',
-          }"
-        >
-          <slot :name="c.value" :item="g">{{ g[c.value] }}</slot>
-        </div>
-      </div>
+          v-if="props.accordion"
+          class="row accordion-section"
+          v-html="g[props.accordion || '']"
+        ></div>
+      </template>
     </div>
   </div>
 </template>
@@ -155,6 +166,14 @@ watch(props, () => {
       align-items: center;
       width: 100%;
       background-color: $d2;
+
+      &.accordion-section {
+        padding: 20px 30px;
+      }
+
+      &.accordion {
+        cursor: pointer;
+      }
 
       &.selected {
         background-color: $d3;

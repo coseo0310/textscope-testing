@@ -58,8 +58,8 @@ export declare module Grid {
     text: string;
     align: "start" | "center" | "end";
     sortable: boolean;
-    width?: number;
     value: string;
+    width?: number;
   }[];
 
   type GridList = {
@@ -100,7 +100,8 @@ export declare module Icons {
     | "rotate-right"
     | "init"
     | "confirm"
-    | "cancel";
+    | "cancel"
+    | "notice";
 
   type SvgType = {
     width: string;
