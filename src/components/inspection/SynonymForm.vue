@@ -18,7 +18,7 @@ const getItems = computed(() => {
   return items;
 });
 
-const getCurrent = computed(() => inspectionStore.currentIdx);
+const getCurrent = computed(() => inspectionStore.currentPage);
 </script>
 
 <template>

@@ -115,7 +115,7 @@ type States = {
   inspectionItem: Inspection | null;
   isInspection: boolean;
   viewer: Viewer;
-  currentIdx: number;
+  currentPage: number;
   total: number;
 };
 
@@ -130,7 +130,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       inspectionItem: null,
       isInspection: false,
       viewer: new Viewer(),
-      currentIdx: 1,
+      currentPage: 1,
       total: 0,
     };
   },
@@ -139,7 +139,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       try {
         // TODO: Get inspection list
         this.inspectionItems = await setInspectionList();
-        this.setInspectionItem(this.inspectionItems[0], 0);
+        this.setInspectionItem(this.inspectionItems[0], 1);
         this.total = this.inspectionItems.length;
 
         return true;
@@ -148,7 +148,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         return false;
       }
     },
-    async setInspectionItem(item: Inspection, idx: number) {
+    async setInspectionItem(item: Inspection, page: number) {
       this.inspectionItem = item;
       this.viewer.setImgURL(item.img);
       const items =
@@ -169,7 +169,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
           lineWidth: 5,
         });
       });
-      this.currentIdx = idx + 1;
+      this.currentPage = page;
       this.viewer.draw();
     },
     async onStartInspection() {
