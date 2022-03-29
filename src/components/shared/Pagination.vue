@@ -165,7 +165,7 @@ const onPage = (n: number) => {
         }
 
         &:hover {
-          color: $point-blue;
+          color: $d1;
         }
       }
     }
