@@ -149,7 +149,7 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 
 const onDraw = (url: string, json: any) => {
-  viewer.setImgURL(url);
+  viewer.setImgUrl(url);
   const loop =
     json.prediction.key_values.length > 0
       ? json.prediction.key_values

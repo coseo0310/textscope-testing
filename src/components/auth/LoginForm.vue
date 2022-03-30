@@ -74,9 +74,9 @@ const test = false;
         @keyup.enter="onEnter"
       />
       <ErrorForm>
-        <span v-if="errors.email?.type"
-          >아이디는 이메일 형식으로 입력해주세요</span
-        >
+        <span v-if="errors.email?.type">
+          아이디는 이메일 형식으로 입력해주세요
+        </span>
         <span v-else></span>
       </ErrorForm>
     </div>
@@ -98,7 +98,7 @@ const test = false;
         <!-- <span v-if="errors.password?.type"
           >입력된 비밀번호가 올바르지 않습니다.</span
         > -->
-        <span v-if="errors.password?.type"> 패스워드를 입력해주세요 </span>
+        <span v-if="errors.password?.type">패스워드를 입력해주세요</span>
         <span v-else></span>
       </ErrorForm>
     </div>
@@ -108,8 +108,9 @@ const test = false;
         :disabled="!formState.isValid"
         :loader="loader"
         @click="handleSubmit(onLogin)"
-        >로그인</Button
       >
+        로그인
+      </Button>
     </div>
     <div class="sso" @click="onSingleSignOne">SSO (Single Sign One) 로그인</div>
   </div>
