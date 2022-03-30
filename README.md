@@ -1,7 +1,7 @@
 # Textscope Server Installed (Frontend)
 
 - [API DOCUMENTS](https://www.notion.so/lomin/Textscope-API-Documentation-3c4b9e9068564e648107b307e1f3d68e)
-- [Notion](https://www.notion.so/lomin/Frontend-502d7d6d312e403aae14e82639dfb535)
+- [TEXTSCOPE DOCUMENTS](https://www.notion.so/lomin/Textscope-Server-Installed-3613446ee60f4a43a351f102af8c980d)
 
 ## dependencies
 
