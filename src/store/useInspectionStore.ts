@@ -150,7 +150,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
     },
     async setInspectionItem(item: Inspection, page: number) {
       this.inspectionItem = item;
-      this.viewer.setImgURL(item.img);
+      this.viewer.setImgUrl(item.img);
       const items =
         item?.prediction.key_values.length || 0 > 0
           ? item?.prediction.key_values

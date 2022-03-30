@@ -51,7 +51,18 @@ export type ScaleOption = {
   y: number;
 };
 
-export default class DrawEvent {
+export interface IDrawEvent {
+  fillRect: (ctx: CanvasRenderingContext2D, option: RectOption) => void;
+  strokeRect: (ctx: CanvasRenderingContext2D, option: RectOption) => void;
+  fillArc: (ctx: CanvasRenderingContext2D, option: ArcOption) => void;
+  strokeArc: (ctx: CanvasRenderingContext2D, option: ArcOption) => void;
+  fillText: (ctx: CanvasRenderingContext2D, option: TextOption) => void;
+  strokeText: (ctx: CanvasRenderingContext2D, option: TextOption) => void;
+  setScale: (ctx: CanvasRenderingContext2D, option: ScaleOption) => void;
+  drawImage: (ctx: CanvasRenderingContext2D, option: ImgOption) => void;
+}
+
+export default class DrawEvent implements IDrawEvent {
   constructor() {}
 
   fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {

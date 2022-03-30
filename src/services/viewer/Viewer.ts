@@ -1,4 +1,4 @@
-import DrawEvent from "./DrawEvent";
+import DrawEvent, { IDrawEvent } from "./DrawEvent";
 
 type ZoomCommand = "in" | "out" | "init";
 
@@ -14,7 +14,20 @@ export type Field = {
   lineWidth?: number;
 };
 
-interface IViewer {}
+interface IViewer extends IDrawEvent {
+  getViewer: () => void;
+  getImgSize: () => void;
+  getMarginSize: () => void;
+  setCalculatedDepth: () => void;
+  setImgUrl: (url: string) => void;
+  setZoomInOut: (command: ZoomCommand) => void;
+  setRotate: (deg: number) => void;
+  setField: (field: Field) => void;
+  removeField: (id: string) => void;
+  removeFields: () => void;
+  getScale: () => number;
+  draw: () => void;
+}
 
 export default class Viewer extends DrawEvent implements IViewer {
   private canvasEl: HTMLCanvasElement;
@@ -79,7 +92,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.depth = ratio * 2 * -1;
   }
 
-  setImgURL(url: string) {
+  async setImgUrl(url: string) {
     const image = new Image();
     image.src = url;
     this.imgEl = image;
