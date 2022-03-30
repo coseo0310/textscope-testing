@@ -59,7 +59,7 @@ const onCancel = () => {};
           :id="`value-${props.idx}`"
           type="text"
           :defaultValue="props.text"
-          :class="{ ['color-red']: !confirm }"
+          :class="{ ['background-color-red']: !confirm }"
         />
         <label :for="`value-${props.idx}`">t</label>
         <div class="confirm">

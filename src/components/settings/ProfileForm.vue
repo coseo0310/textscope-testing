@@ -79,6 +79,11 @@ onMounted(() => {
           type="text"
           placeholder="이름을 입력해주세요"
           name="name"
+          class="color-d4 focus-color-d5 focus-border-color-blue"
+          :class="{
+            ['border-color-d4']: !errors.name?.type,
+            ['border-color-red']: errors.name?.type,
+          }"
           :ref="register({ required: true })"
           :defaultValue="authStore.user?.name"
         />
@@ -103,7 +108,7 @@ onMounted(() => {
     </div>
     <div class="profile-form__job-position form">
       <div class="text">직급 / 직책*</div>
-      <div class="input" :class="{ validate: errors.position?.type }">
+      <div class="input">
         <!-- <Input
           type="text"
           placeholder="직급 / 직책을 입력해주세요"
@@ -127,11 +132,16 @@ onMounted(() => {
     </div>
     <div class="profile-form__phone form">
       <div class="text">내선번호</div>
-      <div class="input" :class="{ validate: errors.phone?.type }">
+      <div class="input">
         <Input
           type="text"
           placeholder="전화번호는 '-' 없이 숫자만 입력해주세요"
           name="phone"
+          class="color-d4 focus-color-d5 focus-border-color-blue"
+          :class="{
+            ['border-color-d4']: !errors.phone?.type,
+            ['border-color-red']: errors.phone?.type,
+          }"
           :ref="register({})"
           :defaultValue="authStore.user?.phone_number"
         />
@@ -140,11 +150,16 @@ onMounted(() => {
     </div>
     <div class="profile-form__cellphone form">
       <div class="text">휴대폰번호</div>
-      <div class="input" :class="{ validate: errors.cellphone?.type }">
+      <div class="input">
         <Input
           type="text"
           placeholder="전화번호는 '-' 없이 숫자만 입력해주세요"
           name="cellphone"
+          class="color-d4 focus-color-d5 focus-border-color-blue"
+          :class="{
+            ['border-color-d4']: !errors.cellphone?.type,
+            ['border-color-red']: errors.cellphone?.type,
+          }"
           :ref="register({ required: false })"
           :defaultValue="authStore.user?.extension_number"
         />
@@ -185,28 +200,6 @@ onMounted(() => {
 
       .text {
         font-weight: 400;
-      }
-
-      input {
-        color: $d4;
-        border-color: $d4;
-
-        &:focus {
-          color: $d5;
-          border-color: $point-blue;
-        }
-      }
-
-      &.validate {
-        input {
-          border-color: $point-red;
-        }
-      }
-
-      &.error {
-        input {
-          border: 1px solid $point-red;
-        }
       }
 
       p {

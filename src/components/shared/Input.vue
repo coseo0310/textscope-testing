@@ -16,8 +16,68 @@ input {
   color: $d5;
   outline: none;
 
-  &.color-red {
+  &.background-color-red {
     background-color: rgba(255, 82, 82, 0.3);
+  }
+
+  &.border-color-red {
+    border-color: $point-red;
+  }
+
+  &.border-color-blue {
+    border-color: $point-blue;
+  }
+
+  &.border-color-d5 {
+    border-color: $d5;
+  }
+
+  &.border-color-d4 {
+    border-color: $d4;
+  }
+
+  &.color-red {
+    color: $point-red;
+  }
+
+  &.color-blue {
+    color: $point-blue;
+  }
+
+  &.color-d5 {
+    color: $d5;
+  }
+
+  &.color-d4 {
+    color: $d4;
+  }
+
+  &:focus {
+    &.focus-color-d5 {
+      color: $d5;
+    }
+    &.focus-color-d4 {
+      color: $d4;
+    }
+    &.focus-color-blue {
+      color: $point-blue;
+    }
+    &.focus-color-red {
+      color: $point-red;
+    }
+
+    &.focus-border-color-d5 {
+      border-color: $d5;
+    }
+    &.focus-border-color-d4 {
+      border-color: $d4;
+    }
+    &.focus-border-color-blue {
+      border-color: $point-blue;
+    }
+    &.focus-border-color-red {
+      border-color: $point-red;
+    }
   }
 }
 </style>

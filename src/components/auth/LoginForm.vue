@@ -57,12 +57,15 @@ const test = false;
       <img src="@/assets/logo/textscope-logo.png" alt="logo" />
       <p>AI 기반 문서 인식 솔루션</p>
     </div>
-    <div class="input email" :class="{ validate: test }"></div>
-    <div class="input email" :class="{ validate: errors.email?.type }">
+    <div class="input email">
       <label>ID</label>
       <Input
         type="text"
         name="email"
+        class="color-d4 focus-color-d5"
+        :class="{
+          ['border-color-red']: errors.email?.type,
+        }"
         :ref="
           register({
             required: true,
@@ -85,6 +88,10 @@ const test = false;
       <Input
         :type="icon === 'hide' ? 'password' : 'text'"
         name="password"
+        class="color-d4 focus-color-d5"
+        :class="{
+          ['border-color-red']: errors.password?.type,
+        }"
         :ref="
           register({
             required: true,
@@ -144,19 +151,6 @@ const test = false;
     label {
       display: block;
       margin: 10px 0 5px 0;
-    }
-
-    &.validate {
-      input {
-        border-color: $point-red;
-      }
-    }
-    input {
-      color: $d4;
-
-      &:focus {
-        color: $d5;
-      }
     }
   }
 

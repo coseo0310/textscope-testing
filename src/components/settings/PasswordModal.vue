@@ -48,8 +48,10 @@ const onSubmit = async () => {
 
 const onCancel = (e: MouseEvent) => {
   const el = e.target as HTMLElement;
-  const closest = el.closest(".password-modal__form");
-  if (closest) {
+  const closest1 = el.closest(".password-modal__form");
+  const closest2 = el.closest(".cancel");
+
+  if (closest1 && !closest2) {
     return;
   }
   authStore.isPasswordModal = false;
@@ -75,7 +77,9 @@ const onCancel = (e: MouseEvent) => {
                   notMatch: 'newPassword',
                 })
               "
-              :class="{ error: errors.nowPassword?.type || !!nowErrorMsg }"
+              :class="{
+                ['border-color-red']: errors.nowPassword?.type || !!nowErrorMsg,
+              }"
               maxlength="20"
               @keyup="
                 () => {
@@ -120,7 +124,7 @@ const onCancel = (e: MouseEvent) => {
                   minLength: 8,
                 })
               "
-              :class="{ error: errors.newPassword?.type }"
+              :class="{ ['border-color-red']: errors.newPassword?.type }"
               maxlength="20"
             />
             <Icons
@@ -158,7 +162,7 @@ const onCancel = (e: MouseEvent) => {
                 })
               "
               maxlength="20"
-              :class="{ error: errors.confirmPassword?.type }"
+              :class="{ ['border-color-red']: errors.confirmPassword?.type }"
             />
             <Icons
               :icons="confirmIcon"
@@ -181,13 +185,14 @@ const onCancel = (e: MouseEvent) => {
         </div>
       </div>
       <div class="btn-wrap">
-        <Button class="outline semi-bold" @click="onCancel">취소</Button>
+        <Button class="cancel outline semi-bold" @click="onCancel">취소</Button>
         <Button
           :disabled="!formState.isValid || !!nowErrorMsg"
-          class="primary semi-bold disabled"
+          class="confirm primary semi-bold disabled"
           @click="handleSubmit(onSubmit)"
-          >변경</Button
         >
+          변경
+        </Button>
       </div>
     </div>
   </div>
@@ -244,10 +249,6 @@ const onCancel = (e: MouseEvent) => {
 
           input {
             height: 48px;
-
-            &.error {
-              border: 1px solid $point-red;
-            }
 
             &::placeholder {
               color: $d5;
