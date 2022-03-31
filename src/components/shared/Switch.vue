@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+export type Labels = {
+  on: string;
+  off: string;
+};
+
 type Props = {
   default: boolean;
-  labels?: {
-    on: string;
-    off: string;
-  };
+  labels?: Labels;
 };
 
 const props = withDefaults(defineProps<Props>(), {

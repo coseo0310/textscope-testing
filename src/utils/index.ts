@@ -21,4 +21,15 @@ export const eraseCookie = (key: string) => {
   document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 };
 
-// export const getMenuList(m: Menu)
+export const notification = () => {
+  // TODO: Notification setting
+  if (Notification.permission !== "denied") {
+    Notification.requestPermission((permission) => {
+      if (permission === "granted") {
+        new Notification("Hi, Notification");
+      } else {
+        alert("Notification denied");
+      }
+    });
+  }
+};
