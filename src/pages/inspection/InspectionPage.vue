@@ -20,6 +20,7 @@ onMounted(async () => {
     return;
   }
   viewEl.value.appendChild(inspectionStore.viewer.getViewer());
+  inspectionStore.viewer.getOffset();
 });
 </script>
 

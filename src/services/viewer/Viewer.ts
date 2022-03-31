@@ -1,4 +1,5 @@
 import DrawEvent, { IDrawEvent } from "./DrawEvent";
+import { v4 as uuidv4 } from "uuid";
 
 type ZoomCommand = "in" | "out" | "init";
 
@@ -41,6 +42,13 @@ export default class Viewer extends DrawEvent implements IViewer {
   private deg: number;
   private fields: Field[];
 
+  private editField: Field | null;
+  private isDown: boolean;
+  private startX: number;
+  private startY: number;
+  private mouseX: number;
+  private mouseY: number;
+
   constructor() {
     super();
     this.canvasEl = document.createElement("canvas");
@@ -55,6 +63,48 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.depth = 0;
     this.deg = 0;
     this.fields = [];
+
+    this.isDown = false;
+    this.startX = 0;
+    this.startY = 0;
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.editField = null;
+    this.setMouseEvent();
+  }
+
+  setMouseEvent() {
+    this.canvasEl.addEventListener(
+      "mousedown",
+      this.handleMouseDown.bind(this)
+    );
+    this.canvasEl.addEventListener(
+      "mousemove",
+      this.handleMouseMove.bind(this)
+    );
+    this.canvasEl.addEventListener("mouseup", this.handleMouseLeave.bind(this));
+    this.canvasEl.addEventListener(
+      "mouseleave",
+      this.handleMouseLeave.bind(this)
+    );
+  }
+  removeMouseEvent() {
+    this.canvasEl.removeEventListener(
+      "mousedown",
+      this.handleMouseDown.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousemove",
+      this.handleMouseMove.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mouseup",
+      this.handleMouseLeave.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mouseleave",
+      this.handleMouseLeave.bind(this)
+    );
   }
 
   getViewer() {
@@ -155,6 +205,60 @@ export default class Viewer extends DrawEvent implements IViewer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
+  async getOffset() {
+    const cOffset = this.canvasEl.getBoundingClientRect();
+    return { offsetX: cOffset.left, offsetY: cOffset.top };
+  }
+
+  private async handleMouseDown(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.editField = {
+      id: uuidv4(),
+      text: `tmp`,
+      dx: 0,
+      dy: 0,
+      dWidth: 0,
+      dHeight: 0,
+      type: "stroke",
+      color: `red`,
+      lineWidth: 5,
+    };
+
+    const { offsetX, offsetY } = await this.getOffset();
+    this.startX = e.clientX - offsetX;
+    this.startY = e.clientY - offsetY;
+
+    const scale = this.getScale();
+    this.editField.dx = this.startX / scale;
+    this.editField.dy = this.startY / scale;
+    this.fields.push(this.editField);
+    this.isDown = true;
+  }
+
+  private async handleMouseLeave(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isDown = false;
+  }
+
+  private async handleMouseMove(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isDown || !this.editField) {
+      return;
+    }
+    const scale = this.getScale();
+    const { offsetX, offsetY } = await this.getOffset();
+    const mouseX = e.clientX - offsetX;
+    const mouseY = e.clientY - offsetY;
+    this.editField.dWidth = (mouseX - this.startX) / scale;
+    this.editField.dHeight = (mouseY - this.startY) / scale;
+
+    this.draw();
+  }
+
   async draw() {
     if (!this.imgEl) {
       return;
@@ -194,13 +298,13 @@ export default class Viewer extends DrawEvent implements IViewer {
         color: f.color,
         lineWidth: 5,
       };
-      const textOption = {
-        dx: f.dx,
-        dy: f.dy,
-        text: `${f.id}: ${f.text}`,
-        font: "48px serif",
-        color: "blue",
-      };
+      // const textOption = {
+      //   dx: f.dx,
+      //   dy: f.dy,
+      //   text: `${f.id}: ${f.text}`,
+      //   font: "48px serif",
+      //   color: "blue",
+      // };
 
       if (f.type === "fill") {
         this.fillRect(this.ctx, rectOption);
