@@ -7,7 +7,7 @@ import { useInspectionStore } from "@/store";
 const inspectionStore = useInspectionStore();
 
 const onPage = (n: number) => {
-  inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n], n);
+  inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n - 1], n);
 };
 
 const getItems = computed(() => {
