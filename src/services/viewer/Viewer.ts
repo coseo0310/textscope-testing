@@ -19,6 +19,9 @@ interface IViewer extends IDrawEvent {
   getViewer: () => void;
   getImgSize: () => void;
   getMarginSize: (w: number, h: number) => number;
+  setMouseEvent: () => void;
+  removeMouseEvent: () => void;
+  setScroll: () => void;
   setCalculatedDepth: () => void;
   setImgUrl: (url: string) => void;
   setZoomInOut: (command: ZoomCommand) => void;
@@ -270,8 +273,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     const dWidth = this.imgEl.naturalWidth;
     const dHeight = this.imgEl.naturalHeight;
-
-    console.log(this.canvasEl.width, this.canvasEl.height, dWidth, dHeight);
 
     this.setScale(this.ctx, { x: scale, y: scale });
     this.drawRotate(this.ctx, {

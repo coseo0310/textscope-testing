@@ -60,6 +60,7 @@ export interface IDrawEvent {
   strokeText: (ctx: CanvasRenderingContext2D, option: TextOption) => void;
   setScale: (ctx: CanvasRenderingContext2D, option: ScaleOption) => void;
   drawImage: (ctx: CanvasRenderingContext2D, option: ImgOption) => void;
+  drawRotate: (ctx: CanvasRenderingContext2D, option: RotateOption) => void;
 }
 
 export default class DrawEvent implements IDrawEvent {
@@ -137,7 +138,6 @@ export default class DrawEvent implements IDrawEvent {
   drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
     const tx = option.dx + option.dWidth / 2;
     const ty = option.dy + option.dHeight / 2;
-    console.log(">>", tx, ty);
     ctx.translate(tx, ty);
     ctx.rotate((option.deg * Math.PI) / 180);
     ctx.translate(-tx, -ty);
