@@ -27,7 +27,7 @@ export type TextOption = {
 };
 
 export type ImgOption = {
-  img: HTMLImageElement;
+  img: HTMLImageElement | HTMLCanvasElement;
   sx: number;
   sy: number;
   sWidth: number;

@@ -273,6 +273,12 @@ export default class Viewer extends DrawEvent implements IViewer {
     if (!this.imgEl) {
       return;
     }
+    const imgCanvas = document.createElement("canvas");
+    const imgCtx = imgCanvas.getContext("2d");
+    if (!imgCtx) {
+      return;
+    }
+
     const scale = this.getScale();
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
 
@@ -282,15 +288,17 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.canvasEl.width = cWidth + margin * scale;
     this.canvasEl.height = cHeight + margin * scale;
+    imgCanvas.width = cWidth + margin * scale;
+    imgCanvas.height = cHeight + margin * scale;
 
     const dWidth = this.imgEl.naturalWidth;
     const dHeight = this.imgEl.naturalHeight;
 
     this.dMargin = margin / 2;
 
-    this.setScale(this.ctx, { x: scale, y: scale });
+    this.setScale(imgCtx, { x: scale, y: scale });
 
-    this.drawRotate(this.ctx, {
+    this.drawRotate(imgCtx, {
       dx: this.dMargin,
       dy: this.dMargin,
       dWidth,
@@ -298,7 +306,7 @@ export default class Viewer extends DrawEvent implements IViewer {
       deg: this.deg,
     });
 
-    this.drawImage(this.ctx, {
+    this.drawImage(imgCtx, {
       img: this.imgEl,
       sx: 0,
       sy: 0,
@@ -309,6 +317,20 @@ export default class Viewer extends DrawEvent implements IViewer {
       dWidth: dWidth,
       dHeight: dHeight,
     });
+
+    this.drawImage(this.ctx, {
+      img: imgCanvas,
+      sx: 0,
+      sy: 0,
+      sWidth: dWidth,
+      sHeight: dHeight,
+      dx: 0,
+      dy: 0,
+      dWidth: dWidth,
+      dHeight: dHeight,
+    });
+
+    this.setScale(this.ctx, { x: scale, y: scale });
 
     for (const f of this.fields) {
       const rectOption = {
