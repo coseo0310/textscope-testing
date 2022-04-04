@@ -40,6 +40,12 @@ const onInit = () => {
   //TODO: Data reset
 };
 
+const onDraw = () => {
+  inspectionStore.viewer.setDraw();
+  inspectionStore.synonymList = inspectionStore.viewer.getFields();
+  console.log(">>>", inspectionStore.synonymList);
+};
+
 const onComparison = () => {
   // TODO: comparison
   alert("준비중...");
@@ -64,7 +70,7 @@ const onComparison = () => {
         </div>
         <div class="rows">
           <div class="column">
-            {{ inspectionStore.inspectionItem?.request.task_id }}
+            {{ inspectionStore.inspectionItem?.task_id }}
           </div>
           <Button class="column category">
             <Dropdown
@@ -79,7 +85,7 @@ const onComparison = () => {
             />
           </Button>
           <div class="column">
-            {{ inspectionStore.inspectionItem?.image_metadata.filename }}
+            {{ inspectionStore.inspectionItem?.filename }}
           </div>
           <div class="column">장화</div>
           <div class="column">-</div>
@@ -106,6 +112,7 @@ const onComparison = () => {
         <div class="box">크기</div>
         <div class="box">회전</div>
         <div class="box">초기화</div>
+        <div class="box">드로우</div>
         <div class="box icon">
           <Button @click="onZoomInOut('in')">
             <Icons icons="plus" />
@@ -127,7 +134,12 @@ const onComparison = () => {
         </div>
         <div class="box icon">
           <Button @click="onInit">
-            <Icons icons="init" />
+            <Icons icons="reset" />
+          </Button>
+        </div>
+        <div class="box icon">
+          <Button @click="onDraw">
+            <Icons icons="template" />
           </Button>
         </div>
       </div>
@@ -274,7 +286,7 @@ const onComparison = () => {
     .control-box {
       height: 100%;
       display: grid;
-      grid-template-columns: 0.8fr 1.4fr 0.8fr;
+      grid-template-columns: 0.9fr 1.2fr 0.9fr 1fr;
       padding: 0 1px 1px 0;
       margin: 0 0 0 1px;
       gap: 1px;
@@ -292,6 +304,7 @@ const onComparison = () => {
 
         &.icon {
           background-color: $d2;
+
           button {
             background-color: $d2;
             color: $point-blue;

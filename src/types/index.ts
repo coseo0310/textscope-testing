@@ -100,7 +100,8 @@ export declare module Icons {
     | "init"
     | "confirm"
     | "cancel"
-    | "notice";
+    | "notice"
+    | "reset";
 
   type SvgType = {
     width: string;
@@ -123,6 +124,12 @@ export declare module Icons {
       height: string;
       rx: string;
       fill: string;
+    };
+    circle?: {
+      cx: string;
+      cy: string;
+      r: string;
+      fill?: string;
     };
   };
 

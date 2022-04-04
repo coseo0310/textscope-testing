@@ -8,15 +8,8 @@ const inspectionStore = useInspectionStore();
 
 const onPage = (n: number) => {
   inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n - 1], n);
+  inspectionStore.synonymList = inspectionStore.viewer.getFields();
 };
-
-const getItems = computed(() => {
-  const items =
-    inspectionStore.inspectionItem?.prediction.key_values.length || 0 > 0
-      ? inspectionStore.inspectionItem?.prediction.key_values
-      : inspectionStore.inspectionItem?.prediction.texts;
-  return items;
-});
 
 const getCurrent = computed(() => inspectionStore.currentPage);
 </script>
@@ -34,12 +27,13 @@ const getCurrent = computed(() => inspectionStore.currentPage);
     </div>
     <div class="label">인식결과</div>
     <div class="card-list">
-      <SynonymCard :idx="1" key-text="test" :text="``" :confirm="false" />
+      <!-- <SynonymCard :idx="1" key-text="test" :text="``" :confirm="false" /> -->
       <SynonymCard
-        v-for="(item, idx) in getItems"
-        :idx="idx + 2"
+        v-for="(item, idx) in inspectionStore.synonymList"
+        :idx="idx"
         :key-text="item.id"
         :text="item.text"
+        :confirm="!!item.text"
       />
     </div>
   </div>

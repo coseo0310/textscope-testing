@@ -1,5 +1,4 @@
 import DrawEvent, { IDrawEvent } from "./DrawEvent";
-import { v4 as uuidv4 } from "uuid";
 
 type ZoomCommand = "in" | "out" | "init";
 
@@ -19,6 +18,8 @@ export type Field = {
 interface IViewer extends IDrawEvent {
   getViewer: () => void;
   getScale: () => number;
+  getFields: () => Field[];
+  getEditFiled: () => Field | null;
   setImgUrl: (url: string) => void;
   setZoomInOut: (command: ZoomCommand) => void;
   setRotate: (deg: number) => void;
@@ -167,8 +168,16 @@ export default class Viewer extends DrawEvent implements IViewer {
     await this.draw();
   }
 
-  setField(field: Field) {
+  async setField(field: Field) {
     this.fields.push(field);
+  }
+
+  getEditFiled() {
+    return this.editField;
+  }
+
+  getFields() {
+    return this.fields;
   }
 
   removeField(id: string) {
@@ -183,6 +192,24 @@ export default class Viewer extends DrawEvent implements IViewer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
+  setDraw() {
+    this.editField = {
+      id: `tmp-${Date.now()}`,
+      text: "",
+      dx: 0,
+      dy: 0,
+      dWidth: 0,
+      dHeight: 0,
+      type: "stroke",
+      color: `rgba(220, 118, 118, 1)`,
+      lineWidth: 5,
+      draw: true,
+    };
+    this.fields.push(this.editField);
+
+    this.canvasEl.style.cursor = "pointer";
+  }
+
   private async getOffset() {
     const cOffset = this.canvasEl.getBoundingClientRect();
     return { offsetX: cOffset.left, offsetY: cOffset.top };
@@ -192,18 +219,9 @@ export default class Viewer extends DrawEvent implements IViewer {
     e.preventDefault();
     e.stopPropagation();
 
-    this.editField = {
-      id: uuidv4(),
-      text: `tmp`,
-      dx: 0,
-      dy: 0,
-      dWidth: 0,
-      dHeight: 0,
-      type: "stroke",
-      color: `red`,
-      lineWidth: 5,
-      draw: true,
-    };
+    if (!this.editField) {
+      return;
+    }
 
     const { offsetX, offsetY } = await this.getOffset();
     this.startX = e.clientX - offsetX;
@@ -213,7 +231,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.editField.dx = this.startX / scale;
     this.editField.dy = this.startY / scale;
-    this.fields.push(this.editField);
     this.isDown = true;
   }
 
@@ -228,6 +245,10 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.editField.dx = this.editField.dx - this.dMargin;
     this.editField.dy = this.editField.dy - this.dMargin;
+
+    this.editField = null;
+
+    this.canvasEl.style.cursor = "default";
   }
 
   private async handleMouseMove(e: MouseEvent) {

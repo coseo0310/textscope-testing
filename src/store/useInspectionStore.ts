@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Viewer } from "@/services";
+import { Field } from "@/services/viewer/Viewer";
 
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";
@@ -62,6 +63,35 @@ type ImageMetadata = {
   width: number;
 };
 
+type KeyValues = {
+  bbox: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  };
+  id: string;
+  key: string;
+  text: string;
+  confidence: number;
+  is_hint_trusted: boolean;
+  is_hint_used: boolean;
+  text_ids: string[];
+};
+
+type Texts = {
+  bbox: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  };
+  id: string;
+  confidence: number;
+  text: string;
+  kv_ids: string[];
+};
+
 type Prediction = {
   doc_type: {
     code: string;
@@ -70,36 +100,11 @@ type Prediction = {
     is_hint_used: boolean;
     name: string;
   };
-  key_values: {
-    bbox: {
-      x: number;
-      y: number;
-      w: number;
-      h: number;
-    };
-    id: string;
-    key: string;
-    text: string;
-    confidence: number;
-    is_hint_trusted: boolean;
-    is_hint_used: boolean;
-    text_ids: string[];
-  }[];
+  key_values: KeyValues[];
   rectification: {
     rotated: number;
   };
-  texts: {
-    bbox: {
-      x: number;
-      y: number;
-      w: number;
-      h: number;
-    };
-    id: string;
-    confidence: number;
-    text: string;
-    kv_ids: string[];
-  }[];
+  texts: Texts[];
 };
 
 type Inspection = {
@@ -110,9 +115,25 @@ type Inspection = {
   response_metadata: ResponseMetadata;
 };
 
+type Bbox = {
+  id: string;
+  text: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
+type InspectionItem = {
+  bbox: Bbox[];
+  task_id: string;
+  filename: string;
+};
+
 type States = {
   inspectionItems: Inspection[];
-  inspectionItem: Inspection | null;
+  inspectionItem: InspectionItem | null;
+  synonymList: Field[];
   isInspection: boolean;
   viewer: Viewer;
   currentPage: number;
@@ -128,6 +149,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       // all these properties will have their type inferred automatically
       inspectionItems: [],
       inspectionItem: null,
+      synonymList: [],
       isInspection: false,
       viewer: new Viewer(),
       currentPage: 1,
@@ -149,26 +171,44 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(item: Inspection, page: number) {
-      this.inspectionItem = item;
+      this.viewer.removeFields();
       const items =
         item?.prediction.key_values.length || 0 > 0
           ? item?.prediction.key_values
           : item?.prediction.texts;
-      this.viewer.removeFields();
-      items.forEach((d) => {
+
+      const task_id = item.request.task_id;
+      const filename = item.image_metadata.filename;
+      const bbox = items.map((item) => {
         this.viewer.setField({
-          id: d.id,
-          text: d.text,
-          dx: d.bbox.x,
-          dy: d.bbox.y,
-          dWidth: d.bbox.w,
-          dHeight: d.bbox.h,
+          id: item.id,
+          text: item.text,
+          dx: item.bbox.x,
+          dy: item.bbox.y,
+          dWidth: item.bbox.w,
+          dHeight: item.bbox.h,
           type: "stroke",
           color: `rgba(220, 118, 118, 1)`,
           lineWidth: 5,
         });
+        return {
+          id: item.id,
+          text: item.text,
+          x: item.bbox.x,
+          y: item.bbox.y,
+          w: item.bbox.w,
+          h: item.bbox.h,
+        };
       });
+
+      this.inspectionItem = {
+        task_id,
+        filename,
+        bbox,
+      };
+
       this.currentPage = page;
+      this.synonymList = this.viewer.getFields();
       this.viewer.setImgUrl(item.img);
     },
     async onStartInspection() {

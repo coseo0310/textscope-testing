@@ -52,6 +52,14 @@ const svg = computed(() => svgs[props.icons]);
         :stroke-linejoin="p.strokeLinejoin ? p.strokeLinejoin : 'round'"
       />
     </template>
+    <template v-if="svg.circle">
+      <circle
+        :cx="svg.circle.cx"
+        :cy="svg.circle.cy"
+        :r="svg.circle.r"
+        :fill="svg.circle.fill"
+      />
+    </template>
   </svg>
 </template>
 

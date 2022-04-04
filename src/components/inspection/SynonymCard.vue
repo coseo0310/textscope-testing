@@ -2,6 +2,7 @@
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
+import { useInspectionStore } from "@/store";
 
 type Props = {
   idx: number;
@@ -14,6 +15,16 @@ const props = withDefaults(defineProps<Props>(), {
   confirm: true,
 });
 
+const inspectionStore = useInspectionStore();
+
+const onKeyup = (e: KeyboardEvent) => {
+  const el = e.target as HTMLInputElement;
+  if (!el) {
+    return;
+  }
+
+  inspectionStore.synonymList[props.idx].text = el.value;
+};
 const onConfirm = () => {};
 const onCancel = () => {};
 </script>
@@ -60,6 +71,7 @@ const onCancel = () => {};
           type="text"
           :defaultValue="props.text"
           :class="{ ['background-color-red']: !confirm }"
+          @keyup="onKeyup"
         />
         <label :for="`value-${props.idx}`">t</label>
         <div class="confirm">
