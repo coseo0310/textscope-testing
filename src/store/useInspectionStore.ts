@@ -150,7 +150,6 @@ export const useInspectionStore = defineStore("inspectionStore", {
     },
     async setInspectionItem(item: Inspection, page: number) {
       this.inspectionItem = item;
-      this.viewer.setImgUrl(item.img);
       const items =
         item?.prediction.key_values.length || 0 > 0
           ? item?.prediction.key_values
@@ -170,7 +169,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         });
       });
       this.currentPage = page;
-      this.viewer.draw();
+      this.viewer.setImgUrl(item.img);
     },
     async onStartInspection() {
       alert("준비중...");
