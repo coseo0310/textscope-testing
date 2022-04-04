@@ -275,7 +275,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     }
     const imgCanvas = document.createElement("canvas");
     const imgCtx = imgCanvas.getContext("2d");
-    if (!imgCtx) {
+    if (!imgCtx || !this.ctx) {
       return;
     }
 
