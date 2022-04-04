@@ -13,6 +13,7 @@ export type Field = {
   type: "fill" | "stroke";
   color: string;
   lineWidth?: number;
+  draw?: boolean;
 };
 
 interface IViewer extends IDrawEvent {
@@ -45,6 +46,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   private fields: Field[];
 
   private editField: Field | null;
+  private dMargin: number;
   private isDown: boolean;
   private startX: number;
   private startY: number;
@@ -70,6 +72,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.mouseX = 0;
     this.mouseY = 0;
     this.editField = null;
+    this.dMargin = 0;
     this.setMouseEvent();
   }
 
@@ -222,6 +225,7 @@ export default class Viewer extends DrawEvent implements IViewer {
       type: "stroke",
       color: `red`,
       lineWidth: 5,
+      draw: true,
     };
 
     const { offsetX, offsetY } = await this.getOffset();
@@ -229,6 +233,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.startY = e.clientY - offsetY;
 
     const scale = this.getScale();
+
     this.editField.dx = this.startX / scale;
     this.editField.dy = this.startY / scale;
     this.fields.push(this.editField);
@@ -238,7 +243,14 @@ export default class Viewer extends DrawEvent implements IViewer {
   private async handleMouseLeave(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.isDown || !this.editField) {
+      return;
+    }
     this.isDown = false;
+    this.editField.draw = false;
+
+    this.editField.dx = this.editField.dx - this.dMargin;
+    this.editField.dy = this.editField.dy - this.dMargin;
   }
 
   private async handleMouseMove(e: MouseEvent) {
@@ -274,10 +286,13 @@ export default class Viewer extends DrawEvent implements IViewer {
     const dWidth = this.imgEl.naturalWidth;
     const dHeight = this.imgEl.naturalHeight;
 
+    this.dMargin = margin / 2;
+
     this.setScale(this.ctx, { x: scale, y: scale });
+
     this.drawRotate(this.ctx, {
-      dx: margin / 2,
-      dy: margin / 2,
+      dx: this.dMargin,
+      dy: this.dMargin,
       dWidth,
       dHeight,
       deg: this.deg,
@@ -289,18 +304,16 @@ export default class Viewer extends DrawEvent implements IViewer {
       sy: 0,
       sWidth: dWidth,
       sHeight: dHeight,
-      dx: margin / 2,
-      dy: margin / 2,
+      dx: this.dMargin,
+      dy: this.dMargin,
       dWidth: dWidth,
       dHeight: dHeight,
     });
 
-    // this.ctx.save();
-
     for (const f of this.fields) {
       const rectOption = {
-        dx: f.dx + margin / 2,
-        dy: f.dy + margin / 2,
+        dx: f.draw ? f.dx : f.dx + this.dMargin,
+        dy: f.draw ? f.dy : f.dy + this.dMargin,
         dWidth: f.dWidth,
         dHeight: f.dHeight,
         color: f.color,
