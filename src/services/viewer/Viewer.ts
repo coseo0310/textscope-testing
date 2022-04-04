@@ -367,9 +367,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
-    // this.canvasEl.removeEventListener("mousemove", event.bind(this));
-    // this.canvasEl.addEventListener("mousemove", event.bind(this));
-
     let cnt = 1;
     for (const f of this.fields) {
       const rectOption = {
@@ -404,10 +401,9 @@ export default class Viewer extends DrawEvent implements IViewer {
           dx:
             Math.floor(f.draw ? f.dx : f.dx + this.dMargin) -
             10 * String(cnt).length,
-          dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin),
-          // text: `☓`,
+          dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin) + 1,
           text: `${cnt++}`,
-          font: "32px serif",
+          font: "32px Pretendard",
           color: "white",
         };
         this.fillText(this.ctx, textOption);
