@@ -322,12 +322,12 @@ export default class Viewer extends DrawEvent implements IViewer {
       img: imgCanvas,
       sx: 0,
       sy: 0,
-      sWidth: dWidth,
-      sHeight: dHeight,
+      sWidth: imgCanvas.width,
+      sHeight: imgCanvas.height,
       dx: 0,
       dy: 0,
-      dWidth: dWidth,
-      dHeight: dHeight,
+      dWidth: imgCanvas.width,
+      dHeight: imgCanvas.height,
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
