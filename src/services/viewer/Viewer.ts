@@ -18,7 +18,7 @@ export type Field = {
 interface IViewer extends IDrawEvent {
   getViewer: () => void;
   getImgSize: () => void;
-  getMarginSize: () => void;
+  getMarginSize: (w: number, h: number) => number;
   setCalculatedDepth: () => void;
   setImgUrl: (url: string) => void;
   setZoomInOut: (command: ZoomCommand) => void;
@@ -33,7 +33,6 @@ interface IViewer extends IDrawEvent {
 export default class Viewer extends DrawEvent implements IViewer {
   private canvasEl: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private canvasWrap: HTMLDivElement;
   private viewerEl: HTMLDivElement;
   private imgEl: HTMLImageElement | null;
   private depth: number;
@@ -53,10 +52,8 @@ export default class Viewer extends DrawEvent implements IViewer {
     super();
     this.canvasEl = document.createElement("canvas");
     this.ctx = this.canvasEl.getContext("2d")!;
-    this.canvasWrap = document.createElement("div");
-    this.canvasWrap.appendChild(this.canvasEl);
     this.viewerEl = document.createElement("div");
-    this.viewerEl.appendChild(this.canvasWrap);
+    this.viewerEl.appendChild(this.canvasEl);
     this.imgEl = null;
     this.maxDepth = 7;
     this.minDepth = -7;
@@ -108,7 +105,6 @@ export default class Viewer extends DrawEvent implements IViewer {
   }
 
   getViewer() {
-    const scale = this.getScale();
     this.viewerEl.classList.add("viewer");
     this.viewerEl.style.width = `100%`;
     this.viewerEl.style.height = `100%`;
@@ -116,9 +112,6 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.viewerEl.style.display = "flex";
     this.viewerEl.style.justifyContent = "flex-start";
     this.viewerEl.style.alignItems = "flex-start";
-    this.canvasEl.style.margin = `${
-      this.imgEl?.naturalWidth || 0 * scale * 0.15
-    }px`;
     return this.viewerEl;
   }
 
@@ -129,10 +122,22 @@ export default class Viewer extends DrawEvent implements IViewer {
     };
   }
 
-  getMarginSize() {
-    return this.canvasEl.width > this.canvasEl.height
-      ? this.canvasEl.width - this.canvasEl.height
-      : this.canvasEl.height - this.canvasEl.width;
+  getMarginSize(w: number, h: number) {
+    return w > h ? w : h;
+  }
+
+  async setScroll() {
+    const scale = this.getScale();
+    const margin = this.getMarginSize(
+      this.canvasEl.width,
+      this.canvasEl.height
+    );
+    await this.viewerEl.scrollTo(0, 0);
+    await this.viewerEl.scrollBy({
+      top: (margin / 4) * scale,
+      left: (margin / 4) * scale,
+      behavior: "auto",
+    });
   }
 
   setCalculatedDepth() {
@@ -150,12 +155,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.imgEl.onload = async () => {
       await this.setCalculatedDepth();
       await this.draw();
-      await this.viewerEl.scrollTo(0, 0);
-      await this.viewerEl?.scrollBy({
-        top: this.getMarginSize(),
-        left: this.getMarginSize(),
-        // behavior: "smooth",
-      });
+      await this.setScroll();
     };
   }
 
@@ -176,17 +176,12 @@ export default class Viewer extends DrawEvent implements IViewer {
       this.setCalculatedDepth();
     }
     await this.draw();
-    await this.viewerEl?.scrollBy({
-      top: this.getMarginSize(),
-      left: this.getMarginSize(),
-      // behavior: "smooth",
-    });
+    await this.setScroll();
   }
 
   setRotate(deg: number) {
     this.deg = deg;
-    const rotate = `rotate(${this.deg}deg)`;
-    this.canvasEl.style.transform = rotate;
+    this.draw();
   }
 
   setField(field: Field) {
@@ -266,33 +261,45 @@ export default class Viewer extends DrawEvent implements IViewer {
     const scale = this.getScale();
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
 
-    this.canvasEl.width = this.imgEl.naturalWidth * scale;
-    this.canvasEl.height = this.imgEl.naturalHeight * scale;
-    this.canvasEl.style.margin = `${this.getMarginSize()}px`;
+    const cWidth = this.imgEl.naturalWidth * scale;
+    const cHeight = this.imgEl.naturalHeight * scale;
+    const margin = this.getMarginSize(cWidth, cHeight);
 
-    const width =
-      scale > 1 ? this.imgEl.naturalWidth * scale : this.imgEl.naturalWidth;
-    const height =
-      scale > 1 ? this.imgEl.naturalHeight * scale : this.imgEl.naturalHeight;
+    this.canvasEl.width = cWidth + margin * scale;
+    this.canvasEl.height = cHeight + margin * scale;
+
+    const dWidth = this.imgEl.naturalWidth;
+    const dHeight = this.imgEl.naturalHeight;
+
+    console.log(this.canvasEl.width, this.canvasEl.height, dWidth, dHeight);
 
     this.setScale(this.ctx, { x: scale, y: scale });
+    this.drawRotate(this.ctx, {
+      dx: margin / 2,
+      dy: margin / 2,
+      dWidth,
+      dHeight,
+      deg: this.deg,
+    });
 
     this.drawImage(this.ctx, {
       img: this.imgEl,
       sx: 0,
       sy: 0,
-      sWidth: width,
-      sHeight: height,
-      dx: 0,
-      dy: 0,
-      dWidth: width,
-      dHeight: height,
+      sWidth: dWidth,
+      sHeight: dHeight,
+      dx: margin / 2,
+      dy: margin / 2,
+      dWidth: dWidth,
+      dHeight: dHeight,
     });
+
+    // this.ctx.save();
 
     for (const f of this.fields) {
       const rectOption = {
-        dx: f.dx,
-        dy: f.dy,
+        dx: f.dx + margin / 2,
+        dy: f.dy + margin / 2,
         dWidth: f.dWidth,
         dHeight: f.dHeight,
         color: f.color,
@@ -305,7 +312,6 @@ export default class Viewer extends DrawEvent implements IViewer {
       //   font: "48px serif",
       //   color: "blue",
       // };
-
       if (f.type === "fill") {
         this.fillRect(this.ctx, rectOption);
       } else if (f.type === "stroke") {

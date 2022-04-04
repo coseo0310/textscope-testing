@@ -9,7 +9,7 @@ import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
 
-const isPreview = ref<boolean>(true);
+const isPreview = ref<boolean>(false);
 const viewEl = ref<HTMLDivElement | null>(null);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
