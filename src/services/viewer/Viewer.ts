@@ -296,6 +296,10 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.dMargin = margin / 2;
 
+    if (imgCanvas.width === 0) {
+      return;
+    }
+
     this.setScale(imgCtx, { x: scale, y: scale });
 
     this.drawRotate(imgCtx, {
@@ -310,34 +314,34 @@ export default class Viewer extends DrawEvent implements IViewer {
       img: this.imgEl,
       sx: 0,
       sy: 0,
-      sWidth: dWidth,
-      sHeight: dHeight,
-      dx: this.dMargin,
-      dy: this.dMargin,
-      dWidth: dWidth,
-      dHeight: dHeight,
+      sWidth: Math.floor(dWidth),
+      sHeight: Math.floor(dHeight),
+      dx: Math.floor(this.dMargin),
+      dy: Math.floor(this.dMargin),
+      dWidth: Math.floor(dWidth),
+      dHeight: Math.floor(dHeight),
     });
 
     this.drawImage(this.ctx, {
       img: imgCanvas,
       sx: 0,
       sy: 0,
-      sWidth: imgCanvas.width,
-      sHeight: imgCanvas.height,
+      sWidth: Math.floor(imgCanvas.width),
+      sHeight: Math.floor(imgCanvas.height),
       dx: 0,
       dy: 0,
-      dWidth: imgCanvas.width,
-      dHeight: imgCanvas.height,
+      dWidth: Math.floor(imgCanvas.width),
+      dHeight: Math.floor(imgCanvas.height),
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
     for (const f of this.fields) {
       const rectOption = {
-        dx: f.draw ? f.dx : f.dx + this.dMargin,
-        dy: f.draw ? f.dy : f.dy + this.dMargin,
-        dWidth: f.dWidth,
-        dHeight: f.dHeight,
+        dx: Math.floor(f.draw ? f.dx : f.dx + this.dMargin),
+        dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin),
+        dWidth: Math.floor(f.dWidth),
+        dHeight: Math.floor(f.dHeight),
         color: f.color,
         lineWidth: 5,
       };
