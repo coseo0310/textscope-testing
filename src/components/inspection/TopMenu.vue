@@ -43,7 +43,6 @@ const onInit = () => {
 const onDraw = () => {
   inspectionStore.viewer.setDraw();
   inspectionStore.synonymList = inspectionStore.viewer.getFields();
-  console.log(">>>", inspectionStore.synonymList);
 };
 
 const onComparison = () => {

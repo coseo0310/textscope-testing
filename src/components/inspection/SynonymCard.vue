@@ -24,6 +24,7 @@ const onKeyup = (e: KeyboardEvent) => {
   }
 
   inspectionStore.synonymList[props.idx].text = el.value;
+  inspectionStore.viewer.draw();
 };
 const onConfirm = () => {};
 const onCancel = () => {};

@@ -13,6 +13,7 @@ export type Field = {
   color: string;
   lineWidth?: number;
   draw?: boolean;
+  circle?: Path2D;
 };
 
 interface IViewer extends IDrawEvent {
@@ -84,6 +85,10 @@ export default class Viewer extends DrawEvent implements IViewer {
       "mousemove",
       this.handleMouseMove.bind(this)
     );
+    // this.canvasEl.addEventListener(
+    //   "mousemove",
+    //   this.handleCloseHoverEvent.bind(this)
+    // );
     this.canvasEl.addEventListener("mouseup", this.handleMouseLeave.bind(this));
     this.canvasEl.addEventListener(
       "mouseleave",
@@ -215,6 +220,21 @@ export default class Viewer extends DrawEvent implements IViewer {
     return { offsetX: cOffset.left, offsetY: cOffset.top };
   }
 
+  private async handleCloseHoverEvent(event: MouseEvent) {
+    // Check whether point is inside circle
+    for (const f of this.fields) {
+      if (
+        !f.circle ||
+        !this.ctx.isPointInPath(f.circle, event.offsetX, event.offsetY)
+      ) {
+        this.canvasEl.style.cursor = "default";
+        continue;
+      }
+      this.canvasEl.style.cursor = "pointer";
+      break;
+    }
+  }
+
   private async handleMouseDown(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
@@ -249,6 +269,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.editField = null;
 
     this.canvasEl.style.cursor = "default";
+    this.draw();
   }
 
   private async handleMouseMove(e: MouseEvent) {
@@ -346,6 +367,10 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
+    // this.canvasEl.removeEventListener("mousemove", event.bind(this));
+    // this.canvasEl.addEventListener("mousemove", event.bind(this));
+
+    let cnt = 1;
     for (const f of this.fields) {
       const rectOption = {
         dx: Math.floor(f.draw ? f.dx : f.dx + this.dMargin),
@@ -355,19 +380,38 @@ export default class Viewer extends DrawEvent implements IViewer {
         color: f.color,
         lineWidth: 5,
       };
-      // const textOption = {
-      //   dx: f.dx,
-      //   dy: f.dy,
-      //   text: `${f.id}: ${f.text}`,
-      //   font: "48px serif",
-      //   color: "blue",
-      // };
+
       if (f.type === "fill") {
         this.fillRect(this.ctx, rectOption);
       } else if (f.type === "stroke") {
         this.strokeRect(this.ctx, rectOption);
       }
-      // this.fillText(this.ctx, textOption);
+
+      const circle = new Path2D();
+      circle.arc(
+        Math.floor(f.draw ? f.dx : f.dx + this.dMargin),
+        Math.floor(f.draw ? f.dy : f.dy + this.dMargin) - 10,
+        25,
+        0,
+        2 * Math.PI
+      );
+      if (!f.draw) {
+        this.ctx.fillStyle = "black";
+        this.ctx.fill(circle);
+        f.circle = circle;
+
+        const textOption = {
+          dx:
+            Math.floor(f.draw ? f.dx : f.dx + this.dMargin) -
+            10 * String(cnt).length,
+          dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin),
+          // text: `☓`,
+          text: `${cnt++}`,
+          font: "32px serif",
+          color: "white",
+        };
+        this.fillText(this.ctx, textOption);
+      }
     }
   }
 }

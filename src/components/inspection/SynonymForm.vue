@@ -30,7 +30,7 @@ const getCurrent = computed(() => inspectionStore.currentPage);
       <!-- <SynonymCard :idx="1" key-text="test" :text="``" :confirm="false" /> -->
       <SynonymCard
         v-for="(item, idx) in inspectionStore.synonymList"
-        :idx="idx"
+        :idx="idx + 1"
         :key-text="item.id"
         :text="item.text"
         :confirm="!!item.text"
