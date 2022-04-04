@@ -44,6 +44,8 @@ export default class Viewer extends DrawEvent implements IViewer {
   private minDepth: number;
   private deg: number;
   private fields: Field[];
+  private imageCache: HTMLCanvasElement;
+  private imageCacheCtx: CanvasRenderingContext2D;
 
   private editField: Field | null;
   private dMargin: number;
@@ -57,6 +59,8 @@ export default class Viewer extends DrawEvent implements IViewer {
     super();
     this.canvasEl = document.createElement("canvas");
     this.ctx = this.canvasEl.getContext("2d")!;
+    this.imageCache = document.createElement("canvas");
+    this.imageCacheCtx = this.imageCache.getContext("2d")!;
     this.viewerEl = document.createElement("div");
     this.viewerEl.appendChild(this.canvasEl);
     this.imgEl = null;
@@ -160,6 +164,7 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.imgEl.onload = async () => {
       await this.setCalculatedDepth();
+      await this.setImageCache();
       await this.draw();
       await this.setScroll();
     };
@@ -181,13 +186,16 @@ export default class Viewer extends DrawEvent implements IViewer {
       // this.depth = 0;
       this.setCalculatedDepth();
     }
+
+    await this.setImageCache();
     await this.draw();
     await this.setScroll();
   }
 
-  setRotate(deg: number) {
+  async setRotate(deg: number) {
     this.deg = deg;
-    this.draw();
+    await this.setImageCache();
+    await this.draw();
   }
 
   setField(field: Field) {
@@ -269,6 +277,51 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.draw();
   }
 
+  setImageCache() {
+    if (!this.imgEl) {
+      return;
+    }
+
+    const scale = this.getScale();
+    const cWidth = this.imgEl.naturalWidth * scale;
+    const cHeight = this.imgEl.naturalHeight * scale;
+
+    const margin = this.getMarginSize(cWidth, cHeight);
+    this.imageCache.width = cWidth + margin * scale;
+    this.imageCache.height = cHeight + margin * scale;
+
+    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
+      return;
+    }
+
+    this.dMargin = margin / 2;
+
+    const dWidth = this.imgEl.naturalWidth;
+    const dHeight = this.imgEl.naturalHeight;
+
+    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
+
+    this.drawRotate(this.imageCacheCtx, {
+      dx: this.dMargin,
+      dy: this.dMargin,
+      dWidth,
+      dHeight,
+      deg: this.deg,
+    });
+
+    this.drawImage(this.imageCacheCtx, {
+      img: this.imgEl,
+      sx: 0,
+      sy: 0,
+      sWidth: Math.floor(dWidth),
+      sHeight: Math.floor(dHeight),
+      dx: Math.floor(this.dMargin),
+      dy: Math.floor(this.dMargin),
+      dWidth: Math.floor(dWidth),
+      dHeight: Math.floor(dHeight),
+    });
+  }
+
   async draw() {
     if (!this.imgEl) {
       return;
@@ -288,50 +341,17 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.canvasEl.width = cWidth + margin * scale;
     this.canvasEl.height = cHeight + margin * scale;
-    imgCanvas.width = cWidth + margin * scale;
-    imgCanvas.height = cHeight + margin * scale;
-
-    const dWidth = this.imgEl.naturalWidth;
-    const dHeight = this.imgEl.naturalHeight;
-
-    this.dMargin = margin / 2;
-
-    if (imgCanvas.width === 0) {
-      return;
-    }
-
-    this.setScale(imgCtx, { x: scale, y: scale });
-
-    this.drawRotate(imgCtx, {
-      dx: this.dMargin,
-      dy: this.dMargin,
-      dWidth,
-      dHeight,
-      deg: this.deg,
-    });
-
-    this.drawImage(imgCtx, {
-      img: this.imgEl,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(dWidth),
-      sHeight: Math.floor(dHeight),
-      dx: Math.floor(this.dMargin),
-      dy: Math.floor(this.dMargin),
-      dWidth: Math.floor(dWidth),
-      dHeight: Math.floor(dHeight),
-    });
 
     this.drawImage(this.ctx, {
-      img: imgCanvas,
+      img: this.imageCache,
       sx: 0,
       sy: 0,
-      sWidth: Math.floor(imgCanvas.width),
-      sHeight: Math.floor(imgCanvas.height),
+      sWidth: Math.floor(this.imageCache.width),
+      sHeight: Math.floor(this.imageCache.height),
       dx: 0,
       dy: 0,
-      dWidth: Math.floor(imgCanvas.width),
-      dHeight: Math.floor(imgCanvas.height),
+      dWidth: Math.floor(this.imageCache.width),
+      dHeight: Math.floor(this.imageCache.height),
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
