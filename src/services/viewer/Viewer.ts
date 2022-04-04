@@ -18,19 +18,13 @@ export type Field = {
 
 interface IViewer extends IDrawEvent {
   getViewer: () => void;
-  getImgSize: () => void;
-  getMarginSize: (w: number, h: number) => number;
-  setMouseEvent: () => void;
-  removeMouseEvent: () => void;
-  setScroll: () => void;
-  setCalculatedDepth: () => void;
+  getScale: () => number;
   setImgUrl: (url: string) => void;
   setZoomInOut: (command: ZoomCommand) => void;
   setRotate: (deg: number) => void;
   setField: (field: Field) => void;
   removeField: (id: string) => void;
   removeFields: () => void;
-  getScale: () => number;
   draw: () => void;
 }
 
@@ -80,7 +74,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.setMouseEvent();
   }
 
-  setMouseEvent() {
+  private setMouseEvent() {
     this.canvasEl.addEventListener(
       "mousedown",
       this.handleMouseDown.bind(this)
@@ -91,24 +85,6 @@ export default class Viewer extends DrawEvent implements IViewer {
     );
     this.canvasEl.addEventListener("mouseup", this.handleMouseLeave.bind(this));
     this.canvasEl.addEventListener(
-      "mouseleave",
-      this.handleMouseLeave.bind(this)
-    );
-  }
-  removeMouseEvent() {
-    this.canvasEl.removeEventListener(
-      "mousedown",
-      this.handleMouseDown.bind(this)
-    );
-    this.canvasEl.removeEventListener(
-      "mousemove",
-      this.handleMouseMove.bind(this)
-    );
-    this.canvasEl.removeEventListener(
-      "mouseup",
-      this.handleMouseLeave.bind(this)
-    );
-    this.canvasEl.removeEventListener(
       "mouseleave",
       this.handleMouseLeave.bind(this)
     );
@@ -125,18 +101,11 @@ export default class Viewer extends DrawEvent implements IViewer {
     return this.viewerEl;
   }
 
-  getImgSize() {
-    return {
-      w: this.imgEl?.naturalWidth || 0,
-      h: this.imgEl?.naturalHeight || 0,
-    };
-  }
-
-  getMarginSize(w: number, h: number) {
+  private getMarginSize(w: number, h: number) {
     return w > h ? w : h;
   }
 
-  async setScroll() {
+  private async setScroll() {
     const scale = this.getScale();
     const margin = this.getMarginSize(
       this.canvasEl.width,
@@ -150,7 +119,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     });
   }
 
-  setCalculatedDepth() {
+  private setCalculatedDepth() {
     const ratio = Math.ceil(
       (this.imgEl?.naturalWidth || 0) / this.viewerEl?.clientWidth
     );
@@ -214,7 +183,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
-  async getOffset() {
+  private async getOffset() {
     const cOffset = this.canvasEl.getBoundingClientRect();
     return { offsetX: cOffset.left, offsetY: cOffset.top };
   }
@@ -277,7 +246,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.draw();
   }
 
-  setImageCache() {
+  private setImageCache() {
     if (!this.imgEl) {
       return;
     }
