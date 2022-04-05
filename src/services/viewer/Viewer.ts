@@ -220,20 +220,20 @@ export default class Viewer extends DrawEvent implements IViewer {
     return { offsetX: cOffset.left, offsetY: cOffset.top };
   }
 
-  private async handleCloseHoverEvent(event: MouseEvent) {
-    // Check whether point is inside circle
-    for (const f of this.fields) {
-      if (
-        !f.circle ||
-        !this.ctx.isPointInPath(f.circle, event.offsetX, event.offsetY)
-      ) {
-        this.canvasEl.style.cursor = "default";
-        continue;
-      }
-      this.canvasEl.style.cursor = "pointer";
-      break;
-    }
-  }
+  // private async handleCloseHoverEvent(event: MouseEvent) {
+  //   // Check whether point is inside circle
+  //   for (const f of this.fields) {
+  //     if (
+  //       !f.circle ||
+  //       !this.ctx.isPointInPath(f.circle, event.offsetX, event.offsetY)
+  //     ) {
+  //       this.canvasEl.style.cursor = "default";
+  //       continue;
+  //     }
+  //     this.canvasEl.style.cursor = "pointer";
+  //     break;
+  //   }
+  // }
 
   private async handleMouseDown(e: MouseEvent) {
     e.preventDefault();
@@ -369,9 +369,12 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     let cnt = 1;
     for (const f of this.fields) {
+      const dx = Math.floor(f.draw ? f.dx : f.dx + this.dMargin);
+      const dy = Math.floor(f.draw ? f.dy : f.dy + this.dMargin);
+
       const rectOption = {
-        dx: Math.floor(f.draw ? f.dx : f.dx + this.dMargin),
-        dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin),
+        dx,
+        dy,
         dWidth: Math.floor(f.dWidth),
         dHeight: Math.floor(f.dHeight),
         color: f.color,
@@ -385,23 +388,15 @@ export default class Viewer extends DrawEvent implements IViewer {
       }
 
       const circle = new Path2D();
-      circle.arc(
-        Math.floor(f.draw ? f.dx : f.dx + this.dMargin),
-        Math.floor(f.draw ? f.dy : f.dy + this.dMargin) - 10,
-        25,
-        0,
-        2 * Math.PI
-      );
+      circle.arc(dx, dy - 10, 25, 0, 2 * Math.PI);
       if (!f.draw) {
         this.ctx.fillStyle = "black";
         this.ctx.fill(circle);
         f.circle = circle;
 
         const textOption = {
-          dx:
-            Math.floor(f.draw ? f.dx : f.dx + this.dMargin) -
-            10 * String(cnt).length,
-          dy: Math.floor(f.draw ? f.dy : f.dy + this.dMargin) + 1,
+          dx: dx - 10 * String(cnt).length,
+          dy: dy + 1,
           text: `${cnt++}`,
           font: "32px Pretendard",
           color: "white",

@@ -209,6 +209,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
 
       this.currentPage = page;
       this.synonymList = this.viewer.getFields();
+
       this.viewer.setImgUrl(item.img);
     },
     async onStartInspection() {

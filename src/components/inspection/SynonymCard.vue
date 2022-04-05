@@ -23,8 +23,7 @@ const onKeyup = (e: KeyboardEvent) => {
     return;
   }
 
-  inspectionStore.synonymList[props.idx].text = el.value;
-  inspectionStore.viewer.draw();
+  inspectionStore.synonymList[props.idx - 1].text = el.value;
 };
 const onConfirm = () => {};
 const onCancel = () => {};
@@ -70,7 +69,7 @@ const onCancel = () => {};
         <Input
           :id="`value-${props.idx}`"
           type="text"
-          :defaultValue="props.text"
+          :value="props.text"
           :class="{ ['background-color-red']: !confirm }"
           @keyup="onKeyup"
         />

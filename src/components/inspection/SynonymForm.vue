@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import SynonymCard from "@/components/inspection/SynonymCard.vue";
 import { useInspectionStore } from "@/store";
@@ -8,7 +8,6 @@ const inspectionStore = useInspectionStore();
 
 const onPage = (n: number) => {
   inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n - 1], n);
-  inspectionStore.synonymList = inspectionStore.viewer.getFields();
 };
 
 const getCurrent = computed(() => inspectionStore.currentPage);
@@ -34,6 +33,7 @@ const getCurrent = computed(() => inspectionStore.currentPage);
         :key-text="item.id"
         :text="item.text"
         :confirm="!!item.text"
+        :key="idx"
       />
     </div>
   </div>
