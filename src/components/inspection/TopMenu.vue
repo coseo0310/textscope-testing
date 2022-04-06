@@ -37,6 +37,10 @@ const onInit = () => {
   deg.value = 0;
   inspectionStore.viewer.setRotate(deg.value);
   inspectionStore.viewer.setZoomInOut("init");
+  inspectionStore.setInspectionItem(
+    inspectionStore.inspectionItems[inspectionStore.currentPage - 1],
+    inspectionStore.currentPage
+  );
   //TODO: Data reset
 };
 

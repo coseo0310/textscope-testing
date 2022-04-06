@@ -209,11 +209,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
 
       this.currentPage = page;
       this.synonymList = this.viewer.getFields();
-
       this.viewer.setImgUrl(item.img);
     },
     async onStartInspection() {
-      alert("준비중...");
+      // alert("준비중...");
     },
     async onCompleted() {
       alert("준비중...");

@@ -13,7 +13,9 @@ export type Field = {
   color: string;
   lineWidth?: number;
   draw?: boolean;
-  circle?: Path2D;
+  edit?: boolean;
+  circle?: Path2D[];
+  box?: Path2D;
 };
 
 interface IViewer extends IDrawEvent {
@@ -43,9 +45,15 @@ export default class Viewer extends DrawEvent implements IViewer {
   private imageCache: HTMLCanvasElement;
   private imageCacheCtx: CanvasRenderingContext2D;
 
+  private drawField: Field | null;
   private editField: Field | null;
   private dMargin: number;
-  private isDown: boolean;
+  private isDraw: boolean;
+  private isEdit: boolean;
+  private isMove: boolean;
+  private isResize: boolean;
+  private resizePointer: string;
+  private resizeDirection: number;
   private startX: number;
   private startY: number;
   private mouseX: number;
@@ -66,45 +74,308 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.deg = 0;
     this.fields = [];
 
-    this.isDown = false;
+    this.isDraw = false;
+    this.isEdit = false;
+    this.isMove = false;
+    this.isResize = false;
+    this.resizePointer = "default";
+    this.resizeDirection = 0;
     this.startX = 0;
     this.startY = 0;
     this.mouseX = 0;
     this.mouseY = 0;
+    this.drawField = null;
     this.editField = null;
     this.dMargin = 0;
-    this.setMouseEvent();
+    this.setDrawEvent();
+    this.setEditEvent();
   }
 
-  private setMouseEvent() {
-    this.canvasEl.addEventListener(
-      "mousedown",
-      this.handleMouseDown.bind(this)
-    );
+  private setEditEvent() {
+    this.canvasEl.addEventListener("mousemove", this.handleBoxHover.bind(this));
     this.canvasEl.addEventListener(
       "mousemove",
-      this.handleMouseMove.bind(this)
+      this.handleCircleHover.bind(this)
     );
-    // this.canvasEl.addEventListener(
-    //   "mousemove",
-    //   this.handleCloseHoverEvent.bind(this)
-    // );
-    this.canvasEl.addEventListener("mouseup", this.handleMouseLeave.bind(this));
+    this.canvasEl.addEventListener("mousemove", this.handleResize.bind(this));
+    this.canvasEl.addEventListener("mousemove", this.handleBoxMove.bind(this));
+    this.canvasEl.addEventListener(
+      "mousedown",
+      this.handleBoxSelect.bind(this)
+    );
+    this.canvasEl.addEventListener(
+      "mousedown",
+      this.handleCircelSelect.bind(this)
+    );
+    this.canvasEl.addEventListener(
+      "mouseup",
+      this.handleBoxSelected.bind(this)
+    );
+    this.canvasEl.addEventListener("mouseup", this.handleResized.bind(this));
     this.canvasEl.addEventListener(
       "mouseleave",
-      this.handleMouseLeave.bind(this)
+      this.handleBoxSelected.bind(this)
     );
+    this.canvasEl.addEventListener("mouseleave", this.handleResized.bind(this));
   }
 
-  getViewer() {
-    this.viewerEl.classList.add("viewer");
-    this.viewerEl.style.width = `100%`;
-    this.viewerEl.style.height = `100%`;
-    this.viewerEl.style.overflow = "scroll";
-    this.viewerEl.style.display = "flex";
-    this.viewerEl.style.justifyContent = "flex-start";
-    this.viewerEl.style.alignItems = "flex-start";
-    return this.viewerEl;
+  private setDrawEvent() {
+    this.canvasEl.addEventListener(
+      "mousedown",
+      this.handleDrawStart.bind(this)
+    );
+    this.canvasEl.addEventListener("mousemove", this.handleDraw.bind(this));
+    this.canvasEl.addEventListener("mouseup", this.handleDrawEnd.bind(this));
+    this.canvasEl.addEventListener("mouseleave", this.handleDrawEnd.bind(this));
+  }
+
+  private async handleCircleHover(e: MouseEvent) {
+    if (!this.editField?.circle || this.isResize) {
+      return;
+    }
+    for (let i = 0; i < this.editField.circle.length; i++) {
+      if (
+        !this.ctx.isPointInPath(this.editField.circle[i], e.offsetX, e.offsetY)
+      ) {
+        continue;
+      }
+      if (i === 0 || i === 4) {
+        this.resizePointer = "nwse-resize";
+      } else if (i === 2 || i === 6) {
+        this.resizePointer = "nesw-resize";
+      } else if (i === 1 || i === 5) {
+        this.resizePointer = "ns-resize";
+      } else {
+        this.resizePointer = "ew-resize";
+      }
+      this.canvasEl.style.cursor = this.resizePointer;
+      this.resizeDirection = i;
+      break;
+    }
+  }
+
+  private async handleCircelSelect(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isEdit || this.isMove || this.isResize) {
+      return;
+    }
+    this.isResize = true;
+    const { offsetX, offsetY } = await this.getOffset();
+    const mouseX = e.clientX - offsetX;
+    const mouseY = e.clientY - offsetY;
+    this.mouseX = mouseX;
+    this.mouseY = mouseY;
+  }
+
+  private async handleResize(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isResize) {
+      return;
+    }
+    if (!this.editField) {
+      return;
+    }
+    const { offsetX, offsetY } = await this.getOffset();
+    const mouseX = e.clientX - offsetX;
+    const mouseY = e.clientY - offsetY;
+
+    const scale = this.getScale();
+    if (this.mouseX !== mouseX) {
+      const x = (this.mouseX - mouseX) / scale;
+      this.mouseX = mouseX;
+      if (
+        this.resizeDirection === 0 ||
+        this.resizeDirection === 6 ||
+        this.resizeDirection === 7
+      ) {
+        this.editField.dx = this.editField.dx - x;
+        this.editField.dWidth = this.editField.dWidth + x;
+      } else if (
+        this.resizeDirection === 2 ||
+        this.resizeDirection === 3 ||
+        this.resizeDirection === 4
+      ) {
+        this.editField.dWidth = this.editField.dWidth - x;
+      }
+    }
+    if (this.mouseY !== mouseY) {
+      const y = (this.mouseY - mouseY) / scale;
+      this.mouseY = mouseY;
+      if (
+        this.resizeDirection === 0 ||
+        this.resizeDirection === 1 ||
+        this.resizeDirection === 2
+      ) {
+        this.editField.dy = this.editField.dy - y;
+        this.editField.dHeight = this.editField.dHeight + y;
+      } else if (
+        this.resizeDirection === 4 ||
+        this.resizeDirection === 5 ||
+        this.resizeDirection === 6
+      ) {
+        this.editField.dHeight = this.editField.dHeight - y;
+      }
+    }
+
+    this.canvasEl.style.cursor = this.resizePointer;
+    this.draw();
+  }
+
+  private async handleResized(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isResize) {
+      return;
+    }
+    if (!this.editField) {
+      return;
+    }
+    this.isResize = false;
+  }
+
+  private async handleBoxHover(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    for (const f of this.fields) {
+      if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
+        if (!this.drawField) {
+          this.canvasEl.style.cursor = "default";
+        }
+        continue;
+      }
+      this.canvasEl.style.cursor = "pointer";
+      break;
+    }
+  }
+
+  private async handleBoxSelect(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.editField?.circle) {
+      for (const c of this.editField.circle) {
+        if (this.ctx.isPointInPath(c, e.offsetX, e.offsetY)) {
+          return;
+        }
+      }
+    }
+
+    for (const f of this.fields) {
+      if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
+        f.edit = false;
+        this.isEdit = false;
+        continue;
+      }
+      f.edit = true;
+      this.isEdit = true;
+      this.isMove = true;
+      this.editField = f;
+      const { offsetX, offsetY } = await this.getOffset();
+      const mouseX = e.clientX - offsetX;
+      const mouseY = e.clientY - offsetY;
+      this.mouseX = mouseX;
+      this.mouseY = mouseY;
+      break;
+    }
+    this.draw();
+  }
+
+  private async handleBoxMove(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isMove) {
+      return;
+    }
+    if (!this.editField) {
+      return;
+    }
+    const { offsetX, offsetY } = await this.getOffset();
+    const mouseX = e.clientX - offsetX;
+    const mouseY = e.clientY - offsetY;
+
+    const scale = this.getScale();
+    if (this.mouseX !== mouseX) {
+      const x = (this.mouseX - mouseX) / scale;
+      this.mouseX = mouseX;
+      this.editField.dx = this.editField.dx - x;
+    }
+    if (this.mouseY !== mouseY) {
+      const y = (this.mouseY - mouseY) / scale;
+      this.mouseY = mouseY;
+      this.editField.dy = this.editField.dy - y;
+    }
+
+    this.canvasEl.style.cursor = "grabbing";
+    this.draw();
+  }
+
+  private async handleBoxSelected(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isMove = false;
+    this.canvasEl.style.cursor = "default";
+    this.draw();
+  }
+
+  private async handleDrawStart(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!this.drawField) {
+      return;
+    }
+
+    const { offsetX, offsetY } = await this.getOffset();
+    this.startX = e.clientX - offsetX;
+    this.startY = e.clientY - offsetY;
+
+    const scale = this.getScale();
+
+    this.drawField.dx = this.startX / scale;
+    this.drawField.dy = this.startY / scale;
+    this.isDraw = true;
+  }
+
+  private async handleDrawEnd(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isDraw) {
+      return;
+    }
+    if (!this.drawField) {
+      return;
+    }
+    this.isDraw = false;
+    this.drawField.draw = false;
+
+    this.drawField.dx = this.drawField.dx - this.dMargin;
+    this.drawField.dy = this.drawField.dy - this.dMargin;
+
+    this.drawField = null;
+
+    this.canvasEl.style.cursor = "default";
+
+    this.draw();
+  }
+
+  private async handleDraw(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.isDraw) {
+      return;
+    }
+    if (!this.drawField) {
+      return;
+    }
+    const scale = this.getScale();
+    const { offsetX, offsetY } = await this.getOffset();
+    const mouseX = e.clientX - offsetX;
+    const mouseY = e.clientY - offsetY;
+    this.drawField.dWidth = (mouseX - this.startX) / scale;
+    this.drawField.dHeight = (mouseY - this.startY) / scale;
+
+    this.draw();
   }
 
   private getMarginSize(w: number, h: number) {
@@ -177,8 +448,22 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.fields.push(field);
   }
 
+  getViewer() {
+    this.viewerEl.classList.add("viewer");
+    this.viewerEl.style.width = `100%`;
+    this.viewerEl.style.height = `100%`;
+    this.viewerEl.style.overflow = "scroll";
+    this.viewerEl.style.display = "flex";
+    this.viewerEl.style.justifyContent = "flex-start";
+    this.viewerEl.style.alignItems = "flex-start";
+    return this.viewerEl;
+  }
+
   getEditFiled() {
     return this.editField;
+  }
+  getDrawFiled() {
+    return this.drawField;
   }
 
   getFields() {
@@ -198,7 +483,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   }
 
   setDraw() {
-    this.editField = {
+    this.drawField = {
       id: `tmp-${Date.now()}`,
       text: "",
       dx: 0,
@@ -210,82 +495,14 @@ export default class Viewer extends DrawEvent implements IViewer {
       lineWidth: 5,
       draw: true,
     };
-    this.fields.push(this.editField);
+    this.fields.push(this.drawField);
 
-    this.canvasEl.style.cursor = "pointer";
+    this.canvasEl.style.cursor = "crosshair";
   }
 
   private async getOffset() {
     const cOffset = this.canvasEl.getBoundingClientRect();
     return { offsetX: cOffset.left, offsetY: cOffset.top };
-  }
-
-  // private async handleCloseHoverEvent(event: MouseEvent) {
-  //   // Check whether point is inside circle
-  //   for (const f of this.fields) {
-  //     if (
-  //       !f.circle ||
-  //       !this.ctx.isPointInPath(f.circle, event.offsetX, event.offsetY)
-  //     ) {
-  //       this.canvasEl.style.cursor = "default";
-  //       continue;
-  //     }
-  //     this.canvasEl.style.cursor = "pointer";
-  //     break;
-  //   }
-  // }
-
-  private async handleMouseDown(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!this.editField) {
-      return;
-    }
-
-    const { offsetX, offsetY } = await this.getOffset();
-    this.startX = e.clientX - offsetX;
-    this.startY = e.clientY - offsetY;
-
-    const scale = this.getScale();
-
-    this.editField.dx = this.startX / scale;
-    this.editField.dy = this.startY / scale;
-    this.isDown = true;
-  }
-
-  private async handleMouseLeave(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!this.isDown || !this.editField) {
-      return;
-    }
-    this.isDown = false;
-    this.editField.draw = false;
-
-    this.editField.dx = this.editField.dx - this.dMargin;
-    this.editField.dy = this.editField.dy - this.dMargin;
-
-    this.editField = null;
-
-    this.canvasEl.style.cursor = "default";
-    this.draw();
-  }
-
-  private async handleMouseMove(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!this.isDown || !this.editField) {
-      return;
-    }
-    const scale = this.getScale();
-    const { offsetX, offsetY } = await this.getOffset();
-    const mouseX = e.clientX - offsetX;
-    const mouseY = e.clientY - offsetY;
-    this.editField.dWidth = (mouseX - this.startX) / scale;
-    this.editField.dHeight = (mouseY - this.startY) / scale;
-
-    this.draw();
   }
 
   private setImageCache() {
@@ -367,7 +584,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
-    let cnt = 1;
     for (const f of this.fields) {
       const dx = Math.floor(f.draw ? f.dx : f.dx + this.dMargin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + this.dMargin);
@@ -382,26 +598,76 @@ export default class Viewer extends DrawEvent implements IViewer {
       };
 
       if (f.type === "fill") {
-        this.fillRect(this.ctx, rectOption);
+        f.box = this.fillRect(this.ctx, rectOption);
       } else if (f.type === "stroke") {
-        this.strokeRect(this.ctx, rectOption);
+        f.box = this.strokeRect(this.ctx, rectOption);
       }
 
-      const circle = new Path2D();
-      circle.arc(dx, dy - 10, 25, 0, 2 * Math.PI);
-      if (!f.draw) {
-        this.ctx.fillStyle = "black";
-        this.ctx.fill(circle);
-        f.circle = circle;
+      if (f.edit) {
+        const circle1 = new Path2D();
+        const circle2 = new Path2D();
+        const circle3 = new Path2D();
+        const circle4 = new Path2D();
+        const circle5 = new Path2D();
+        const circle6 = new Path2D();
+        const circle7 = new Path2D();
+        const circle8 = new Path2D();
+        circle1.arc(dx, dy, 10, 0, 2 * Math.PI);
+        circle2.arc(dx + Math.floor(f.dWidth) / 2, dy, 10, 0, 2 * Math.PI);
+        circle3.arc(dx + Math.floor(f.dWidth), dy, 10, 0, 2 * Math.PI);
+        circle4.arc(
+          dx + Math.floor(f.dWidth),
+          dy + Math.floor(f.dHeight) / 2,
+          10,
+          0,
+          2 * Math.PI
+        );
+        circle5.arc(
+          dx + Math.floor(f.dWidth),
+          dy + Math.floor(f.dHeight),
+          10,
+          0,
+          2 * Math.PI
+        );
+        circle6.arc(
+          dx + Math.floor(f.dWidth) / 2,
+          dy + Math.floor(f.dHeight),
+          10,
+          0,
+          2 * Math.PI
+        );
+        circle7.arc(dx, dy + Math.floor(f.dHeight), 10, 0, 2 * Math.PI);
+        circle8.arc(dx, dy + Math.floor(f.dHeight) / 2, 10, 0, 2 * Math.PI);
 
-        const textOption = {
-          dx: dx - 10 * String(cnt).length,
-          dy: dy + 1,
-          text: `${cnt++}`,
-          font: "32px Pretendard",
-          color: "white",
-        };
-        this.fillText(this.ctx, textOption);
+        this.ctx.fillStyle = "blue";
+        this.ctx.fill(circle1);
+        this.ctx.fill(circle2);
+        this.ctx.fill(circle3);
+        this.ctx.fill(circle4);
+        this.ctx.fill(circle5);
+        this.ctx.fill(circle6);
+        this.ctx.fill(circle7);
+        this.ctx.fill(circle8);
+
+        f.circle = [
+          circle1,
+          circle2,
+          circle3,
+          circle4,
+          circle5,
+          circle6,
+          circle7,
+          circle8,
+        ];
+
+        // const textOption = {
+        //   dx: dx - 10 * String(cnt).length,
+        //   dy: dy + 1,
+        //   text: `${cnt++}`,
+        //   font: "32px Pretendard",
+        //   color: "white",
+        // };
+        // this.fillText(this.ctx, textOption);
       }
     }
   }

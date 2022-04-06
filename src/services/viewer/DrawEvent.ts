@@ -68,13 +68,21 @@ export default class DrawEvent implements IDrawEvent {
 
   fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
     ctx.fillStyle = option.color;
-    ctx.fillRect(option.dx, option.dy, option.dWidth, option.dHeight);
+    const box = new Path2D();
+    box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
+    // ctx.fillRect(option.dx, option.dy, option.dWidth, option.dHeight);
+    ctx.fill(box);
+    return box;
   }
 
   strokeRect(ctx: CanvasRenderingContext2D, option: RectOption) {
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
-    ctx.strokeRect(option.dx, option.dy, option.dWidth, option.dHeight);
+    const box = new Path2D();
+    box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
+    // ctx.strokeRect(option.dx, option.dy, option.dWidth, option.dHeight);
+    ctx.stroke(box);
+    return box;
   }
 
   fillArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
