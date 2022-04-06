@@ -172,6 +172,9 @@ export const useInspectionStore = defineStore("inspectionStore", {
     },
     async setInspectionItem(item: Inspection, page: number) {
       this.viewer.removeFields();
+      this.viewer.init();
+      this.viewer.setZoomInOut("init");
+      this.viewer.setRotate(0);
       const items =
         item?.prediction.key_values.length || 0 > 0
           ? item?.prediction.key_values

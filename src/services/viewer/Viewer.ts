@@ -13,7 +13,6 @@ export type Field = {
   color: string;
   lineWidth?: number;
   draw?: boolean;
-  edit?: boolean;
   circle?: Path2D[];
   box?: Path2D;
 };
@@ -91,6 +90,24 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.setEditEvent();
   }
 
+  init() {
+    this.editField = null;
+    this.drawField = null;
+    this.isDraw = false;
+    this.isEdit = false;
+    this.isMove = false;
+    this.isResize = false;
+    this.resizePointer = "default";
+    this.resizeDirection = 0;
+    this.startX = 0;
+    this.startY = 0;
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.fields = [];
+    this.dMargin = 0;
+    this.setCalculatedDepth();
+  }
+
   private setEditEvent() {
     this.canvasEl.addEventListener("mousemove", this.handleBoxHover.bind(this));
     this.canvasEl.addEventListener(
@@ -130,7 +147,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   }
 
   private async handleCircleHover(e: MouseEvent) {
-    if (!this.editField?.circle || this.isResize) {
+    if (!this.editField?.circle || this.isResize || !this.isEdit) {
       return;
     }
     for (let i = 0; i < this.editField.circle.length; i++) {
@@ -253,6 +270,7 @@ export default class Viewer extends DrawEvent implements IViewer {
   private async handleBoxSelect(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+
     if (this.editField?.circle) {
       for (const c of this.editField.circle) {
         if (this.ctx.isPointInPath(c, e.offsetX, e.offsetY)) {
@@ -260,22 +278,22 @@ export default class Viewer extends DrawEvent implements IViewer {
         }
       }
     }
+    this.isEdit = false;
+    this.editField = null;
 
     for (const f of this.fields) {
       if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
-        f.edit = false;
-        this.isEdit = false;
         continue;
+      } else {
+        this.isEdit = true;
+        this.isMove = true;
+        this.editField = f;
+        const { offsetX, offsetY } = await this.getOffset();
+        const mouseX = e.clientX - offsetX;
+        const mouseY = e.clientY - offsetY;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
       }
-      f.edit = true;
-      this.isEdit = true;
-      this.isMove = true;
-      this.editField = f;
-      const { offsetX, offsetY } = await this.getOffset();
-      const mouseX = e.clientX - offsetX;
-      const mouseY = e.clientY - offsetY;
-      this.mouseX = mouseX;
-      this.mouseY = mouseY;
     }
     this.draw();
   }
@@ -601,73 +619,18 @@ export default class Viewer extends DrawEvent implements IViewer {
       } else if (f.type === "stroke") {
         f.box = this.strokeRect(this.ctx, rectOption);
       }
+    }
 
-      if (f.edit) {
-        const circle1 = new Path2D();
-        const circle2 = new Path2D();
-        const circle3 = new Path2D();
-        const circle4 = new Path2D();
-        const circle5 = new Path2D();
-        const circle6 = new Path2D();
-        const circle7 = new Path2D();
-        const circle8 = new Path2D();
-        circle1.arc(dx, dy, 10, 0, 2 * Math.PI);
-        circle2.arc(dx + Math.floor(f.dWidth) / 2, dy, 10, 0, 2 * Math.PI);
-        circle3.arc(dx + Math.floor(f.dWidth), dy, 10, 0, 2 * Math.PI);
-        circle4.arc(
-          dx + Math.floor(f.dWidth),
-          dy + Math.floor(f.dHeight) / 2,
-          10,
-          0,
-          2 * Math.PI
-        );
-        circle5.arc(
-          dx + Math.floor(f.dWidth),
-          dy + Math.floor(f.dHeight),
-          10,
-          0,
-          2 * Math.PI
-        );
-        circle6.arc(
-          dx + Math.floor(f.dWidth) / 2,
-          dy + Math.floor(f.dHeight),
-          10,
-          0,
-          2 * Math.PI
-        );
-        circle7.arc(dx, dy + Math.floor(f.dHeight), 10, 0, 2 * Math.PI);
-        circle8.arc(dx, dy + Math.floor(f.dHeight) / 2, 10, 0, 2 * Math.PI);
-
-        this.ctx.fillStyle = "blue";
-        this.ctx.fill(circle1);
-        this.ctx.fill(circle2);
-        this.ctx.fill(circle3);
-        this.ctx.fill(circle4);
-        this.ctx.fill(circle5);
-        this.ctx.fill(circle6);
-        this.ctx.fill(circle7);
-        this.ctx.fill(circle8);
-
-        f.circle = [
-          circle1,
-          circle2,
-          circle3,
-          circle4,
-          circle5,
-          circle6,
-          circle7,
-          circle8,
-        ];
-
-        // const textOption = {
-        //   dx: dx - 10 * String(cnt).length,
-        //   dy: dy + 1,
-        //   text: `${cnt++}`,
-        //   font: "32px Pretendard",
-        //   color: "white",
-        // };
-        // this.fillText(this.ctx, textOption);
-      }
+    if (this.editField) {
+      const dx = Math.floor(this.editField.dx + this.dMargin);
+      const dy = Math.floor(this.editField.dy + this.dMargin);
+      this.editField.circle = this.drawEditCircle(
+        this.ctx,
+        dx,
+        dy,
+        this.editField.dWidth,
+        this.editField.dHeight
+      );
     }
   }
 }

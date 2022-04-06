@@ -150,4 +150,68 @@ export default class DrawEvent implements IDrawEvent {
     ctx.rotate((option.deg * Math.PI) / 180);
     ctx.translate(-tx, -ty);
   }
+
+  drawEditCircle(
+    ctx: CanvasRenderingContext2D,
+    dx: number,
+    dy: number,
+    dWidth: number,
+    dHeight: number
+  ) {
+    const circle1 = new Path2D();
+    const circle2 = new Path2D();
+    const circle3 = new Path2D();
+    const circle4 = new Path2D();
+    const circle5 = new Path2D();
+    const circle6 = new Path2D();
+    const circle7 = new Path2D();
+    const circle8 = new Path2D();
+    circle1.arc(dx, dy, 10, 0, 2 * Math.PI);
+    circle2.arc(dx + Math.floor(dWidth) / 2, dy, 10, 0, 2 * Math.PI);
+    circle3.arc(dx + Math.floor(dWidth), dy, 10, 0, 2 * Math.PI);
+    circle4.arc(
+      dx + Math.floor(dWidth),
+      dy + Math.floor(dHeight) / 2,
+      10,
+      0,
+      2 * Math.PI
+    );
+    circle5.arc(
+      dx + Math.floor(dWidth),
+      dy + Math.floor(dHeight),
+      10,
+      0,
+      2 * Math.PI
+    );
+    circle6.arc(
+      dx + Math.floor(dWidth) / 2,
+      dy + Math.floor(dHeight),
+      10,
+      0,
+      2 * Math.PI
+    );
+    circle7.arc(dx, dy + Math.floor(dHeight), 10, 0, 2 * Math.PI);
+    circle8.arc(dx, dy + Math.floor(dHeight) / 2, 10, 0, 2 * Math.PI);
+
+    ctx.fillStyle = "blue";
+    ctx.fill(circle1);
+    ctx.fill(circle2);
+    ctx.fill(circle3);
+    ctx.fill(circle4);
+    ctx.fill(circle5);
+    ctx.fill(circle6);
+    ctx.fill(circle7);
+    ctx.fill(circle8);
+
+    return [
+      circle1,
+      circle2,
+      circle3,
+      circle4,
+      circle5,
+      circle6,
+      circle7,
+      circle8,
+    ];
+  }
 }
