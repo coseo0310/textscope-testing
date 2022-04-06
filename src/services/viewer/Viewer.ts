@@ -276,7 +276,6 @@ export default class Viewer extends DrawEvent implements IViewer {
       const mouseY = e.clientY - offsetY;
       this.mouseX = mouseX;
       this.mouseY = mouseY;
-      break;
     }
     this.draw();
   }
