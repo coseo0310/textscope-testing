@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Viewer } from "@/services";
-import { Field } from "@/services/viewer/Viewer";
+import { Field } from "@/services/viewer/DrawEvent";
 
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";

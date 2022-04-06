@@ -76,6 +76,16 @@ export interface IDrawEvent {
   setScale: (ctx: CanvasRenderingContext2D, option: ScaleOption) => void;
   drawImage: (ctx: CanvasRenderingContext2D, option: ImgOption) => void;
   drawRotate: (ctx: CanvasRenderingContext2D, option: RotateOption) => void;
+  drawEditCircle: (
+    ctx: CanvasRenderingContext2D,
+    field: Field,
+    margin: number
+  ) => void;
+  drawFields: (
+    ctx: CanvasRenderingContext2D,
+    fields: Field[],
+    margin: number
+  ) => void;
 }
 
 export default class DrawEvent implements IDrawEvent {

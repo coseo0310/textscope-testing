@@ -6,7 +6,6 @@ interface IViewer extends IDrawEvent {
   getViewer: () => void;
   getScale: () => number;
   getFields: () => Field[];
-  getEditFiled: () => Field | null;
   setImgUrl: (url: string) => void;
   setZoomInOut: (command: ZoomCommand) => void;
   setRotate: (deg: number) => void;
@@ -459,13 +458,6 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.viewerEl.style.justifyContent = "flex-start";
     this.viewerEl.style.alignItems = "flex-start";
     return this.viewerEl;
-  }
-
-  getEditFiled() {
-    return this.editField;
-  }
-  getDrawFiled() {
-    return this.drawField;
   }
 
   getFields() {
