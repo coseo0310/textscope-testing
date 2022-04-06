@@ -1,21 +1,6 @@
-import DrawEvent, { IDrawEvent } from "./DrawEvent";
+import DrawEvent, { IDrawEvent, Field } from "./DrawEvent";
 
 type ZoomCommand = "in" | "out" | "init";
-
-export type Field = {
-  id: string;
-  text: string;
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  type: "fill" | "stroke";
-  color: string;
-  lineWidth?: number;
-  draw?: boolean;
-  circle?: Path2D[];
-  box?: Path2D;
-};
 
 interface IViewer extends IDrawEvent {
   getViewer: () => void;
@@ -600,36 +585,13 @@ export default class Viewer extends DrawEvent implements IViewer {
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
-
-    for (const f of this.fields) {
-      const dx = Math.floor(f.draw ? f.dx : f.dx + this.dMargin);
-      const dy = Math.floor(f.draw ? f.dy : f.dy + this.dMargin);
-
-      const rectOption = {
-        dx,
-        dy,
-        dWidth: Math.floor(f.dWidth),
-        dHeight: Math.floor(f.dHeight),
-        color: f.color,
-        lineWidth: 5,
-      };
-
-      if (f.type === "fill") {
-        f.box = this.fillRect(this.ctx, rectOption);
-      } else if (f.type === "stroke") {
-        f.box = this.strokeRect(this.ctx, rectOption);
-      }
-    }
+    this.drawFields(this.ctx, this.fields, this.dMargin);
 
     if (this.editField) {
-      const dx = Math.floor(this.editField.dx + this.dMargin);
-      const dy = Math.floor(this.editField.dy + this.dMargin);
       this.editField.circle = this.drawEditCircle(
         this.ctx,
-        dx,
-        dy,
-        this.editField.dWidth,
-        this.editField.dHeight
+        this.editField,
+        this.dMargin
       );
     }
   }
