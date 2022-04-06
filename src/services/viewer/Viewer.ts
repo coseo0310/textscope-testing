@@ -106,7 +106,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     );
     this.canvasEl.addEventListener(
       "mousedown",
-      this.handleCircelSelect.bind(this)
+      this.handleCircleSelect.bind(this)
     );
     this.canvasEl.addEventListener(
       "mouseup",
@@ -155,7 +155,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     }
   }
 
-  private async handleCircelSelect(e: MouseEvent) {
+  private async handleCircleSelect(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (!this.isEdit || this.isMove || this.isResize) {
@@ -548,9 +548,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     if (!this.imgEl) {
       return;
     }
-    const imgCanvas = document.createElement("canvas");
-    const imgCtx = imgCanvas.getContext("2d");
-    if (!imgCtx || !this.ctx) {
+    if (!this.ctx) {
       return;
     }
 
@@ -580,7 +578,7 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.drawFields(this.ctx, this.fields, this.dMargin);
 
     if (this.editField) {
-      this.editField.circle = this.drawEditCircle(
+      this.editField.circle = this.drawEditCircles(
         this.ctx,
         this.editField,
         this.dMargin
