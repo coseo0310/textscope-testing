@@ -2,6 +2,8 @@ import DrawEvent, { IDrawEvent, Field } from "./DrawEvent";
 
 type ZoomCommand = "in" | "out" | "init";
 
+type DrawCallback = (field: Field) => void;
+
 interface IViewer extends IDrawEvent {
   getViewer: () => void;
   getScale: () => number;
@@ -28,6 +30,12 @@ export default class Viewer extends DrawEvent implements IViewer {
   private imageCache: HTMLCanvasElement;
   private imageCacheCtx: CanvasRenderingContext2D;
 
+  // Events callback;
+  private drawEndCallback: DrawCallback | null;
+  private resizeEndCallback: DrawCallback | null;
+  private boxSelectedCallback: DrawCallback | null;
+
+  // Draw Events Valiables
   private drawField: Field | null;
   private editField: Field | null;
   private dMargin: number;
@@ -56,6 +64,10 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.depth = 0;
     this.deg = 0;
     this.fields = [];
+
+    this.drawEndCallback = null;
+    this.resizeEndCallback = null;
+    this.boxSelectedCallback = null;
 
     this.isDraw = false;
     this.isEdit = false;
@@ -90,6 +102,16 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.fields = [];
     this.dMargin = 0;
     this.setCalculatedDepth();
+  }
+
+  setDrawEndCallback(c: DrawCallback) {
+    this.drawEndCallback = c;
+  }
+  setResizeCallback(c: DrawCallback) {
+    this.resizeEndCallback = c;
+  }
+  setBoxSelectCallback(c: DrawCallback) {
+    this.boxSelectedCallback = c;
   }
 
   private setEditEvent() {
@@ -233,6 +255,9 @@ export default class Viewer extends DrawEvent implements IViewer {
     if (!this.editField) {
       return;
     }
+    if (this.resizeEndCallback && this.editField) {
+      this.resizeEndCallback(this.editField);
+    }
     this.isResize = false;
   }
 
@@ -317,6 +342,10 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.isMove = false;
     this.canvasEl.style.cursor = "default";
     this.draw();
+
+    if (this.boxSelectedCallback && this.editField) {
+      this.boxSelectedCallback(this.editField);
+    }
   }
 
   private async handleDrawStart(e: MouseEvent) {
@@ -352,6 +381,10 @@ export default class Viewer extends DrawEvent implements IViewer {
 
     this.drawField.dx = this.drawField.dx - this.dMargin;
     this.drawField.dy = this.drawField.dy - this.dMargin;
+
+    if (this.drawEndCallback && this.drawField) {
+      this.drawEndCallback(this.drawField);
+    }
 
     this.drawField = null;
 
@@ -476,21 +509,9 @@ export default class Viewer extends DrawEvent implements IViewer {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 
-  setDraw() {
-    this.drawField = {
-      id: `tmp-${Date.now()}`,
-      text: "",
-      dx: 0,
-      dy: 0,
-      dWidth: 0,
-      dHeight: 0,
-      type: "stroke",
-      color: `rgba(220, 118, 118, 1)`,
-      lineWidth: 5,
-      draw: true,
-    };
+  setDraw(field: Field) {
+    this.drawField = field;
     this.fields.push(this.drawField);
-
     this.canvasEl.style.cursor = "crosshair";
   }
 

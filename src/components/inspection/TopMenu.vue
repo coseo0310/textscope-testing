@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Dropdown from "@/components/shared/Dropdown.vue";
@@ -43,14 +43,33 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  inspectionStore.viewer.setDraw();
-  inspectionStore.synonymList = inspectionStore.viewer.getFields();
+  inspectionStore.viewer.setDraw({
+    id: `tmp-${Date.now()}`,
+    text: "",
+    dx: 0,
+    dy: 0,
+    dWidth: 0,
+    dHeight: 0,
+    type: "stroke",
+    color: `rgba(220, 118, 118, 1)`,
+    lineWidth: 5,
+    draw: true,
+  });
 };
 
 const onComparison = () => {
   // TODO: comparison
   alert("준비중...");
 };
+
+onMounted(() => {
+  inspectionStore.viewer.setDrawEndCallback((field) => {
+    if (field.dWidth === 0 && field.dHeight === 0) {
+      inspectionStore.viewer.removeField(field.id);
+    }
+    inspectionStore.synonymList = inspectionStore.viewer.getFields();
+  });
+});
 </script>
 
 <template>
