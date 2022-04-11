@@ -48,7 +48,7 @@ const onEnter = () => {
   handleSubmit(onLogin);
 };
 
-const test = false;
+const isAdmin = import.meta.env.MODE.includes("admin");
 </script>
 
 <template>
@@ -119,7 +119,9 @@ const test = false;
         로그인
       </Button>
     </div>
-    <div class="sso" @click="onSingleSignOne">SSO (Single Sign One) 로그인</div>
+    <div v-if="isAdmin" class="sso" @click="onSingleSignOne">
+      SSO (Single Sign One) 로그인
+    </div>
   </div>
 </template>
 
