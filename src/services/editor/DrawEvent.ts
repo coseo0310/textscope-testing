@@ -1,97 +1,19 @@
-export type Field = {
-  id: string;
-  text: string;
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  type: "fill" | "stroke";
-  color: string;
-  lineWidth?: number;
-  draw?: boolean;
-  circle?: Path2D[];
-  box?: Path2D;
-};
+import { EditorTypes } from "./types";
 
-export type RectOption = {
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  color: string;
-  lineWidth?: number;
-};
+type RectOption = EditorTypes.RectOption;
+type ArcOption = EditorTypes.ArcOption;
+type TextOption = EditorTypes.TextOption;
+type ScaleOption = EditorTypes.ScaleOption;
+type ImgOption = EditorTypes.ImgOption;
+type RotateOption = EditorTypes.RotateOption;
+type Field = EditorTypes.Field;
 
-export type ArcOption = {
-  dx: number;
-  dy: number;
-  startArc: number;
-  endArc: number;
-  color: string;
-  radius: number;
-  lineWidth?: number;
-};
-
-export type TextOption = {
-  text: string;
-  dx: number;
-  dy: number;
-  font: string;
-  color: string;
-  lineWidth?: number;
-};
-
-export type ImgOption = {
-  img: HTMLImageElement | HTMLCanvasElement;
-  sx: number;
-  sy: number;
-  sWidth: number;
-  sHeight: number;
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-};
-
-export type RotateOption = {
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  deg: number;
-};
-
-export type ScaleOption = {
-  x: number;
-  y: number;
-};
-
-export interface IDrawEvent {
-  fillRect: (ctx: CanvasRenderingContext2D, option: RectOption) => void;
-  strokeRect: (ctx: CanvasRenderingContext2D, option: RectOption) => void;
-  fillArc: (ctx: CanvasRenderingContext2D, option: ArcOption) => void;
-  strokeArc: (ctx: CanvasRenderingContext2D, option: ArcOption) => void;
-  fillText: (ctx: CanvasRenderingContext2D, option: TextOption) => void;
-  strokeText: (ctx: CanvasRenderingContext2D, option: TextOption) => void;
-  setScale: (ctx: CanvasRenderingContext2D, option: ScaleOption) => void;
-  drawImage: (ctx: CanvasRenderingContext2D, option: ImgOption) => void;
-  drawRotate: (ctx: CanvasRenderingContext2D, option: RotateOption) => void;
-  drawEditCircles: (
-    ctx: CanvasRenderingContext2D,
-    field: Field,
-    margin: number
-  ) => void;
-  drawFields: (
-    ctx: CanvasRenderingContext2D,
-    fields: Field[],
-    margin: number
-  ) => void;
-}
+export interface IDrawEvent {}
 
 export default class DrawEvent implements IDrawEvent {
   constructor() {}
 
-  fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+  protected fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
     ctx.fillStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
@@ -100,7 +22,7 @@ export default class DrawEvent implements IDrawEvent {
     return box;
   }
 
-  strokeRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+  protected strokeRect(ctx: CanvasRenderingContext2D, option: RectOption) {
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     const box = new Path2D();
@@ -110,7 +32,7 @@ export default class DrawEvent implements IDrawEvent {
     return box;
   }
 
-  fillArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+  protected fillArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
     ctx.beginPath();
     ctx.fillStyle = option.color;
     ctx.arc(
@@ -123,7 +45,7 @@ export default class DrawEvent implements IDrawEvent {
     ctx.fill();
   }
 
-  strokeArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+  protected strokeArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
     ctx.beginPath();
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
@@ -137,24 +59,24 @@ export default class DrawEvent implements IDrawEvent {
     ctx.stroke();
   }
 
-  fillText(ctx: CanvasRenderingContext2D, option: TextOption) {
+  protected fillText(ctx: CanvasRenderingContext2D, option: TextOption) {
     ctx.font = option.font;
     ctx.fillStyle = option.color;
     ctx.fillText(option.text, option.dx, option.dy);
   }
 
-  strokeText(ctx: CanvasRenderingContext2D, option: TextOption) {
+  protected strokeText(ctx: CanvasRenderingContext2D, option: TextOption) {
     ctx.font = option.font;
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     ctx.strokeText(option.text, option.dx, option.dy);
   }
 
-  setScale(ctx: CanvasRenderingContext2D, option: ScaleOption) {
+  protected setScale(ctx: CanvasRenderingContext2D, option: ScaleOption) {
     ctx.scale(option.x, option.y);
   }
 
-  drawImage(ctx: CanvasRenderingContext2D, option: ImgOption) {
+  protected drawImage(ctx: CanvasRenderingContext2D, option: ImgOption) {
     ctx.drawImage(
       option.img,
       option.sx,
@@ -168,7 +90,7 @@ export default class DrawEvent implements IDrawEvent {
     );
   }
 
-  drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
+  protected drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
     const tx = option.dx + option.dWidth / 2;
     const ty = option.dy + option.dHeight / 2;
     ctx.translate(tx, ty);
@@ -176,7 +98,7 @@ export default class DrawEvent implements IDrawEvent {
     ctx.translate(-tx, -ty);
   }
 
-  drawEditCircles(
+  protected drawEditCircles(
     ctx: CanvasRenderingContext2D,
     field: Field,
     margin: number = 0
@@ -240,7 +162,7 @@ export default class DrawEvent implements IDrawEvent {
     ];
   }
 
-  drawFields(
+  protected drawFields(
     ctx: CanvasRenderingContext2D,
     fields: Field[],
     margin: number = 0

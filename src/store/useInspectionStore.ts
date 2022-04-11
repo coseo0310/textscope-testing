@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { Viewer } from "@/services";
-import { Field } from "@/services/viewer/DrawEvent";
+import Editor, { Field } from "@/services/editor";
 
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";
@@ -135,7 +134,7 @@ type States = {
   inspectionItem: InspectionItem | null;
   synonymList: Field[];
   isInspection: boolean;
-  viewer: Viewer;
+  editor: Editor;
   currentPage: number;
   total: number;
 };
@@ -151,7 +150,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       inspectionItem: null,
       synonymList: [],
       isInspection: false,
-      viewer: new Viewer(),
+      editor: new Editor(),
       currentPage: 1,
       total: 0,
     };
@@ -171,10 +170,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(item: Inspection, page: number) {
-      this.viewer.removeFields();
-      this.viewer.init();
-      this.viewer.setZoomInOut("init");
-      this.viewer.setRotate(0);
+      this.editor.removeFields();
+      this.editor.init();
+      this.editor.setZoomInOut("init");
+      this.editor.setRotate(0);
       const items =
         item?.prediction.key_values.length || 0 > 0
           ? item?.prediction.key_values
@@ -183,7 +182,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       const task_id = item.request.task_id;
       const filename = item.image_metadata.filename;
       const bbox = items.map((item) => {
-        this.viewer.setField({
+        this.editor.setField({
           id: item.id,
           text: item.text,
           dx: item.bbox.x,
@@ -211,8 +210,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       };
 
       this.currentPage = page;
-      this.synonymList = this.viewer.getFields();
-      this.viewer.setImgUrl(item.img);
+      this.synonymList = this.editor.getFields();
+      this.editor.setImgUrl(item.img);
     },
     async onStartInspection() {
       // alert("준비중...");

@@ -19,7 +19,7 @@ onMounted(async () => {
   if (!viewEl.value) {
     return;
   }
-  viewEl.value.appendChild(inspectionStore.viewer.getViewer());
+  viewEl.value.appendChild(inspectionStore.editor.getViewer());
 });
 </script>
 

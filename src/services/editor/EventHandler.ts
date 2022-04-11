@@ -1,44 +1,21 @@
-import DrawEvent, { IDrawEvent, Field } from "./DrawEvent";
+import EditorContorller, { IEditorContorller } from "./EditorController";
+import { EditorTypes } from "./types";
 
-type ZoomCommand = "in" | "out" | "init";
-
-type DrawCallback = (field: Field) => void;
-
-interface IViewer extends IDrawEvent {
-  getViewer: () => void;
-  getScale: () => number;
-  getFields: () => Field[];
-  setImgUrl: (url: string) => void;
-  setZoomInOut: (command: ZoomCommand) => void;
-  setRotate: (deg: number) => void;
-  setField: (field: Field) => void;
-  removeField: (id: string) => void;
-  removeFields: () => void;
-  draw: () => void;
+interface IEventHandler extends IEditorContorller {
+  init: () => void;
+  setDrawEndCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
+  setResizeCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
+  setBoxSelectedCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
 }
 
-export default class Viewer extends DrawEvent implements IViewer {
-  private canvasEl: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private viewerEl: HTMLDivElement;
-  private imgEl: HTMLImageElement | null;
-  private depth: number;
-  private maxDepth: number;
-  private minDepth: number;
-  private deg: number;
-  private fields: Field[];
-  private imageCache: HTMLCanvasElement;
-  private imageCacheCtx: CanvasRenderingContext2D;
-
-  // Events callback;
-  private drawEndCallback: DrawCallback | null;
-  private resizeEndCallback: DrawCallback | null;
-  private boxSelectedCallback: DrawCallback | null;
-
-  // Draw Events Valiables
-  private drawField: Field | null;
-  private editField: Field | null;
-  private dMargin: number;
+export default class EventHandler
+  extends EditorContorller
+  implements IEventHandler
+{
+  // Events callback
+  private drawEndCallback: EditorTypes.DrawCallback | null;
+  private resizeEndCallback: EditorTypes.DrawCallback | null;
+  private boxSelectedCallback: EditorTypes.DrawCallback | null;
   private isDraw: boolean;
   private isEdit: boolean;
   private isMove: boolean;
@@ -52,22 +29,6 @@ export default class Viewer extends DrawEvent implements IViewer {
 
   constructor() {
     super();
-    this.canvasEl = document.createElement("canvas");
-    this.ctx = this.canvasEl.getContext("2d")!;
-    this.imageCache = document.createElement("canvas");
-    this.imageCacheCtx = this.imageCache.getContext("2d")!;
-    this.viewerEl = document.createElement("div");
-    this.viewerEl.appendChild(this.canvasEl);
-    this.imgEl = null;
-    this.maxDepth = 7;
-    this.minDepth = -7;
-    this.depth = 0;
-    this.deg = 0;
-    this.fields = [];
-
-    this.drawEndCallback = null;
-    this.resizeEndCallback = null;
-    this.boxSelectedCallback = null;
 
     this.isDraw = false;
     this.isEdit = false;
@@ -79,11 +40,11 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.startY = 0;
     this.mouseX = 0;
     this.mouseY = 0;
-    this.drawField = null;
-    this.editField = null;
-    this.dMargin = 0;
-    this.setDrawEvent();
+    this.drawEndCallback = null;
+    this.resizeEndCallback = null;
+    this.boxSelectedCallback = null;
     this.setEditEvent();
+    this.setDrawEvent();
   }
 
   init() {
@@ -104,13 +65,15 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.setCalculatedDepth();
   }
 
-  setDrawEndCallback(c: DrawCallback) {
+  async setDrawEndCallback(c: EditorTypes.DrawCallback) {
     this.drawEndCallback = c;
   }
-  setResizeCallback(c: DrawCallback) {
+
+  async setResizeCallback(c: EditorTypes.DrawCallback) {
     this.resizeEndCallback = c;
   }
-  setBoxSelectCallback(c: DrawCallback) {
+
+  async setBoxSelectedCallback(c: EditorTypes.DrawCallback) {
     this.boxSelectedCallback = c;
   }
 
@@ -410,200 +373,5 @@ export default class Viewer extends DrawEvent implements IViewer {
     this.drawField.dHeight = (mouseY - this.startY) / scale;
 
     this.draw();
-  }
-
-  private getMarginSize(w: number, h: number) {
-    return w > h ? w : h;
-  }
-
-  private async setScroll() {
-    const scale = this.getScale();
-    const margin = this.getMarginSize(
-      this.canvasEl.width,
-      this.canvasEl.height
-    );
-    await this.viewerEl.scrollTo(0, 0);
-    await this.viewerEl.scrollBy({
-      top: (margin / 4) * scale,
-      left: (margin / 4) * scale,
-      behavior: "auto",
-    });
-  }
-
-  private setCalculatedDepth() {
-    const ratio = Math.ceil(
-      (this.imgEl?.naturalWidth || 0) / this.viewerEl?.clientWidth
-    );
-    this.depth = ratio * 2 * -1;
-  }
-
-  async setImgUrl(url: string) {
-    const image = new Image();
-    image.src = url;
-    this.imgEl = image;
-
-    this.imgEl.onload = async () => {
-      await this.setCalculatedDepth();
-      await this.setImageCache();
-      await this.draw();
-      await this.setScroll();
-    };
-  }
-
-  async setZoomInOut(command: ZoomCommand) {
-    if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
-      return;
-    }
-
-    this.viewerEl.scrollTo(0, 0);
-    if (command === "out" && this.depth >= this.maxDepth * -1) {
-      // OUT
-      this.depth -= 1;
-    } else if (command === "in" && this.depth <= this.maxDepth) {
-      // IN
-      this.depth += 1;
-    } else if (command === "init") {
-      // this.depth = 0;
-      this.setCalculatedDepth();
-    }
-
-    await this.setImageCache();
-    await this.draw();
-    await this.setScroll();
-  }
-
-  async setRotate(deg: number) {
-    this.deg = deg;
-    await this.setImageCache();
-    await this.draw();
-  }
-
-  async setField(field: Field) {
-    this.fields.push(field);
-  }
-
-  getViewer() {
-    this.viewerEl.classList.add("viewer");
-    this.viewerEl.style.width = `100%`;
-    this.viewerEl.style.height = `100%`;
-    this.viewerEl.style.overflow = "scroll";
-    this.viewerEl.style.display = "flex";
-    this.viewerEl.style.justifyContent = "flex-start";
-    this.viewerEl.style.alignItems = "flex-start";
-    return this.viewerEl;
-  }
-
-  getFields() {
-    return this.fields;
-  }
-
-  removeField(id: string) {
-    this.fields = this.fields.filter((f) => f.id !== id);
-  }
-
-  removeFields() {
-    this.fields = [];
-  }
-
-  getScale() {
-    return Number((this.depth * 0.1 + 1).toFixed(1));
-  }
-
-  setDraw(field: Field) {
-    this.drawField = field;
-    this.fields.push(this.drawField);
-    this.canvasEl.style.cursor = "crosshair";
-  }
-
-  private async getOffset() {
-    const cOffset = this.canvasEl.getBoundingClientRect();
-    return { offsetX: cOffset.left, offsetY: cOffset.top };
-  }
-
-  private setImageCache() {
-    if (!this.imgEl) {
-      return;
-    }
-
-    const scale = this.getScale();
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-
-    const margin = this.getMarginSize(cWidth, cHeight);
-    this.imageCache.width = cWidth + margin * scale;
-    this.imageCache.height = cHeight + margin * scale;
-
-    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
-      return;
-    }
-
-    this.dMargin = margin / 2;
-
-    const dWidth = this.imgEl.naturalWidth;
-    const dHeight = this.imgEl.naturalHeight;
-
-    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
-
-    this.drawRotate(this.imageCacheCtx, {
-      dx: this.dMargin,
-      dy: this.dMargin,
-      dWidth,
-      dHeight,
-      deg: this.deg,
-    });
-
-    this.drawImage(this.imageCacheCtx, {
-      img: this.imgEl,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(dWidth),
-      sHeight: Math.floor(dHeight),
-      dx: Math.floor(this.dMargin),
-      dy: Math.floor(this.dMargin),
-      dWidth: Math.floor(dWidth),
-      dHeight: Math.floor(dHeight),
-    });
-  }
-
-  async draw() {
-    if (!this.imgEl) {
-      return;
-    }
-    if (!this.ctx) {
-      return;
-    }
-
-    const scale = this.getScale();
-    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
-
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-    const margin = this.getMarginSize(cWidth, cHeight);
-
-    this.canvasEl.width = cWidth + margin * scale;
-    this.canvasEl.height = cHeight + margin * scale;
-
-    this.drawImage(this.ctx, {
-      img: this.imageCache,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(this.imageCache.width),
-      sHeight: Math.floor(this.imageCache.height),
-      dx: 0,
-      dy: 0,
-      dWidth: Math.floor(this.imageCache.width),
-      dHeight: Math.floor(this.imageCache.height),
-    });
-
-    this.setScale(this.ctx, { x: scale, y: scale });
-    this.drawFields(this.ctx, this.fields, this.dMargin);
-
-    if (this.editField) {
-      this.editField.circle = this.drawEditCircles(
-        this.ctx,
-        this.editField,
-        this.dMargin
-      );
-    }
   }
 }

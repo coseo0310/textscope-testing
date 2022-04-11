@@ -9,7 +9,7 @@ import { useInspectionStore } from "@/store";
 const inspectionStore = useInspectionStore();
 
 const deg = ref<number>(0);
-const zoom = ref<number>(Math.floor(inspectionStore.viewer.getScale() * 100));
+const zoom = ref<number>(Math.floor(inspectionStore.editor.getScale() * 100));
 
 const onInspection = () => {
   inspectionStore.isInspection = !inspectionStore.isInspection;
@@ -25,12 +25,12 @@ const onRotate = (type: "left" | "right" | "90") => {
     deg.value -= 90;
   }
 
-  inspectionStore.viewer.setRotate(deg.value);
+  inspectionStore.editor.setRotate(deg.value);
 };
 
 const onZoomInOut = (type: "in" | "out") => {
-  zoom.value = Math.floor(inspectionStore.viewer.getScale() * 100);
-  inspectionStore.viewer.setZoomInOut(type);
+  zoom.value = Math.floor(inspectionStore.editor.getScale() * 100);
+  inspectionStore.editor.setZoomInOut(type);
 };
 
 const onInit = () => {
@@ -43,7 +43,7 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  inspectionStore.viewer.setDraw({
+  inspectionStore.editor.setDraw({
     id: `tmp-${Date.now()}`,
     text: "",
     dx: 0,
@@ -63,12 +63,12 @@ const onComparison = () => {
 };
 
 onMounted(() => {
-  inspectionStore.viewer.setDrawEndCallback((field) => {
-    if (field.dWidth === 0 && field.dHeight === 0) {
-      inspectionStore.viewer.removeField(field.id);
-    }
-    inspectionStore.synonymList = inspectionStore.viewer.getFields();
-  });
+  // inspectionStore.editor.setDrawEndCallback((field) => {
+  //   if (field.dWidth === 0 && field.dHeight === 0) {
+  //     inspectionStore.editor.removeField(field.id);
+  //   }
+  //   inspectionStore.synonymList = inspectionStore.editor.getFields();
+  // });
 });
 </script>
 
