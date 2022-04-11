@@ -61,11 +61,11 @@ const onExtend = (b: boolean) => {
   &.separation.extend {
     .aside {
       display: fixed;
-      width: 220px;
+      width: 240px;
     }
 
     .main {
-      width: calc(100vw - 220px);
+      width: calc(100vw - 240px);
     }
   }
 }

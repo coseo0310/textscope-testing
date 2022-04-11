@@ -213,6 +213,129 @@ export const a: Routes.AdminConstants = {
       },
     },
   },
+  user: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/user",
+      name: "user",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "구성원 관리",
+        icons: "user-plus",
+      },
+    },
+  },
+  department: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/department",
+      name: "department",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "부서 관리",
+        icons: "group",
+      },
+    },
+  },
+  task: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/task",
+      name: "task",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "업무 관리",
+        icons: "work",
+      },
+    },
+  },
+  classification: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/classification",
+      name: "classification",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "문서 분류 모델 관리",
+        icons: "classification",
+      },
+    },
+  },
+  template: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/template",
+      name: "template",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "템플릿 OCR 관리",
+        icons: "template",
+      },
+    },
+  },
+  notice: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/notice",
+      name: "notice",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+        title: "공지사항",
+        icons: "notice",
+      },
+    },
+  },
+  settings: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/settings",
+      name: "settings",
+      component: SettingsPage,
+      children: [
+        {
+          path: "",
+          name: "profile",
+          component: ProfilePage,
+          meta: {
+            requiresAuth: true,
+            title: "프로필",
+            icons: "user",
+          },
+        },
+        {
+          path: "group",
+          name: "group",
+          component: GroupPage,
+          meta: {
+            requiresAuth: true,
+            title: "조직",
+            icons: "group",
+          },
+        },
+        {
+          path: "push",
+          name: "push",
+          component: PushPage,
+          meta: {
+            requiresAuth: true,
+            title: "푸시알림",
+            icons: "bell",
+          },
+        },
+      ],
+      meta: {
+        requiresAuth: true,
+        title: "설정",
+        icons: "setting",
+      },
+    },
+  },
   alarm: {
     isMenu: false,
     routeRecordRaw: {

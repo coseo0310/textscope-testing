@@ -12,6 +12,7 @@ export declare module Routes {
   type CommonConstant =
     | "root"
     | "login"
+    | "settings"
     | "alarm"
     | "logout"
     | "errors"
@@ -25,7 +26,15 @@ export declare module Routes {
     | "work"
     | "settings";
 
-  type AdminConstant = CommonConstant | "dashboard";
+  type AdminConstant =
+    | CommonConstant
+    | "dashboard"
+    | "user"
+    | "department"
+    | "task"
+    | "classification"
+    | "template"
+    | "notice";
 
   interface Routes {
     isMenu: boolean;

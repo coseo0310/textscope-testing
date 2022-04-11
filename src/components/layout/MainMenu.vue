@@ -168,7 +168,7 @@ onUnmounted(() => {
   grid-template-rows: 150px 1fr 100px;
 
   &.active {
-    width: 220px;
+    width: 240px;
     .logo {
       &::before {
         display: none;
@@ -179,7 +179,7 @@ onUnmounted(() => {
       .list {
         a {
           b {
-            width: 210px;
+            width: 230px;
             transition: width 0.5s;
           }
         }
