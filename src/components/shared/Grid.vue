@@ -7,12 +7,12 @@ export type Columns = Grid.Columns;
 export type GridList = Grid.GridList;
 export type Selected = Grid.Selected;
 
-type Props = {
+interface Props {
   columns: Columns;
   gridList: GridList;
   selected?: Selected[];
   accordion?: string;
-};
+}
 
 const props = defineProps<Props>();
 const emits = defineEmits<{

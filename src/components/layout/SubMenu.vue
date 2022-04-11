@@ -10,9 +10,9 @@ export type MenuItem = {
 
 export type MenuList = MenuItem[];
 
-type Props = {
+interface Props {
   menuList: MenuList;
-};
+}
 
 const props = defineProps<Props>();
 

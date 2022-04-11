@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-type Props = {
+interface Props {
   limit?: number;
   total?: number;
   current?: number;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   limit: 10,

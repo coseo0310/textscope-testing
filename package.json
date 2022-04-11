@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --mode development",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev:admin": "vite --mode development:admin",
+    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build:admin": "vue-tsc --noEmit && vite build --mode production:admin",
     "deploy": "sh deploy.sh",
+    "deploy:admin": "sh deploy_admin.sh",
     "preview": "vite preview"
   },
   "dependencies": {

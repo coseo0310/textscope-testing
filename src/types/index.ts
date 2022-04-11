@@ -8,36 +8,46 @@ declare module "vue-router" {
     icons?: Icons.IconType;
   }
 }
+export declare module Routes {
+  type CommonConstant =
+    | "root"
+    | "login"
+    | "alarm"
+    | "logout"
+    | "errors"
+    | "catch";
 
-export type Constant =
-  | "root"
-  | "login"
-  | "dashboard"
-  | "classification"
-  | "work"
-  | "settings"
-  | "alarm"
-  | "logout"
-  | "errors"
-  | "catch"
-  | "inspection";
+  type DefaultConstant =
+    | CommonConstant
+    | "dashboard"
+    | "classification"
+    | "inspection"
+    | "work"
+    | "settings";
 
-export type Routes = {
-  isMenu: boolean;
-  routeRecordRaw: RouteRecordRaw;
-};
+  type AdminConstant = CommonConstant | "dashboard";
 
-export type Constants = {
-  [k in Constant]: Routes;
-};
+  interface Routes {
+    isMenu: boolean;
+    routeRecordRaw: RouteRecordRaw;
+  }
 
-export type MenuItem = {
-  path: string;
-  icons: Icons.IconType;
-  title: string;
-};
+  type DefaultConstants = {
+    [k in DefaultConstant]: Routes;
+  };
 
-export type MenuList = MenuItem[];
+  type AdminConstants = {
+    [k in AdminConstant]: Routes;
+  };
+
+  interface MenuItem {
+    path: string;
+    icons: Icons.IconType;
+    title: string;
+  }
+
+  type MenuList = MenuItem[];
+}
 
 export declare module Work {
   type FilterLists = {
@@ -65,9 +75,9 @@ export declare module Grid {
     [k in string]: string | boolean;
   }[];
 
-  type Selected = {
+  interface Selected {
     id: string;
-  };
+  }
 }
 
 export declare module Icons {
@@ -103,7 +113,7 @@ export declare module Icons {
     | "notice"
     | "reset";
 
-  type SvgType = {
+  interface SvgType {
     width: string;
     height: string;
     viewBox: string;
@@ -131,7 +141,7 @@ export declare module Icons {
       r: string;
       fill?: string;
     };
-  };
+  }
 
   type Svgs = {
     [k in IconType]: SvgType;
@@ -139,17 +149,17 @@ export declare module Icons {
 }
 
 export declare module HTTP {
-  type ResponseMetadata = {
+  interface ResponseMetadata {
     request_datetime: string;
     response_datetime: string;
     time_elapsed: string;
-  };
+  }
 
-  type RequestType = {
+  interface RequestType {
     password: string;
-  };
+  }
 
-  type User = {
+  interface User {
     id: string;
     name: string;
     division: string;
@@ -159,28 +169,28 @@ export declare module HTTP {
     extension_number: string;
     profile_img: string;
     team?: User[];
-  };
+  }
 
-  type Token = {
+  interface Token {
     token: string;
     expires_after: string;
     created_at: string;
-  };
+  }
 
-  type PostAuthToken = {
+  interface PostAuthToken {
     request: RequestType;
     response_metadata: ResponseMetadata;
     token: Token;
-  };
+  }
 
-  type GetAuthToken = {
+  interface GetAuthToken {
     user: User;
     request: RequestType;
     response_metadata: ResponseMetadata;
-  };
+  }
 
-  type DeleteAuthToken = {
+  interface DeleteAuthToken {
     request: RequestType;
     response_metadata: ResponseMetadata;
-  };
+  }
 }

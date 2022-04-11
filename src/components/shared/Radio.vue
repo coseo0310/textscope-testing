@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-type Props = {
+interface Props {
   label: string;
   default: boolean;
   disabled?: boolean;
-};
+}
 
 const props = defineProps<Props>();
 

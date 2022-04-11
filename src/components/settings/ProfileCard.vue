@@ -2,10 +2,10 @@
 import { HTTP } from "@/types";
 import Frame from "@/assets/img/frame.png";
 
-type Props = {
+interface Props {
   user: HTTP.User;
   focus: boolean;
-};
+}
 
 const props = defineProps<Props>();
 const url = props.user.profile_img

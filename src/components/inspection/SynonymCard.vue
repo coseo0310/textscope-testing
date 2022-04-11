@@ -4,12 +4,12 @@ import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
 
-type Props = {
+interface Props {
   idx: number;
   keyText: string;
   text: string;
   confirm?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   confirm: true,

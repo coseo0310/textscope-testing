@@ -1,7 +1,9 @@
-import DrawEvent from "./DrawEvent";
+import DrawEvent, { IDrawEvent } from "./DrawEvent";
 import { EditorTypes } from "./types";
 
-export interface IEditorConfig {}
+export interface IEditorConfig extends IDrawEvent {
+  getScale: () => number;
+}
 
 export default class EditorConfig extends DrawEvent implements IEditorConfig {
   // Editor Elements values
@@ -76,7 +78,7 @@ export default class EditorConfig extends DrawEvent implements IEditorConfig {
     return { offsetX: cOffset.left, offsetY: cOffset.top };
   }
 
-  protected getScale() {
+  getScale() {
     return Number((this.depth * 0.1 + 1).toFixed(1));
   }
 

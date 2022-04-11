@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
-type Props = {
+interface Props {
   messages: {
     message: string;
     messageType: "warn" | "info";
   };
-};
+}
 
 const props = defineProps<Props>();
 

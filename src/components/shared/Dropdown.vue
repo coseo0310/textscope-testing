@@ -8,10 +8,10 @@ export type DropdownItem = {
   value: string;
 };
 
-type Props = {
+interface Props {
   list: DropdownItem[];
   default?: string;
-};
+}
 
 const props = defineProps<Props>();
 const emits = defineEmits<{

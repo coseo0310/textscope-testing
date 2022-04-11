@@ -6,10 +6,10 @@ export type Labels = {
   off: string;
 };
 
-type Props = {
+interface Props {
   default: boolean;
   labels?: Labels;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   default: false,

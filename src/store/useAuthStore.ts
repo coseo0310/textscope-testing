@@ -5,6 +5,7 @@ import { TOKEN } from "@/constants";
 import { HTTP, Grid } from "@/types";
 
 type States = {
+  isAdmin: boolean;
   accessToken: string;
   user: HTTP.User | null;
   isPasswordModal: boolean;
@@ -22,6 +23,7 @@ export const useAuthStore = defineStore("authStore", {
       accessToken: getCookie(TOKEN) || "",
       user: null,
       isPasswordModal: false,
+      isAdmin: false,
       alarmColumns: getAlarmColumns(),
       alarmList: [],
     };

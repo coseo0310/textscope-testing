@@ -9,6 +9,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [vue()],
     server: {
       host: "0.0.0.0",
+      port: mode.includes("admin") ? 4000 : 3000,
       fs: {
         allow: [".."],
       },

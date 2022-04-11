@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Button from "@/components/shared/Button.vue";
 
-type Props = {
+interface Props {
   confirm: {
     messages: string[];
     confirmType: "info" | "warn";
     confirmFunc: Function;
     cancelFunc: Function;
   };
-};
+}
 
 const props = defineProps<Props>();
 

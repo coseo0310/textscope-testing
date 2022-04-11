@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import GradientLoader from "@/components/shared/GradientLoader.vue";
 
-type Props = {
+interface Props {
   loader?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   loader: false,

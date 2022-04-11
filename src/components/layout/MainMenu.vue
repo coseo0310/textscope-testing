@@ -7,13 +7,13 @@ import Avatar from "@/components/shared/Avatar.vue";
 import Logo from "@/assets/logo/textscope-logo.png";
 import { useAuthStore } from "@/store";
 import { constants } from "@/router";
-import { MenuList } from "@/types";
+import { Routes } from "@/types";
 
-type Props = {
-  menuList: MenuList;
+interface Props {
+  menuList: Routes.MenuList;
   extend?: boolean;
   onExtend?: (b: boolean) => void;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   extend: false,

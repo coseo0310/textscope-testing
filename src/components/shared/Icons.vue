@@ -5,10 +5,10 @@ import { Icons } from "@/types";
 
 export type IconType = Icons.IconType;
 
-type Props = {
+interface Props {
   icons: IconType;
   on?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   on: false,
