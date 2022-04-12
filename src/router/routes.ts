@@ -1,4 +1,5 @@
 import { Routes } from "@/types";
+// Default pages
 import LoginPage from "@/pages/auth/LoginPage.vue";
 import LogoutPage from "@/pages/auth/LogoutPage.vue";
 import NotFound from "@/pages/auth/404.vue";
@@ -11,6 +12,9 @@ import GroupPage from "@/pages/settings/GroupPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
+// Admin pages
+import UserPage from "@/pages/user/UserPage.vue";
+import TeamPage from "@/pages/team/TeamPage.vue";
 
 export const d: Routes.DefaultConstants = {
   root: {
@@ -218,7 +222,7 @@ export const a: Routes.AdminConstants = {
     routeRecordRaw: {
       path: "/user",
       name: "user",
-      component: DashboardPage,
+      component: UserPage,
       meta: {
         requiresAuth: true,
         title: "구성원 관리",
@@ -226,12 +230,12 @@ export const a: Routes.AdminConstants = {
       },
     },
   },
-  department: {
+  team: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/department",
-      name: "department",
-      component: DashboardPage,
+      path: "/team",
+      name: "team",
+      component: TeamPage,
       meta: {
         requiresAuth: true,
         title: "부서 관리",

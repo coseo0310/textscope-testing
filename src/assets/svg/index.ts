@@ -571,4 +571,28 @@ export const svgs: Icons.Svgs = {
       r: "2.66667",
     },
   },
+  search: {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 32 32",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    path: [
+      {
+        d: "M18.5 18.0855L23.657 23.2424",
+        stroke: "#FAFCFF",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        fill: "none",
+      },
+    ],
+    circle: {
+      cx: "14",
+      cy: "14",
+      r: "6",
+      fill: "#6779D7",
+      stroke: "#FAFCFF",
+      strokeWidth: "2",
+    },
+  },
 };

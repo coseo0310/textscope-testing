@@ -16,6 +16,12 @@ input {
   color: $d5;
   outline: none;
 
+  &.placeholder-d4 {
+    &::placeholder {
+      color: $d4;
+    }
+  }
+
   &.background-color-red {
     background-color: rgba(255, 82, 82, 0.3);
   }
@@ -34,6 +40,9 @@ input {
 
   &.border-color-d4 {
     border-color: $d4;
+  }
+  &.border-color-d3 {
+    border-color: $d3;
   }
 
   &.color-red {

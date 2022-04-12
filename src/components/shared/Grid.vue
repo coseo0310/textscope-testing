@@ -214,5 +214,11 @@ watch(props, () => {
       }
     }
   }
+
+  &.no-underline {
+    .grid__columns {
+      border-width: 0;
+    }
+  }
 }
 </style>

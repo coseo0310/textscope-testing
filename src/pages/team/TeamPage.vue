@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import ProfileCard from "@/components/shared/ProfileCard.vue";
+import ProfileCard from "@/components/settings/ProfileCard.vue";
 import { useAuthStore } from "@/store";
 
 const authStore = useAuthStore();
 </script>
 
 <template>
-  <div class="group-page">
+  <div class="team-page">
     <div class="title">
       {{ authStore.user?.division }} ({{ authStore.user?.team?.length }})
     </div>
@@ -19,7 +19,7 @@ const authStore = useAuthStore();
 </template>
 
 <style lang="scss" scoped>
-.group-page {
+.team-page {
   width: 100%;
   /* max-width: 1640px; */
   width: 100%;

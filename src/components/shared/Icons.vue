@@ -58,6 +58,8 @@ const svg = computed(() => svgs[props.icons]);
         :cy="svg.circle.cy"
         :r="svg.circle.r"
         :fill="svg.circle.fill"
+        :stroke="svg.circle.stroke ? `currentColor` : 'none'"
+        :stroke-width="svg.circle.strokeWidth"
       />
     </template>
   </svg>

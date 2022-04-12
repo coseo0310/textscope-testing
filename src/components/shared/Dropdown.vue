@@ -76,14 +76,14 @@ onUnmounted(() => {
 <template>
   <div class="dropdown">
     <div class="current" :class="{ active: isDown }" @click="onOpen">
-      {{ current.text }}
+      {{ current?.text }}
     </div>
     <div class="icon" :class="{ active: isDown }" @click="onOpen">
       <Icons icons="chevron-down" />
     </div>
     <ul v-if="isDown" class="list" @click="onSelect">
       <li v-for="item in props.list" class="item" :data-id="item.id">
-        {{ item.text }}
+        {{ item?.text }}
       </li>
     </ul>
   </div>
@@ -100,7 +100,7 @@ onUnmounted(() => {
     height: 100%;
     border: 1px solid $d5;
     border-radius: 5px;
-    background-color: $d2;
+    background-color: $d1;
     height: 48px;
     font-size: 18px;
     font-weight: 400;
@@ -124,6 +124,30 @@ onUnmounted(() => {
       top: 9px;
       color: $point-blue;
       transform: rotate(180deg) scale(1.5);
+    }
+  }
+
+  &.border-color-d4 {
+    .current {
+      border-color: $d4;
+    }
+    &:hover {
+      .current {
+        border-color: $d5;
+      }
+    }
+  }
+
+  &.color-d4 {
+    .current,
+    .icon {
+      color: $d4;
+    }
+    &:hover {
+      .current,
+      .icon {
+        color: $d5;
+      }
     }
   }
 

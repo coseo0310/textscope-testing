@@ -30,7 +30,7 @@ export declare module Routes {
     | CommonConstant
     | "dashboard"
     | "user"
-    | "department"
+    | "team"
     | "task"
     | "classification"
     | "template"
@@ -120,7 +120,8 @@ export declare module Icons {
     | "confirm"
     | "cancel"
     | "notice"
-    | "reset";
+    | "reset"
+    | "search";
 
   interface SvgType {
     width: string;
@@ -149,6 +150,8 @@ export declare module Icons {
       cy: string;
       r: string;
       fill?: string;
+      stroke?: string;
+      strokeWidth?: string;
     };
   }
 
