@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import MainLayout from "@/components/layout/MainLayout.vue";
 import SearchBar from "@/components/user/SearchBar.vue";
 import UserForm from "@/components/user/UserForm.vue";
 import Pagination from "@/components/shared/Pagination.vue";
@@ -15,25 +16,26 @@ const onChgPage = (n: number) => {
 </script>
 
 <template>
-  <div class="user-page">
-    <div class="title">구성원 관리 ({{ userStore.users.length }})</div>
-    <div class="search">
-      <SearchBar />
+  <MainLayout>
+    <div class="user-page">
+      <div class="title">구성원 관리 ({{ userStore.users.length }})</div>
+      <div class="search">
+        <SearchBar />
+      </div>
+      <div class="grid">
+        <UserForm />
+      </div>
+      <div class="pagination">
+        <Pagination :current="currentPage" @change="onChgPage" />
+      </div>
     </div>
-    <div class="grid">
-      <UserForm />
-    </div>
-    <div class="pagination">
-      <Pagination :current="currentPage" @change="onChgPage" />
-    </div>
-  </div>
+  </MainLayout>
 </template>
 
 <style lang="scss" scoped>
 .user-page {
   width: 100%;
   height: 100vh;
-  background-color: $d2;
   padding: 80px 100px;
   display: flex;
   flex-direction: column;

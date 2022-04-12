@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import MainLayout from "@/components/layout/MainLayout.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Button from "@/components/shared/Button.vue";
 import PreviewMenu from "@/components/inspection/PreviewMenu.vue";
@@ -24,21 +25,27 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="inspection-page">
-    <div class="top-menu-wrap">
-      <TopMenu :item="inspectionStore.inspectionItem || null" />
+  <MainLayout>
+    <div class="inspection-page">
+      <div class="top-menu-wrap">
+        <TopMenu :item="inspectionStore.inspectionItem || null" />
+      </div>
+      <div class="content">
+        <div class="view" ref="viewEl"></div>
+        <div class="synonym-wrap"><SynonymForm /></div>
+      </div>
+      <div class="preview-wrap" :class="{ active: isPreview }">
+        <PreviewMenu />
+        <Button
+          class="toggle"
+          :class="{ active: isPreview }"
+          @click="onPreview"
+        >
+          <Icons icons="chevron-down" />
+        </Button>
+      </div>
     </div>
-    <div class="content">
-      <div class="view" ref="viewEl"></div>
-      <div class="synonym-wrap"><SynonymForm /></div>
-    </div>
-    <div class="preview-wrap" :class="{ active: isPreview }">
-      <PreviewMenu />
-      <Button class="toggle" :class="{ active: isPreview }" @click="onPreview">
-        <Icons icons="chevron-down" />
-      </Button>
-    </div>
-  </div>
+  </MainLayout>
 </template>
 
 <style lang="scss">

@@ -4,6 +4,7 @@ import "vue-router";
 declare module "vue-router" {
   interface RouteMeta {
     requiresAuth: boolean;
+    isMenu?: boolean;
     title?: string;
     icons?: Icons.IconType;
   }

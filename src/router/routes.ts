@@ -15,6 +15,8 @@ import AlarmPage from "@/pages/auth/AlarmPage.vue";
 // Admin pages
 import UserPage from "@/pages/user/UserPage.vue";
 import TeamPage from "@/pages/team/TeamPage.vue";
+import DepartmentPage from "@/pages/team/DepartmentPage.vue";
+import UsersPage from "@/pages/team/UsersPage.vue";
 
 export const d: Routes.DefaultConstants = {
   root: {
@@ -102,6 +104,7 @@ export const d: Routes.DefaultConstants = {
           name: "profile",
           component: ProfilePage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "프로필",
             icons: "user",
@@ -112,6 +115,7 @@ export const d: Routes.DefaultConstants = {
           name: "group",
           component: GroupPage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "조직",
             icons: "group",
@@ -122,6 +126,7 @@ export const d: Routes.DefaultConstants = {
           name: "push",
           component: PushPage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "푸시알림",
             icons: "bell",
@@ -236,6 +241,30 @@ export const a: Routes.AdminConstants = {
       path: "/team",
       name: "team",
       component: TeamPage,
+      children: [
+        {
+          path: "",
+          name: "department",
+          component: DepartmentPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "프로필",
+            icons: "user",
+          },
+        },
+        {
+          path: "users",
+          name: "users",
+          component: UsersPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "조직",
+            icons: "group",
+          },
+        },
+      ],
       meta: {
         requiresAuth: true,
         title: "부서 관리",
@@ -307,6 +336,7 @@ export const a: Routes.AdminConstants = {
           name: "profile",
           component: ProfilePage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "프로필",
             icons: "user",
@@ -317,6 +347,7 @@ export const a: Routes.AdminConstants = {
           name: "group",
           component: GroupPage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "조직",
             icons: "group",
@@ -327,6 +358,7 @@ export const a: Routes.AdminConstants = {
           name: "push",
           component: PushPage,
           meta: {
+            isMenu: true,
             requiresAuth: true,
             title: "푸시알림",
             icons: "bell",

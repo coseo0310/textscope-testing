@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
+import { useAuthStore } from "@/store";
+
+const authStore = useAuthStore();
 </script>
 
 <template>
   <MainLayout>
-    <router-view></router-view>
+    <div class="department-page">
+      <div class="title">
+        {{ authStore.user?.division }} ({{ authStore.user?.team?.length }})
+      </div>
+    </div>
   </MainLayout>
 </template>
 
 <style lang="scss" scoped>
-.team-page {
+.department-page {
   width: 100%;
   /* max-width: 1640px; */
   width: 100%;

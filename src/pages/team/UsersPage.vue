@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
+import ProfileCard from "@/components/shared/ProfileCard.vue";
+import { useAuthStore } from "@/store";
+
+const authStore = useAuthStore();
 </script>
 
 <template>
   <MainLayout>
-    <router-view></router-view>
+    <div class="users-page">
+      <div class="title">
+        {{ authStore.user?.division }} ({{ authStore.user?.team?.length }})
+      </div>
+      <div class="card-wrap">
+        <div v-for="t in authStore.user?.team" class="card">
+          <ProfileCard :user="t" :focus="t.id === authStore.user?.id" />
+        </div>
+      </div>
+    </div>
   </MainLayout>
 </template>
 
 <style lang="scss" scoped>
-.team-page {
+.users-page {
   width: 100%;
   /* max-width: 1640px; */
   width: 100%;

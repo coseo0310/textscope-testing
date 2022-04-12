@@ -25,6 +25,7 @@ export const getMainMenu = (): Routes.MenuList => {
 };
 
 export const getSubMenu = (path: string): Routes.MenuList => {
+  console.log(">>>", path);
   const item = cEntries.find(
     ([k, v]) => path.includes(k) && !!v.routeRecordRaw.children
   );
@@ -35,7 +36,10 @@ export const getSubMenu = (path: string): Routes.MenuList => {
   if (!find || typeof find === "string" || !find.routeRecordRaw.children) {
     return [];
   }
-  return find.routeRecordRaw.children.map((m): Routes.MenuItem => {
+
+  const menu = find.routeRecordRaw.children.filter((m) => m.meta?.isMenu);
+
+  return menu.map((m): Routes.MenuItem => {
     return {
       path: `${find.routeRecordRaw.path}${m.path ? `/${m.path}` : ""}`,
       icons: m.meta!.icons as Icons.IconType,
