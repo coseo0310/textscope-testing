@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import MainLayout from "@/components/layout/MainLayout.vue";
-import { useAuthStore } from "@/store";
+import { useUserStore } from "@/store";
 
-const authStore = useAuthStore();
+const userStore = useUserStore();
 </script>
 
 <template>
-  <MainLayout>
-    <div class="department-page">
-      <div class="title">
-        {{ authStore.user?.division }} ({{ authStore.user?.team?.length }})
-      </div>
-    </div>
-  </MainLayout>
+  <div class="department-page">
+    <div class="title">부서 관리 ({{ userStore.teams?.length }})</div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
