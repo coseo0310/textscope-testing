@@ -29,7 +29,7 @@ const url = props.user.profile_img
   height: 272px;
   background-color: $d2;
   border-radius: 20px;
-  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-alpha-1;
   padding: 10px;
 
   .img {

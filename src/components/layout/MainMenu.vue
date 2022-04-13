@@ -347,7 +347,7 @@ onUnmounted(() => {
   background-color: $d2;
   color: $d5;
   border-radius: 16px;
-  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: $shadow-alpha-3;
   transition: left 0.5s;
   z-index: 1;
   cursor: pointer;

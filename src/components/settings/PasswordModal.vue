@@ -215,7 +215,7 @@ const onCancel = (e: MouseEvent) => {
     width: 600px;
     height: 482px;
     background-color: $d2;
-    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-alpha-1;
     padding: 70px 73px;
 
     .title {

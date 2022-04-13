@@ -160,7 +160,7 @@ onUnmounted(() => {
   height: 100%;
   border-radius: 20px;
   background-color: $d1;
-  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-alpha-1;
   color: $d5;
   font-size: 18px;
   padding: 90px 40px 0 40px;

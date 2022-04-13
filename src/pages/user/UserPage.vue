@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import MainLayout from "@/components/layout/MainLayout.vue";
 import SearchBar from "@/components/user/SearchBar.vue";
 import UserForm from "@/components/user/UserForm.vue";
@@ -13,6 +13,10 @@ const currentPage = ref<number>(1);
 const onChgPage = (n: number) => {
   currentPage.value = n;
 };
+
+onMounted(() => {
+  userStore.team = null;
+});
 </script>
 
 <template>

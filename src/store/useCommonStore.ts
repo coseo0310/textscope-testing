@@ -11,6 +11,7 @@ type States = {
     confirmType: "info" | "warn";
     confirmFunc: Function;
     cancelFunc: Function;
+    label: string;
   };
 };
 
@@ -31,6 +32,7 @@ export const useCommonStore = defineStore("commonStore", {
         confirmType: "info",
         confirmFunc: () => {},
         cancelFunc: () => {},
+        label: "",
       },
     };
   },
@@ -45,7 +47,8 @@ export const useCommonStore = defineStore("commonStore", {
       messages: string[],
       confirmType: "info" | "warn",
       confirm: Function,
-      cancel: Function
+      cancel: Function,
+      label?: string
     ) {
       this.confirm = {
         messages,
@@ -58,6 +61,7 @@ export const useCommonStore = defineStore("commonStore", {
           cancel();
           this.isConfirm = false;
         },
+        label: label || "",
       };
       this.isConfirm = true;
     },

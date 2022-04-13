@@ -16,7 +16,7 @@ import AlarmPage from "@/pages/auth/AlarmPage.vue";
 import UserPage from "@/pages/user/UserPage.vue";
 import TeamPage from "@/pages/team/TeamPage.vue";
 import DepartmentPage from "@/pages/team/DepartmentPage.vue";
-import UsersPage from "@/pages/team/UsersPage.vue";
+import MemberPage from "@/pages/team/MemberPage.vue";
 
 export const d: Routes.DefaultConstants = {
   root: {
@@ -254,9 +254,9 @@ export const a: Routes.AdminConstants = {
           },
         },
         {
-          path: "users",
-          name: "users",
-          component: UsersPage,
+          path: "memeber",
+          name: "memeber",
+          component: MemberPage,
           meta: {
             isMenu: false,
             requiresAuth: true,

@@ -25,7 +25,6 @@ export const getMainMenu = (): Routes.MenuList => {
 };
 
 export const getSubMenu = (path: string): Routes.MenuList => {
-  console.log(">>>", path);
   const item = cEntries.find(
     ([k, v]) => path.includes(k) && !!v.routeRecordRaw.children
   );

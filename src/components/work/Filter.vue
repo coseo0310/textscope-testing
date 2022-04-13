@@ -288,7 +288,7 @@ onUnmounted(() => {
   background-color: $d2;
   border-radius: 40px;
   padding: 60px;
-  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: $shadow-alpha-1;
   font-size: 18px;
   font-weight: 700;
 

@@ -7,6 +7,7 @@ interface Props {
     confirmType: "info" | "warn";
     confirmFunc: Function;
     cancelFunc: Function;
+    label?: string;
   };
 }
 
@@ -36,7 +37,7 @@ const onConfirm = () => {
             [`color-blue`]: props.confirm.confirmType === 'info',
           }"
           @click="onConfirm"
-          >삭제</Button
+          >{{ props.confirm.label ? props.confirm.label : "삭제" }}</Button
         >
       </div>
     </div>
@@ -65,7 +66,7 @@ const onConfirm = () => {
     height: 200px;
     background-color: $d1;
     border-radius: 10px;
-    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-alpha-1;
     padding: 40px;
 
     .text {

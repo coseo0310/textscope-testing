@@ -13,6 +13,7 @@ type States = {
   userTerm: string;
   userColumns: Grid.Columns;
   userList: Grid.GridList;
+  isTeamModal: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -33,6 +34,7 @@ export const useUserStore = defineStore("userStore", {
       userTerm: "",
       userList: [],
       userColumns: getUserColumns(),
+      isTeamModal: false,
     };
   },
   actions: {

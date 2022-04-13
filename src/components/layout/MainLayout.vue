@@ -6,8 +6,6 @@ import { getSubMenu } from "@/router";
 
 const routes = useRoute();
 const menuList = ref(getSubMenu(routes.path));
-
-console.log("??");
 </script>
 
 <template>

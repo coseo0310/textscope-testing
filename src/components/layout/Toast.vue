@@ -17,7 +17,7 @@ watch(props, () => {
     return;
   }
   const d = document.createElement("div");
-  d.innerText = props.messages.message;
+  d.innerHTML = props.messages.message;
   d.classList.add("text");
   d.classList.add("start");
   d.classList.add(props.messages.messageType);
@@ -51,8 +51,9 @@ watch(props, () => {
     position: relative;
     width: 400px;
     height: 100px;
-    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow-alpha-1;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
