@@ -48,6 +48,11 @@ const onClick = (e: MouseEvent) => {
   }
 };
 
+const onMoveTeam = () => {
+  userStore.user = props.user;
+  userStore.isTeamSelectModal = true;
+};
+
 const onDelete = () => {
   commonStore.setConfirm(
     ["선택한 팀원을 삭제하시겠습니까?", "삭제 후 복구는 불가능합니다."],
@@ -65,7 +70,7 @@ const onDelete = () => {
 };
 
 const contexts: Contexts = [
-  { text: "부서 이동", callback: () => {}, color: "blue" },
+  { text: "부서 이동", callback: onMoveTeam, color: "blue" },
   { text: "삭제", callback: onDelete, color: "red" },
 ];
 </script>

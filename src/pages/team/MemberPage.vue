@@ -71,7 +71,7 @@ onMounted(() => {
       </div>
     </div>
     <MemberModal v-if="userStore.isMemberModal" />
-    <!-- <TeamSelectModal v-if="!userStore.isTeamSelectModal" /> -->
+    <TeamSelectModal v-if="userStore.isTeamSelectModal" />
   </div>
 </template>
 

@@ -1,52 +1,31 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Input from "@/components/shared/Input.vue";
+import { ref, computed } from "vue";
+import Radio from "@/components/shared/Radio.vue";
 import Button from "@/components/shared/Button.vue";
-import { useUserStore, useCommonStore } from "@/store";
+import { useUserStore } from "@/store";
 
 const userStore = useUserStore();
-const commonStore = useCommonStore();
 
-const REGEX = /^[ㄱ-ㅎ\s|가-힣\s|a-z\s|A-Z\s|0-9\s|]+$/;
-const HEIGHT = userStore.team ? "248px" : "200px";
-
-const name = ref<string>(userStore.team?.name || "");
-
-const onKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  if (!el) {
-    return;
-  }
-
-  name.value = el.value;
-};
+const select = ref<string>("");
+const total = computed(() => `${userStore.teams.length * 90}px`);
 
 const onSubmit = () => {
-  if (!userStore.team) {
+  if (!userStore.user || !select.value) {
     return;
   }
 
-  if (userStore.team.name === name.value) {
-    commonStore.setToast("기존 부서명과 동일합니다.", "warn");
-    return;
-  }
+  userStore.users = userStore.users.map((user) => {
+    if (user.id === userStore.user?.id) {
+      user.division = select.value;
+    }
+    return user;
+  });
 
-  if (!REGEX.test(name.value)) {
-    commonStore.setToast("한글, 영어, 숫자만 입력하실 수 있습니다.", "warn");
-    return;
-  }
+  userStore.isTeamSelectModal = false;
+};
 
-  const id = userStore.team.id;
-
-  const f = userStore.teams.find((f) => f.name === name.value && f.id !== id);
-
-  if (f) {
-    commonStore.setToast("동일한 부서명이 존재합니다.", "warn");
-    return;
-  }
-
-  userStore.team.name = name.value;
-  userStore.isTeamModal = false;
+const onSelection = (name: string) => {
+  select.value = name;
 };
 
 const onCancel = (e: MouseEvent) => {
@@ -55,28 +34,27 @@ const onCancel = (e: MouseEvent) => {
     return;
   }
 
-  if (el.className !== "team-modal" && !el.classList.contains("outline")) {
+  if (
+    el.className !== "team-select-modal" &&
+    !el.classList.contains("outline")
+  ) {
     return;
   }
 
-  userStore.isTeamModal = false;
+  userStore.isTeamSelectModal = false;
 };
 </script>
 
 <template>
-  <div class="team-modal" @click="onCancel">
+  <div class="team-select-modal" @click="onCancel">
     <div class="modal">
-      <div v-if="userStore.team" class="title">
-        변경하실 부서명을 입력해주세요.
-      </div>
-      <div class="input-wrap">
-        <label>부서명</label>
-        <Input
-          type="text"
-          class="placeholder-d4 border-color-d4 focus-border-color-d5"
-          :value="userStore.team?.name"
-          placeholder="부서명을 입력해주세요"
-          @keyup="onKeyup"
+      <div class="title">부서 선택</div>
+      <div class="radio-wrap">
+        <Radio
+          v-for="team in userStore.teams"
+          :label="team.name"
+          :default="false"
+          @change="(v) => (v ? onSelection(team.name) : null)"
         />
       </div>
       <div class="btn-group">
@@ -84,9 +62,7 @@ const onCancel = (e: MouseEvent) => {
           <Button class="outline" @click="onCancel">취소</Button>
         </div>
         <div class="btn-wrap">
-          <Button class="primary extra-bold" :disabled="!name" @click="onSubmit"
-            >변경</Button
-          >
+          <Button class="primary extra-bold" @click="onSubmit"> 확인 </Button>
         </div>
       </div>
     </div>
@@ -94,7 +70,7 @@ const onCancel = (e: MouseEvent) => {
 </template>
 
 <style lang="scss" scoped>
-.team-modal {
+.team-select-modal {
   position: absolute;
   top: 0;
   left: 0;
@@ -105,37 +81,28 @@ const onCancel = (e: MouseEvent) => {
   height: 100%;
 
   .modal {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     width: 400px;
-    height: v-bind("HEIGHT");
+    height: v-bind("total");
     background-color: $d1;
     border-radius: 10px;
     box-shadow: $shadow-alpha-1;
     color: $d5;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
     padding: 30px 40px;
+    overflow: scroll;
 
     .title {
       font-size: 18px;
       font-weight: 600;
       padding-bottom: 30px;
     }
-
-    .input-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-
-      label {
-        width: 80px;
-        font-size: 18px;
-        font-weight: 600;
+    .radio-wrap {
+      .radio {
+        padding: 10px 0;
       }
     }
 
