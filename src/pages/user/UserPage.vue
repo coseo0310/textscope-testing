@@ -56,6 +56,7 @@ onMounted(() => {
 
   .grid {
     height: 100%;
+    overflow: scroll;
   }
 
   .pagination {

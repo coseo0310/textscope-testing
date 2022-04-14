@@ -4,6 +4,7 @@ import { HTTP, Grid } from "@/types";
 interface Team {
   id: string;
   name: string;
+  selected?: boolean;
 }
 
 type States = {

@@ -20,10 +20,6 @@ const commonStore = useCommonStore();
 const isContext = ref<boolean>(false);
 const translate = ref<Translate>({ x: 0, y: 0 });
 
-const url = props.user.profile_img
-  ? `url('${props.user.profile_img}')`
-  : `url('${Frame}')`;
-
 const onRightClick = (e: MouseEvent) => {
   isContext.value = true;
   translate.value = { x: e.clientX, y: e.clientY };
@@ -82,7 +78,14 @@ const contexts: Contexts = [
     @mousedown="onClick"
     @contextmenu="(e) => e.preventDefault()"
   >
-    <div class="img"></div>
+    <div
+      class="img"
+      :style="{
+        backgroundImage: `url(${
+          props.user.profile_img ? props.user.profile_img : Frame
+        })`,
+      }"
+    ></div>
     <div class="info">
       {{ props.user.name }} {{ props.user.job_position }}
       {{ props.focus ? "(나)" : "" }}
@@ -111,7 +114,6 @@ const contexts: Contexts = [
   .img {
     width: 200px;
     height: 200px;
-    background-image: v-bind("url");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;

@@ -22,11 +22,7 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 
 const onSubmit = () => {
-  if (!userStore.team) {
-    return;
-  }
-
-  if (userStore.team.name === name.value) {
+  if (userStore.team?.name === name.value) {
     commonStore.setToast("기존 부서명과 동일합니다.", "warn");
     return;
   }
@@ -36,7 +32,7 @@ const onSubmit = () => {
     return;
   }
 
-  const id = userStore.team.id;
+  const id = userStore.team?.id;
 
   const f = userStore.teams.find((f) => f.name === name.value && f.id !== id);
 
@@ -44,8 +40,16 @@ const onSubmit = () => {
     commonStore.setToast("동일한 부서명이 존재합니다.", "warn");
     return;
   }
+  if (userStore.team) {
+    userStore.team.name = name.value;
+  } else {
+    const team = {
+      id: `${Date.now()}`,
+      name: name.value,
+    };
+    userStore.teams.push(team);
+  }
 
-  userStore.team.name = name.value;
   userStore.isTeamModal = false;
 };
 

@@ -8,7 +8,13 @@ const userStore = useUserStore();
 
 const select = ref<string>("");
 const total = computed(() => `${userStore.teams.length * 90}px`);
-
+const radioList = computed(() => {
+  const list = userStore.teams.map((t) => {
+    t.selected = userStore.user?.division === t.name;
+    return t;
+  });
+  return list;
+});
 const onSubmit = () => {
   if (!userStore.user || !select.value) {
     return;
@@ -25,6 +31,9 @@ const onSubmit = () => {
 };
 
 const onSelection = (name: string) => {
+  userStore.teams.forEach((t) => {
+    t.selected = t.name === name;
+  });
   select.value = name;
 };
 
@@ -51,9 +60,9 @@ const onCancel = (e: MouseEvent) => {
       <div class="title">부서 선택</div>
       <div class="radio-wrap">
         <Radio
-          v-for="team in userStore.teams"
+          v-for="team in radioList"
           :label="team.name"
-          :default="false"
+          :default="!!team.selected"
           @change="(v) => (v ? onSelection(team.name) : null)"
         />
       </div>
