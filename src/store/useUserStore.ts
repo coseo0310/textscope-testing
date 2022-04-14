@@ -7,6 +7,7 @@ interface Team {
 }
 
 type States = {
+  user: HTTP.User | null;
   users: HTTP.User[];
   team: Team | null;
   teams: Team[];
@@ -14,6 +15,8 @@ type States = {
   userColumns: Grid.Columns;
   userList: Grid.GridList;
   isTeamModal: boolean;
+  isMemberModal: boolean;
+  isTeamSelectModal: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -30,11 +33,14 @@ export const useUserStore = defineStore("userStore", {
         { id: "2", name: "검수 3팀" },
         { id: "3", name: "검수 4팀" },
       ],
+      user: null,
       team: null,
       userTerm: "",
       userList: [],
       userColumns: getUserColumns(),
       isTeamModal: false,
+      isMemberModal: false,
+      isTeamSelectModal: false,
     };
   },
   actions: {

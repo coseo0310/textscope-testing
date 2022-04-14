@@ -59,6 +59,9 @@ const onClosest = (e: MouseEvent) => {
 };
 
 watch(props, () => {
+  if (props.default === undefined) {
+    return;
+  }
   current.value = props.default
     ? props.list.find((l) => l.id === props.default) || props.list[0]
     : props.list[0];
@@ -106,7 +109,7 @@ onUnmounted(() => {
     font-weight: 400;
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 20px 10px;
     cursor: pointer;
 
     &.active {
@@ -134,6 +137,17 @@ onUnmounted(() => {
     &:hover {
       .current {
         border-color: $d5;
+      }
+    }
+  }
+
+  &.border-color-red {
+    .current {
+      border-color: $point-red;
+    }
+    &:hover {
+      .current {
+        border-color: $point-red;
       }
     }
   }

@@ -38,11 +38,25 @@ const url = computed(() =>
     width: 46px;
     height: 46px;
     border-radius: 50%;
-    background-color: $point-blue;
+    background-color: $d2;
     background-image: v-bind("url");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 100%;
+  }
+
+  &.border-none {
+    border: none;
+    background-image: none;
+  }
+
+  &.size-medium {
+    width: 65px;
+    height: 65px;
+    #avatar {
+      width: 55px;
+      height: 55px;
+    }
   }
 }
 </style>

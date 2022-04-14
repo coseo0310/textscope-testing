@@ -2,8 +2,9 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Button from "@/components/shared/Button.vue";
-import MainLayout from "@/components/layout/MainLayout.vue";
 import ProfileCard from "@/components/shared/ProfileCard.vue";
+import MemberModal from "@/components/team/MemberModal.vue";
+import TeamSelectModal from "@/components/team/TeamSelectModal.vue";
 import { useUserStore } from "@/store";
 import { constants } from "@/router";
 import { Routes } from "@/types";
@@ -14,6 +15,10 @@ const img = `url('${Membership}')`;
 const userStore = useUserStore();
 const router = useRouter();
 
+const onClick = () => {
+  userStore.isMemberModal = true;
+};
+
 onMounted(() => {
   if (!userStore.team) {
     const c = constants as Routes.AdminConstants;
@@ -23,51 +28,51 @@ onMounted(() => {
 </script>
 
 <template>
-  <MainLayout>
-    <div class="users-page">
-      <div class="title">
-        {{ userStore.team?.name }} ({{ userStore.users?.length }})
+  <div class="users-page">
+    <div class="title">
+      {{ userStore.team?.name }} ({{ userStore.users?.length }})
+    </div>
+    <div class="top-menu">
+      <div class="btn-wrap">
+        <Button class="primary extra-bold" @click="onClick">구성원 등록</Button>
       </div>
-      <div class="top-menu">
-        <div class="btn-wrap">
-          <Button class="primary extra-bold">구성원 등록</Button>
-        </div>
-      </div>
+    </div>
+    <div
+      class="card-wrap"
+      :style="{
+        alignItems:
+          userStore.users.filter((f) => f.division === userStore.team?.name)
+            .length === 0
+            ? 'center'
+            : 'flex-start',
+      }"
+    >
       <div
-        class="card-wrap"
-        :style="{
-          alignItems:
-            userStore.users.filter((f) => f.division === userStore.team?.name)
-              .length === 0
-              ? 'center'
-              : 'flex-start',
-        }"
+        v-for="t in userStore.users.filter(
+          (f) => f.division === userStore.team?.name
+        )"
+        class="card"
       >
-        <div
-          v-for="t in userStore.users.filter(
-            (f) => f.division === userStore.team?.name
-          )"
-          class="card"
-        >
-          <ProfileCard :user="t" :focus="false" />
-        </div>
+        <ProfileCard :user="t" :focus="false" />
+      </div>
 
-        <div
-          v-if="
-            userStore.users.filter((f) => f.division === userStore.team?.name)
-              .length === 0
-          "
-          class="not-found"
-        >
-          <div class="img"></div>
-          <div class="msg">
-            <p>등록된 부서가 없습니다.</p>
-            <p>'부서 생성' 버튼을 눌러 부서를 추가해주세요.</p>
-          </div>
+      <div
+        v-if="
+          userStore.users.filter((f) => f.division === userStore.team?.name)
+            .length === 0
+        "
+        class="not-found"
+      >
+        <div class="img"></div>
+        <div class="msg">
+          <p>등록된 부서가 없습니다.</p>
+          <p>'부서 생성' 버튼을 눌러 부서를 추가해주세요.</p>
         </div>
       </div>
     </div>
-  </MainLayout>
+    <MemberModal v-if="userStore.isMemberModal" />
+    <!-- <TeamSelectModal v-if="!userStore.isTeamSelectModal" /> -->
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -109,7 +114,7 @@ onMounted(() => {
 
     .not-found {
       width: 100%;
-      height: 50%;
+      height: 75%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -121,7 +126,8 @@ onMounted(() => {
         background-image: v-bind("img");
         background-repeat: no-repeat;
         background-position: center center;
-        margin-bottom: 10px;
+        background-size: cover;
+        margin-bottom: 20px;
       }
 
       .msg {

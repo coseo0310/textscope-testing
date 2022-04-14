@@ -15,6 +15,11 @@ input {
   padding: 13px 8px;
   color: $d5;
   outline: none;
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
   &.placeholder-d4 {
     &::placeholder {

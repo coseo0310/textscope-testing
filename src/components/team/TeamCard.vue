@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { constants } from "@/router";
 import { useUserStore, useCommonStore } from "@/store";
 import { Routes } from "@/types";
+import ContextMenu, {
+  Contexts,
+  Translate,
+} from "@/components/shared/ContextMenu.vue";
 
 interface Props {
   id: string;
@@ -16,27 +20,12 @@ const userStore = useUserStore();
 const commonStore = useCommonStore();
 const router = useRouter();
 
-const contextMenu = ref<HTMLDivElement | null>(null);
-
-const onClose = () => {
-  const menus = document.querySelectorAll(".context-menu");
-  menus.forEach((m) => {
-    const el = m as HTMLDivElement;
-    if (!el) {
-      return;
-    }
-    el.style.display = "none";
-  });
-};
+const isContext = ref<boolean>(false);
+const translate = ref<Translate>({ x: 0, y: 0 });
 
 const onRightClick = (e: MouseEvent) => {
-  const el = e.target as HTMLDivElement;
-  if (!el || !contextMenu.value) {
-    return;
-  }
-  onClose();
-  contextMenu.value.style.display = "flex";
-  contextMenu.value.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  isContext.value = true;
+  translate.value = { x: e.clientX, y: e.clientY };
 };
 
 const onLeftClick = (e: MouseEvent) => {
@@ -56,57 +45,7 @@ const onLeftClick = (e: MouseEvent) => {
 };
 
 const onClick = (e: MouseEvent) => {
-  if (e.button === 0) {
-    onLeftClick(e);
-  } else if (e.button === 2) {
-    onRightClick(e);
-  }
-};
-
-const onModify = (id: string) => {
-  if (!id) {
-    return;
-  }
-  const f = userStore.teams.find((t) => t.id === id);
-  if (!f) {
-    return;
-  }
-  userStore.team = f;
-  userStore.isTeamModal = true;
-  onClose();
-};
-
-const onDelete = (id: string) => {
-  if (!id) {
-    return;
-  }
-  onClose();
-  const f = userStore.users.find((u) => u.division === props.name);
-  if (f) {
-    commonStore.setToast(
-      "<p>구성원이 존재합니다.</p> <p>모든 구성원을 삭제 후 부서 삭제를 진행해주세요</p>",
-      "warn"
-    );
-    return;
-  }
-
-  commonStore.setConfirm(
-    ["검수 1팀을 삭제하시겠습니까?"],
-    "warn",
-    () => {
-      const list = userStore.teams.filter((t) => t.id !== id);
-      if (!list) {
-        return;
-      }
-      userStore.teams = list;
-    },
-    () => {},
-    "삭제"
-  );
-};
-
-const onClosest = (e: MouseEvent) => {
-  const el = e.target as HTMLElement;
+  const el = e.target as HTMLDivElement;
   if (!el) {
     return;
   }
@@ -117,16 +56,51 @@ const onClosest = (e: MouseEvent) => {
     return;
   }
 
-  onClose();
+  if (e.button === 0) {
+    onLeftClick(e);
+  } else if (e.button === 2) {
+    onRightClick(e);
+  }
 };
 
-onMounted(() => {
-  window.addEventListener("click", onClosest);
-});
+const onModify = () => {
+  const f = userStore.teams.find((t) => t.id === props.id);
+  if (!f) {
+    return;
+  }
+  userStore.team = f;
+  userStore.isTeamModal = true;
+};
 
-onUnmounted(() => {
-  window.removeEventListener("click", onClosest);
-});
+const onDelete = () => {
+  const f = userStore.users.find((u) => u.division === props.name);
+  if (f) {
+    commonStore.setToast(
+      "<p>구성원이 존재합니다.</p> <p>모든 구성원을 삭제 후 부서 삭제를 진행해주세요</p>",
+      "warn"
+    );
+    return;
+  }
+
+  commonStore.setConfirm(
+    [`${props.name}을 삭제하시겠습니까?`],
+    "warn",
+    () => {
+      const list = userStore.teams.filter((t) => t.id !== props.id);
+      if (!list) {
+        return;
+      }
+      userStore.teams = list;
+    },
+    () => {},
+    "삭제"
+  );
+};
+
+const contexts: Contexts = [
+  { text: "변경", callback: onModify, color: "blue" },
+  { text: "삭제", callback: onDelete, color: "red" },
+];
 </script>
 
 <template>
@@ -140,15 +114,13 @@ onUnmounted(() => {
         userStore.users.filter((f) => f.division === name).length
       }})
     </div>
-
-    <div class="context-menu" ref="contextMenu">
-      <div role="button" class="modify btn" @click="onModify(props.id)">
-        변경
-      </div>
-      <div role="button" class="delete btn" @click="onDelete(props.id)">
-        삭제
-      </div>
-    </div>
+    <ContextMenu
+      ref="contextMenu"
+      :isShow="isContext"
+      :translate="translate"
+      :contexts="contexts"
+      @close="isContext = false"
+    />
   </div>
 </template>
 
@@ -167,36 +139,6 @@ onUnmounted(() => {
     font-size: 18px;
     font-weight: 400;
     color: $d5;
-  }
-
-  .context-menu {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: $d1;
-    box-shadow: $shadow-alpha-1;
-
-    display: none;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    width: 80px;
-    height: 112px;
-    border-radius: 16px;
-    padding: 20px 0;
-
-    .btn {
-      font-size: 18px;
-      font-weight: 600;
-
-      &.modify {
-        color: $point-blue;
-      }
-
-      &.delete {
-        color: $point-red;
-      }
-    }
   }
 }
 </style>

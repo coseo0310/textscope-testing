@@ -266,7 +266,6 @@ const onCancel = (e: MouseEvent) => {
 
             &.on {
               stroke: $point-blue;
-              color: transparent;
             }
           }
         }
