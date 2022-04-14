@@ -16,7 +16,7 @@ const { register, handleSubmit, getValues, formState, errors } = useForm();
 
 const newIcon = ref<IconType>("hide");
 const confirmIcon = ref<IconType>("hide");
-const profileImg = ref<string>("");
+const profileImg = ref<string>(Frame);
 const position = ref<DropdownItem | null>(null);
 const isPosition = ref<boolean>(false);
 const fileEl = ref<HTMLInputElement | null>(null);
@@ -103,7 +103,7 @@ const onUploadImg = async () => {
   }
 };
 const imgClear = () => {
-  profileImg.value = "";
+  profileImg.value = Frame;
 };
 </script>
 
@@ -119,10 +119,7 @@ const imgClear = () => {
           @change="onUploadImg"
         />
         <img ref="imgEl" />
-        <Avatar
-          class="border-none size-medium"
-          :uri="profileImg && profileImg !== '' ? Frame : profileImg"
-        />
+        <Avatar class="border-none size-medium" :uri="profileImg" />
         <div role="button" class="img-change btn" @click="imgUpload">
           프로필 사진 변경
         </div>
