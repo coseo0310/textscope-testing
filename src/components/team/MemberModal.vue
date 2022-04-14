@@ -69,7 +69,6 @@ const onCancel = (e: MouseEvent) => {
     return;
   }
 
-  console.log(el.className);
   if (el.className !== "member-modal" && !el.classList.contains("primary")) {
     return;
   }
@@ -122,7 +121,7 @@ const imgClear = () => {
         <img ref="imgEl" />
         <Avatar
           class="border-none size-medium"
-          :uri="profileImg === '' ? Frame : profileImg"
+          :uri="profileImg && profileImg !== '' ? Frame : profileImg"
         />
         <div role="button" class="img-change btn" @click="imgUpload">
           프로필 사진 변경

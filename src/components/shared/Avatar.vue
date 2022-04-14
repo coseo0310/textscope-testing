@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import Frame from "@/assets/img/frame.png";
 
 interface Props {
@@ -7,15 +6,16 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-const url = computed(() =>
-  props.uri ? `url('${props.uri}')` : `url('${Frame}')`
-);
 </script>
 
 <template>
   <div class="avatar-wrap">
-    <div id="avatar"></div>
+    <div
+      id="avatar"
+      :style="{
+        backgroundImage: `url(${props.uri ? props.uri : Frame})`,
+      }"
+    ></div>
   </div>
 </template>
 
@@ -39,7 +39,6 @@ const url = computed(() =>
     height: 46px;
     border-radius: 50%;
     background-color: $d2;
-    background-image: v-bind("url");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 100%;
