@@ -6,10 +6,6 @@ import Button from "@/components/shared/Button.vue";
 import Avatar from "@/components/shared/Avatar.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import ErrorForm from "@/components/shared/ErrorForm.vue";
-import ContextMenu, {
-  Contexts,
-  Translate,
-} from "@/components/shared/ContextMenu.vue";
 import { useUserStore } from "@/store";
 import { useForm } from "@/hooks";
 import { HTTP } from "@/types";
@@ -124,7 +120,10 @@ const imgClear = () => {
           @change="onUploadImg"
         />
         <img ref="imgEl" />
-        <Avatar class="border-none size-medium" :uri="profileImg || Frame" />
+        <Avatar
+          class="border-none size-medium"
+          :uri="profileImg === '' ? Frame : profileImg"
+        />
         <div role="button" class="img-change btn" @click="imgUpload">
           프로필 사진 변경
         </div>
