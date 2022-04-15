@@ -415,12 +415,11 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleDrawEnd(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!this.isDraw) {
-      return;
-    }
+
     if (!this.drawField) {
       return;
     }
+    console.log(">>", 3);
     this.isDraw = false;
     this.drawField.draw = false;
 
@@ -434,7 +433,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.drawField = null;
 
     this.canvasEl.style.cursor = "default";
-
+    console.log(">>", 4);
     this.draw();
   }
 
