@@ -78,6 +78,9 @@ export default class EditorContorller
   async setField(field: Field) {
     this.fields.push(field);
   }
+  async setFields(fields: Field[]) {
+    this.fields = fields;
+  }
 
   getFields() {
     return this.fields;

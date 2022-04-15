@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
@@ -17,15 +18,24 @@ const props = withDefaults(defineProps<Props>(), {
 
 const inspectionStore = useInspectionStore();
 
+const text = ref<string>(props.text);
+
 const onKeyup = (e: KeyboardEvent) => {
   const el = e.target as HTMLInputElement;
   if (!el) {
     return;
   }
 
-  inspectionStore.synonymList[props.idx - 1].text = el.value;
+  text.value = el.value;
+  onConfirm();
 };
-const onConfirm = () => {};
+const onConfirm = () => {
+  inspectionStore.synonymList[props.idx - 1].text = text.value;
+  inspectionStore.editor.setFields(inspectionStore.synonymList);
+
+  console.log(inspectionStore.synonymList[props.idx - 1]);
+  inspectionStore.editor.draw();
+};
 const onCancel = () => {};
 </script>
 
@@ -74,9 +84,9 @@ const onCancel = () => {};
           @keyup="onKeyup"
         />
         <label :for="`value-${props.idx}`">t</label>
-        <div class="confirm">
-          <div class="ok" @click="onConfirm">
-            <Icons icons="confirm" />
+        <div class="confirm" @click="onConfirm">
+          <div class="ok">
+            <Icons icons="confirm" @click="onConfirm" />
           </div>
           <div class="cancel" @click="onCancel">
             <Icons icons="cancel" />
@@ -217,9 +227,9 @@ const onCancel = () => {};
         border-color: $d4;
       }
 
-      input:focus ~ .confirm {
+      /* input:focus ~ .confirm {
         display: flex;
-      }
+      } */
     }
   }
 }
