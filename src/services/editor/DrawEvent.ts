@@ -1,3 +1,5 @@
+import EditorConfig, { IEditorConfig } from "./EditorConfig";
+
 import { EditorTypes } from "./types";
 
 type RectOption = EditorTypes.RectOption;
@@ -8,10 +10,14 @@ type ImgOption = EditorTypes.ImgOption;
 type RotateOption = EditorTypes.RotateOption;
 type Field = EditorTypes.Field;
 
-export interface IDrawEvent {}
+export interface IDrawEvent extends IEditorConfig {
+  draw: () => Promise<void>;
+}
 
-export default class DrawEvent implements IDrawEvent {
-  constructor() {}
+export default class DrawEvent extends EditorConfig implements IDrawEvent {
+  constructor() {
+    super();
+  }
 
   protected fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
     ctx.fillStyle = option.color;
@@ -185,6 +191,70 @@ export default class DrawEvent implements IDrawEvent {
       } else if (f.type === "stroke") {
         f.box = this.strokeRect(ctx, rectOption);
       }
+    }
+  }
+
+  async draw() {
+    if (!this.imgEl || !this.imageCache) {
+      return;
+    }
+
+    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
+      return;
+    }
+
+    if (!this.ctx) {
+      return;
+    }
+
+    const scale = this.getScale();
+    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+
+    const cWidth = this.imgEl.naturalWidth * scale;
+    const cHeight = this.imgEl.naturalHeight * scale;
+    const margin = this.getMarginSize(cWidth, cHeight);
+
+    this.canvasEl.width = cWidth + margin * scale;
+    this.canvasEl.height = cHeight + margin * scale;
+
+    this.drawImage(this.ctx, {
+      img: this.imageCache,
+      sx: 0,
+      sy: 0,
+      sWidth: Math.floor(this.imageCache.width),
+      sHeight: Math.floor(this.imageCache.height),
+      dx: 0,
+      dy: 0,
+      dWidth: Math.floor(this.imageCache.width),
+      dHeight: Math.floor(this.imageCache.height),
+    });
+
+    this.setScale(this.ctx, { x: scale, y: scale });
+    this.drawFields(this.ctx, this.fields, this.dMargin);
+
+    if (this.editField) {
+      this.editField.circle = this.drawEditCircles(
+        this.ctx,
+        this.editField,
+        this.dMargin
+      );
+    }
+
+    if (this.drawField) {
+      this.fillRect(this.ctx, {
+        dx: 0,
+        dy: this.crosshair.dy,
+        dWidth: this.crosshair.dWidth,
+        dHeight: 1,
+        color: this.crosshair.color,
+      });
+      this.fillRect(this.ctx, {
+        dx: this.crosshair.dx,
+        dy: 0,
+        dWidth: 1,
+        dHeight: this.crosshair.dHeight,
+        color: this.crosshair.color,
+      });
     }
   }
 }

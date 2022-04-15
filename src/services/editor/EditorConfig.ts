@@ -1,11 +1,10 @@
-import DrawEvent, { IDrawEvent } from "./DrawEvent";
 import { EditorTypes } from "./types";
 
-export interface IEditorConfig extends IDrawEvent {
+export interface IEditorConfig {
   getScale: () => number;
 }
 
-export default class EditorConfig extends DrawEvent implements IEditorConfig {
+export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
   protected canvasEl: HTMLCanvasElement;
   protected ctx: CanvasRenderingContext2D;
@@ -21,14 +20,19 @@ export default class EditorConfig extends DrawEvent implements IEditorConfig {
   protected deg: number;
   protected fields: EditorTypes.Field[];
   protected dMargin: number;
+  protected crosshair: {
+    dx: number;
+    dy: number;
+    dWidth: number;
+    dHeight: number;
+    color: string;
+  };
 
   // Editor Event Handler values;
   protected drawField: EditorTypes.Field | null;
   protected editField: EditorTypes.Field | null;
 
   constructor() {
-    super();
-
     this.canvasEl = document.createElement("canvas");
     this.ctx = this.canvasEl.getContext("2d")!;
     this.imageCache = document.createElement("canvas");
@@ -50,6 +54,13 @@ export default class EditorConfig extends DrawEvent implements IEditorConfig {
     this.deg = 0;
     this.dMargin = 0;
     this.fields = [];
+    this.crosshair = {
+      dx: 0,
+      dy: 0,
+      dWidth: 0,
+      dHeight: 0,
+      color: "red",
+    };
 
     // Event Handler values
     this.drawField = null;
@@ -73,9 +84,15 @@ export default class EditorConfig extends DrawEvent implements IEditorConfig {
       behavior: "auto",
     });
   }
+
   protected async getOffset() {
     const cOffset = this.canvasEl.getBoundingClientRect();
-    return { offsetX: cOffset.left, offsetY: cOffset.top };
+    return {
+      offsetX: cOffset.left,
+      offsetY: cOffset.top,
+      offsetWidth: cOffset.width,
+      offsetHeight: cOffset.height,
+    };
   }
 
   getScale() {
@@ -87,50 +104,5 @@ export default class EditorConfig extends DrawEvent implements IEditorConfig {
       (this.imgEl?.naturalWidth || 0) / this.editorEl?.clientWidth
     );
     this.depth = ratio * 2 * -1;
-  }
-
-  protected setImageCache() {
-    if (!this.imgEl) {
-      return;
-    }
-
-    const scale = this.getScale();
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-
-    const margin = this.getMarginSize(cWidth, cHeight);
-    this.imageCache.width = cWidth + margin * scale;
-    this.imageCache.height = cHeight + margin * scale;
-
-    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
-      return;
-    }
-
-    this.dMargin = margin / 2;
-
-    const dWidth = this.imgEl.naturalWidth;
-    const dHeight = this.imgEl.naturalHeight;
-
-    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
-
-    this.drawRotate(this.imageCacheCtx, {
-      dx: this.dMargin,
-      dy: this.dMargin,
-      dWidth,
-      dHeight,
-      deg: this.deg,
-    });
-
-    this.drawImage(this.imageCacheCtx, {
-      img: this.imgEl,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(dWidth),
-      sHeight: Math.floor(dHeight),
-      dx: Math.floor(this.dMargin),
-      dy: Math.floor(this.dMargin),
-      dWidth: Math.floor(dWidth),
-      dHeight: Math.floor(dHeight),
-    });
   }
 }

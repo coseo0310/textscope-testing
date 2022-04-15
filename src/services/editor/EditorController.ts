@@ -1,10 +1,10 @@
-import EditorConfig, { IEditorConfig } from "./EditorConfig";
+import EventHandler, { IEventHandler } from "./EventHandler";
 import { EditorTypes } from "./types";
 
 type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
 
-export interface IEditorContorller extends IEditorConfig {
+export interface IEditorContorller extends IEventHandler {
   getViewer: () => void;
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
@@ -14,11 +14,10 @@ export interface IEditorContorller extends IEditorConfig {
   removeField: (id: string) => void;
   removeFields: () => void;
   setDraw: (field: Field) => Promise<void>;
-  draw: () => Promise<void>;
 }
 
 export default class EditorContorller
-  extends EditorConfig
+  extends EventHandler
   implements IEditorContorller
 {
   constructor() {
@@ -86,56 +85,54 @@ export default class EditorContorller
     this.fields = [];
   }
 
-  async setDraw(field: Field) {
-    this.drawField = field;
-    this.fields.push(this.drawField);
-    this.canvasEl.style.cursor = "crosshair";
-  }
-
-  async draw() {
-    if (!this.imgEl || !this.imageCache) {
+  private setImageCache() {
+    if (!this.imgEl) {
       return;
     }
+
+    const scale = this.getScale();
+    const cWidth = this.imgEl.naturalWidth * scale;
+    const cHeight = this.imgEl.naturalHeight * scale;
+
+    const margin = this.getMarginSize(cWidth, cHeight);
+    this.imageCache.width = cWidth + margin * scale;
+    this.imageCache.height = cHeight + margin * scale;
 
     if (this.imageCache.width === 0 || this.imageCache.height === 0) {
       return;
     }
 
-    if (!this.ctx) {
-      return;
-    }
+    this.dMargin = margin / 2;
 
-    const scale = this.getScale();
-    this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+    const dWidth = this.imgEl.naturalWidth;
+    const dHeight = this.imgEl.naturalHeight;
 
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-    const margin = this.getMarginSize(cWidth, cHeight);
+    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
 
-    this.canvasEl.width = cWidth + margin * scale;
-    this.canvasEl.height = cHeight + margin * scale;
-
-    this.drawImage(this.ctx, {
-      img: this.imageCache,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(this.imageCache.width),
-      sHeight: Math.floor(this.imageCache.height),
-      dx: 0,
-      dy: 0,
-      dWidth: Math.floor(this.imageCache.width),
-      dHeight: Math.floor(this.imageCache.height),
+    this.drawRotate(this.imageCacheCtx, {
+      dx: this.dMargin,
+      dy: this.dMargin,
+      dWidth,
+      dHeight,
+      deg: this.deg,
     });
 
-    this.setScale(this.ctx, { x: scale, y: scale });
-    this.drawFields(this.ctx, this.fields, this.dMargin);
+    this.drawImage(this.imageCacheCtx, {
+      img: this.imgEl,
+      sx: 0,
+      sy: 0,
+      sWidth: Math.floor(dWidth),
+      sHeight: Math.floor(dHeight),
+      dx: Math.floor(this.dMargin),
+      dy: Math.floor(this.dMargin),
+      dWidth: Math.floor(dWidth),
+      dHeight: Math.floor(dHeight),
+    });
+  }
 
-    if (this.editField) {
-      this.editField.circle = this.drawEditCircles(
-        this.ctx,
-        this.editField,
-        this.dMargin
-      );
-    }
+  async setDraw(field: Field) {
+    this.drawField = field;
+    this.fields.push(this.drawField);
+    this.canvasEl.style.cursor = "crosshair";
   }
 }

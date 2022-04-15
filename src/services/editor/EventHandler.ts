@@ -1,17 +1,14 @@
-import EditorContorller, { IEditorContorller } from "./EditorController";
+import DrawEvent, { IDrawEvent } from "./DrawEvent";
 import { EditorTypes } from "./types";
 
-interface IEventHandler extends IEditorContorller {
+export interface IEventHandler extends IDrawEvent {
   init: () => void;
   setDrawEndCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
   setResizeCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
   setBoxSelectedCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
 }
 
-export default class EventHandler
-  extends EditorContorller
-  implements IEventHandler
-{
+export default class EventHandler extends DrawEvent implements IEventHandler {
   // Events callback
   private drawEndCallback: EditorTypes.DrawCallback | null;
   private resizeEndCallback: EditorTypes.DrawCallback | null;
@@ -77,7 +74,7 @@ export default class EventHandler
     this.boxSelectedCallback = c;
   }
 
-  private setEditEvent() {
+  protected setEditEvent() {
     this.canvasEl.addEventListener("mousemove", this.handleBoxHover.bind(this));
     this.canvasEl.addEventListener(
       "mousemove",
@@ -105,7 +102,47 @@ export default class EventHandler
     this.canvasEl.addEventListener("mouseleave", this.handleResized.bind(this));
   }
 
-  private setDrawEvent() {
+  protected removeEditEvent() {
+    this.canvasEl.removeEventListener(
+      "mousemove",
+      this.handleBoxHover.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousemove",
+      this.handleCircleHover.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousemove",
+      this.handleResize.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousemove",
+      this.handleBoxMove.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousedown",
+      this.handleBoxSelect.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mousedown",
+      this.handleCircleSelect.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mouseup",
+      this.handleBoxSelected.bind(this)
+    );
+    this.canvasEl.removeEventListener("mouseup", this.handleResized.bind(this));
+    this.canvasEl.removeEventListener(
+      "mouseleave",
+      this.handleBoxSelected.bind(this)
+    );
+    this.canvasEl.removeEventListener(
+      "mouseleave",
+      this.handleResized.bind(this)
+    );
+  }
+
+  protected setDrawEvent() {
     this.canvasEl.addEventListener(
       "mousedown",
       this.handleDrawStart.bind(this)
@@ -113,6 +150,24 @@ export default class EventHandler
     this.canvasEl.addEventListener("mousemove", this.handleDraw.bind(this));
     this.canvasEl.addEventListener("mouseup", this.handleDrawEnd.bind(this));
     this.canvasEl.addEventListener("mouseleave", this.handleDrawEnd.bind(this));
+
+    this.canvasEl.addEventListener(
+      "mousemove",
+      this.handleCrosshair.bind(this)
+    );
+  }
+
+  protected removeDrawEvent() {
+    this.canvasEl.removeEventListener(
+      "mousedown",
+      this.handleDrawStart.bind(this)
+    );
+    this.canvasEl.removeEventListener("mousemove", this.handleDraw.bind(this));
+    this.canvasEl.removeEventListener("mouseup", this.handleDrawEnd.bind(this));
+    this.canvasEl.removeEventListener(
+      "mouseleave",
+      this.handleDrawEnd.bind(this)
+    );
   }
 
   private async handleCircleHover(e: MouseEvent) {
@@ -252,14 +307,23 @@ export default class EventHandler
     }
     this.isEdit = false;
     this.editField = null;
-
+    const scale = this.getScale();
     for (const f of this.fields) {
       if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
         continue;
       } else {
+        const prev: number = this.editField
+          ? this.editField.dWidth * this.editField.dHeight
+          : 0;
+        const next = f.dWidth * f.dHeight * scale;
+
         this.isEdit = true;
         this.isMove = true;
-        this.editField = f;
+        this.editField = this.editField
+          ? prev > next
+            ? f
+            : this.editField
+          : f;
         const { offsetX, offsetY } = await this.getOffset();
         const mouseX = e.clientX - offsetX;
         const mouseY = e.clientY - offsetY;
@@ -328,6 +392,24 @@ export default class EventHandler
     this.drawField.dx = this.startX / scale;
     this.drawField.dy = this.startY / scale;
     this.isDraw = true;
+  }
+
+  private async handleCrosshair(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this.drawField) {
+      return;
+    }
+    const { offsetX, offsetY, offsetWidth, offsetHeight } =
+      await this.getOffset();
+    const startX = e.clientX - offsetX;
+    const startY = e.clientY - offsetY;
+    const scale = this.getScale();
+    this.crosshair.dx = startX / scale;
+    this.crosshair.dy = startY / scale;
+    this.crosshair.dWidth = offsetWidth / scale;
+    this.crosshair.dHeight = offsetHeight / scale;
+    this.draw();
   }
 
   private async handleDrawEnd(e: MouseEvent) {

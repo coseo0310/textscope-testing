@@ -1,4 +1,4 @@
-import Editor from "./EventHandler";
+import Editor from "./EditorController";
 import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
