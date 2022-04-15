@@ -24,6 +24,7 @@ export default class EditorContorller
     super();
 
     this.isText = true;
+    this.isIdx = true;
   }
 
   getViewer() {

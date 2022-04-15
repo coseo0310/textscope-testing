@@ -171,6 +171,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     fields: Field[],
     margin: number = 0
   ) {
+    let cnt = 1;
     for (const f of fields) {
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
@@ -198,6 +199,31 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           color: "blue",
         };
         this.fillText(this.ctx, textOption);
+      }
+
+      if (this.isIdx) {
+        const arcOption: ArcOption = {
+          dx: dx - 28,
+          dy: dy - 28,
+          startArc: 0,
+          endArc: 2 * Math.PI,
+          color: "blue",
+          radius: 26,
+        };
+
+        const len = String(cnt).length;
+        const sx = 36;
+        const sy = 18;
+
+        const indexOption: TextOption = {
+          text: `${cnt++}`,
+          dx: Math.floor(dx - ((sx * (len - 1)) / 4 + sx)),
+          dy: dy - sy,
+          font: `28px serif`,
+          color: "white",
+        };
+        this.fillArc(this.ctx, arcOption);
+        this.fillText(this.ctx, indexOption);
       }
     }
   }

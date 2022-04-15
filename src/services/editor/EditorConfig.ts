@@ -31,6 +31,7 @@ export default class EditorConfig implements IEditorConfig {
 
   // Is
   protected isText: boolean;
+  protected isIdx: boolean;
 
   // Editor Event Handler Field values;
   protected drawField: EditorTypes.Field | null;
@@ -67,6 +68,7 @@ export default class EditorConfig implements IEditorConfig {
     };
 
     this.isText = false;
+    this.isIdx = false;
 
     this.drawField = null;
     this.editField = null;
