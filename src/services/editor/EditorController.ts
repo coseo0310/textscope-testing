@@ -13,7 +13,7 @@ export interface IEditorContorller extends IEventHandler {
   getFields: () => Field[];
   removeField: (id: string) => void;
   removeFields: () => void;
-  setDraw: (field: Field) => Promise<void>;
+  setDraw: (field?: Field) => Promise<void>;
 }
 
 export default class EditorContorller
@@ -22,6 +22,8 @@ export default class EditorContorller
 {
   constructor() {
     super();
+
+    this.isText = true;
   }
 
   getViewer() {
@@ -130,9 +132,21 @@ export default class EditorContorller
     });
   }
 
-  async setDraw(field: Field) {
-    this.drawField = field;
-    this.fields.push(this.drawField);
+  async setDraw(field?: Field) {
+    this.drawField = field
+      ? field
+      : {
+          id: `tmp-${Date.now()}`,
+          text: "",
+          dx: 0,
+          dy: 0,
+          dWidth: 0,
+          dHeight: 0,
+          type: "stroke",
+          color: `rgba(220, 118, 118, 1)`,
+          lineWidth: 5,
+          draw: true,
+        };
     this.canvasEl.style.cursor = "crosshair";
   }
 }

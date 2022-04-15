@@ -23,7 +23,6 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ctx.fillStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
-    // ctx.fillRect(option.dx, option.dy, option.dWidth, option.dHeight);
     ctx.fill(box);
     return box;
   }
@@ -33,7 +32,6 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ctx.strokeStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
-    // ctx.strokeRect(option.dx, option.dy, option.dWidth, option.dHeight);
     ctx.stroke(box);
     return box;
   }
@@ -177,7 +175,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
 
-      const rectOption = {
+      const rectOption: RectOption = {
         dx,
         dy,
         dWidth: Math.floor(f.dWidth),
@@ -191,7 +189,58 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       } else if (f.type === "stroke") {
         f.box = this.strokeRect(ctx, rectOption);
       }
+      if (this.isText) {
+        const textOption: TextOption = {
+          text: f.text,
+          dx: dx,
+          dy: dy - 10,
+          font: `38px serif`,
+          color: "blue",
+        };
+        this.fillText(this.ctx, textOption);
+      }
     }
+  }
+
+  protected drawSelectPointer(field: Field, margin: number) {
+    field.circle = this.drawEditCircles(this.ctx, field, this.dMargin);
+
+    const dx = Math.floor(field.draw ? field.dx : field.dx + margin);
+    const dy = Math.floor(field.draw ? field.dy : field.dy + margin);
+    const rectOption: RectOption = {
+      dx,
+      dy,
+      dWidth: Math.floor(field.dWidth),
+      dHeight: Math.floor(field.dHeight),
+      color: `rgba(255, 160, 140, 0.1)`,
+      lineWidth: 5,
+    };
+    this.fillRect(this.ctx, rectOption);
+  }
+
+  protected drawNewRect(field: Field) {
+    this.fillRect(this.ctx, {
+      dx: 0,
+      dy: this.crosshair.dy,
+      dWidth: this.crosshair.dWidth,
+      dHeight: 1,
+      color: this.crosshair.color,
+    });
+    this.fillRect(this.ctx, {
+      dx: this.crosshair.dx,
+      dy: 0,
+      dWidth: 1,
+      dHeight: this.crosshair.dHeight,
+      color: this.crosshair.color,
+    });
+    this.strokeRect(this.ctx, {
+      dx: field.dx,
+      dy: field.dy,
+      dWidth: field.dWidth,
+      dHeight: field.dHeight,
+      color: field.color,
+      lineWidth: field.lineWidth,
+    });
   }
 
   async draw() {
@@ -230,31 +279,14 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
+
     this.drawFields(this.ctx, this.fields, this.dMargin);
 
     if (this.editField) {
-      this.editField.circle = this.drawEditCircles(
-        this.ctx,
-        this.editField,
-        this.dMargin
-      );
+      this.drawSelectPointer(this.editField, this.dMargin);
     }
-
     if (this.drawField) {
-      this.fillRect(this.ctx, {
-        dx: 0,
-        dy: this.crosshair.dy,
-        dWidth: this.crosshair.dWidth,
-        dHeight: 1,
-        color: this.crosshair.color,
-      });
-      this.fillRect(this.ctx, {
-        dx: this.crosshair.dx,
-        dy: 0,
-        dWidth: 1,
-        dHeight: this.crosshair.dHeight,
-        color: this.crosshair.color,
-      });
+      this.drawNewRect(this.drawField);
     }
   }
 }

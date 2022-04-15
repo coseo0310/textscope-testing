@@ -4,6 +4,13 @@ export interface IEditorConfig {
   getScale: () => number;
 }
 
+interface Crosshair {
+  dx: number;
+  dy: number;
+  dWidth: number;
+  dHeight: number;
+  color: string;
+}
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
   protected canvasEl: HTMLCanvasElement;
@@ -20,15 +27,12 @@ export default class EditorConfig implements IEditorConfig {
   protected deg: number;
   protected fields: EditorTypes.Field[];
   protected dMargin: number;
-  protected crosshair: {
-    dx: number;
-    dy: number;
-    dWidth: number;
-    dHeight: number;
-    color: string;
-  };
+  protected crosshair: Crosshair;
 
-  // Editor Event Handler values;
+  // Is
+  protected isText: boolean;
+
+  // Editor Event Handler Field values;
   protected drawField: EditorTypes.Field | null;
   protected editField: EditorTypes.Field | null;
 
@@ -62,7 +66,8 @@ export default class EditorConfig implements IEditorConfig {
       color: "red",
     };
 
-    // Event Handler values
+    this.isText = false;
+
     this.drawField = null;
     this.editField = null;
   }

@@ -419,12 +419,15 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     if (!this.drawField) {
       return;
     }
-    console.log(">>", 3);
     this.isDraw = false;
     this.drawField.draw = false;
 
     this.drawField.dx = this.drawField.dx - this.dMargin;
     this.drawField.dy = this.drawField.dy - this.dMargin;
+
+    if (this.drawField.dWidth > 0) {
+      this.fields = [...this.fields, this.drawField];
+    }
 
     if (this.drawEndCallback && this.drawField) {
       this.drawEndCallback(this.drawField);
@@ -433,7 +436,6 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.drawField = null;
 
     this.canvasEl.style.cursor = "default";
-    console.log(">>", 4);
     this.draw();
   }
 

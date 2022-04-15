@@ -43,18 +43,7 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  inspectionStore.editor.setDraw({
-    id: `tmp-${Date.now()}`,
-    text: "",
-    dx: 0,
-    dy: 0,
-    dWidth: 0,
-    dHeight: 0,
-    type: "stroke",
-    color: `rgba(220, 118, 118, 1)`,
-    lineWidth: 5,
-    draw: true,
-  });
+  inspectionStore.editor.setDraw();
 };
 
 const onComparison = () => {

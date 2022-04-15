@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import SynonymCard from "@/components/inspection/SynonymCard.vue";
 import { useInspectionStore } from "@/store";
@@ -11,6 +11,10 @@ const onPage = (n: number) => {
 };
 
 const getCurrent = computed(() => inspectionStore.currentPage);
+
+inspectionStore.editor.setDrawEndCallback(() => {
+  inspectionStore.synonymList = inspectionStore.editor.getFields();
+});
 </script>
 
 <template>
