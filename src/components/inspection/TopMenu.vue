@@ -51,14 +51,7 @@ const onComparison = () => {
   alert("준비중...");
 };
 
-onMounted(() => {
-  // inspectionStore.editor.setDrawEndCallback((field) => {
-  //   if (field.dWidth === 0 && field.dHeight === 0) {
-  //     inspectionStore.editor.removeField(field.id);
-  //   }
-  //   inspectionStore.synonymList = inspectionStore.editor.getFields();
-  // });
-});
+onMounted(() => {});
 </script>
 
 <template>
@@ -167,6 +160,30 @@ onMounted(() => {
             @click="inspectionStore.onGOCR"
           >
             G-OCR
+          </Button>
+          <Button
+            class="outline"
+            @click="
+              () => {
+                inspectionStore.editor.setIsText(true);
+                inspectionStore.editor.setIsIdx(true);
+                inspectionStore.editor.draw();
+              }
+            "
+          >
+            SHOW
+          </Button>
+          <Button
+            class="outline"
+            @click="
+              () => {
+                inspectionStore.editor.setIsText(false);
+                inspectionStore.editor.setIsIdx(false);
+                inspectionStore.editor.draw();
+              }
+            "
+          >
+            HIDE
           </Button>
         </div>
         <div class="save-btn-wrap">

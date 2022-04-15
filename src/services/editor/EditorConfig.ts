@@ -2,6 +2,8 @@ import { EditorTypes } from "./types";
 
 export interface IEditorConfig {
   getScale: () => number;
+  setIsText: (isText: boolean) => void;
+  setIsIdx: (isIdx: boolean) => void;
 }
 
 interface Crosshair {
@@ -40,8 +42,10 @@ export default class EditorConfig implements IEditorConfig {
   constructor() {
     this.canvasEl = document.createElement("canvas");
     this.ctx = this.canvasEl.getContext("2d")!;
+
     this.imageCache = document.createElement("canvas");
     this.imageCacheCtx = this.imageCache.getContext("2d")!;
+
     this.editorEl = document.createElement("div");
     this.editorEl.appendChild(this.canvasEl);
     this.editorEl.classList.add("viewer");
@@ -72,6 +76,14 @@ export default class EditorConfig implements IEditorConfig {
 
     this.drawField = null;
     this.editField = null;
+  }
+
+  setIsText(isText: boolean) {
+    this.isText = isText;
+  }
+
+  setIsIdx(isIdx: boolean) {
+    this.isIdx = isIdx;
   }
 
   protected getMarginSize(w: number, h: number) {

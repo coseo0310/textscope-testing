@@ -22,9 +22,6 @@ export default class EditorContorller
 {
   constructor() {
     super();
-
-    this.isText = true;
-    this.isIdx = true;
   }
 
   getViewer() {
@@ -41,6 +38,12 @@ export default class EditorContorller
       await this.setImageCache();
       await this.draw();
       await this.setScroll();
+
+      // const w = new Worker("worker.js");
+      // const c = document.createElement("canvas");
+      // const o = c.transferControlToOffscreen();
+
+      // w.postMessage({ canvas: o }, [o]);
     };
   }
 
