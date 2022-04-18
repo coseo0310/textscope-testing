@@ -5,7 +5,7 @@ type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
 
 export interface IEditorContorller extends IEventHandler {
-  getViewer: () => void;
+  getEditor: () => HTMLCanvasElement;
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
@@ -20,12 +20,17 @@ export default class EditorContorller
   extends EventHandler
   implements IEditorContorller
 {
-  constructor() {
+  constructor(canvas?: HTMLCanvasElement) {
     super();
+
+    if (canvas) {
+      this.canvasEl = canvas;
+      this.ctx = canvas.getContext("2d")!;
+    }
   }
 
-  getViewer() {
-    return this.editorEl;
+  getEditor() {
+    return this.canvasEl;
   }
 
   async setImgUrl(url: string) {
@@ -38,12 +43,6 @@ export default class EditorContorller
       await this.setImageCache();
       await this.draw();
       await this.setScroll();
-
-      // const w = new Worker("worker.js");
-      // const c = document.createElement("canvas");
-      // const o = c.transferControlToOffscreen();
-
-      // w.postMessage({ canvas: o }, [o]);
     };
   }
 
@@ -52,7 +51,6 @@ export default class EditorContorller
       return;
     }
 
-    this.editorEl.scrollTo(0, 0);
     if (command === "out" && this.depth >= this.maxDepth * -1) {
       // OUT
       this.depth -= 1;
@@ -62,6 +60,10 @@ export default class EditorContorller
     } else if (command === "init") {
       // this.depth = 0;
       this.setCalculatedDepth();
+    }
+
+    if (!this.canvasEl.parentElement) {
+      return;
     }
 
     await this.setImageCache();

@@ -16,11 +16,13 @@ interface Crosshair {
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
   protected canvasEl: HTMLCanvasElement;
-  protected ctx: CanvasRenderingContext2D;
-  protected editorEl: HTMLDivElement;
+  protected offCanvasEl: OffscreenCanvas | null;
+  protected ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   protected imgEl: HTMLImageElement;
   protected imageCache: HTMLCanvasElement;
-  protected imageCacheCtx: CanvasRenderingContext2D;
+  protected imageCacheCtx:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D;
 
   // Editor setting values
   protected depth: number;
@@ -41,20 +43,12 @@ export default class EditorConfig implements IEditorConfig {
 
   constructor() {
     this.canvasEl = document.createElement("canvas");
+    this.offCanvasEl = null;
     this.ctx = this.canvasEl.getContext("2d")!;
 
     this.imageCache = document.createElement("canvas");
     this.imageCacheCtx = this.imageCache.getContext("2d")!;
 
-    this.editorEl = document.createElement("div");
-    this.editorEl.appendChild(this.canvasEl);
-    this.editorEl.classList.add("viewer");
-    this.editorEl.style.width = `100%`;
-    this.editorEl.style.height = `100%`;
-    this.editorEl.style.overflow = "scroll";
-    this.editorEl.style.display = "flex";
-    this.editorEl.style.justifyContent = "flex-start";
-    this.editorEl.style.alignItems = "flex-start";
     this.imgEl = new Image();
 
     this.maxDepth = 7;
@@ -86,6 +80,19 @@ export default class EditorConfig implements IEditorConfig {
     this.isIdx = isIdx;
   }
 
+  setCanvas(canvas: HTMLCanvasElement) {
+    this.canvasEl = canvas;
+    this.ctx = canvas.getContext("2d")!;
+  }
+
+  setOffsetCanvas(offCanvas: OffscreenCanvas) {
+    this.offCanvasEl = offCanvas;
+    if (!this.offCanvasEl) {
+      return;
+    }
+    this.ctx = this.offCanvasEl.getContext("2d")!;
+  }
+
   protected getMarginSize(w: number, h: number) {
     return w > h ? w : h;
   }
@@ -96,10 +103,15 @@ export default class EditorConfig implements IEditorConfig {
       this.canvasEl.width,
       this.canvasEl.height
     );
-    await this.editorEl.scrollTo(0, 0);
-    await this.editorEl.scrollBy({
-      top: (margin / 4) * scale,
-      left: (margin / 4) * scale,
+
+    if (!this.canvasEl.parentElement?.scrollTo) {
+      return;
+    }
+
+    await this.canvasEl.parentElement.scrollTo(0, 0);
+    await this.canvasEl.parentElement.scrollBy({
+      top: (margin / 3) * scale,
+      left: (margin / 3) * scale,
       behavior: "auto",
     });
   }
@@ -119,8 +131,14 @@ export default class EditorConfig implements IEditorConfig {
   }
 
   protected setCalculatedDepth() {
+    if (!this.imgEl) {
+      return;
+    }
+    if (!this.canvasEl.parentElement) {
+      return;
+    }
     const ratio = Math.ceil(
-      (this.imgEl?.naturalWidth || 0) / this.editorEl?.clientWidth
+      this.imgEl.naturalWidth / this.canvasEl.parentElement.clientWidth
     );
     this.depth = ratio * 2 * -1;
   }

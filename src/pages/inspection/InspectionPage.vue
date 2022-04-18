@@ -5,33 +5,22 @@ import Icons from "@/components/shared/Icons.vue";
 import Button from "@/components/shared/Button.vue";
 import PreviewMenu from "@/components/inspection/PreviewMenu.vue";
 import TopMenu from "@/components/inspection/TopMenu.vue";
+import EditorForm from "@/components/inspection/EditorForm.vue";
 import SynonymForm from "@/components/inspection/SynonymForm.vue";
-import { useInspectionStore } from "@/store";
-
-const inspectionStore = useInspectionStore();
 
 const isPreview = ref<boolean>(true);
-const viewEl = ref<HTMLDivElement | null>(null);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
-
-onMounted(async () => {
-  await inspectionStore.getInspectionItems();
-  if (!viewEl.value) {
-    return;
-  }
-  viewEl.value.appendChild(inspectionStore.editor.getViewer());
-});
 </script>
 
 <template>
   <MainLayout>
     <div class="inspection-page">
       <div class="top-menu-wrap">
-        <TopMenu :item="inspectionStore.inspectionItem || null" />
+        <TopMenu />
       </div>
       <div class="content">
-        <div class="view" ref="viewEl"></div>
+        <div class="view"><EditorForm /></div>
         <div class="synonym-wrap"><SynonymForm /></div>
       </div>
       <div class="preview-wrap" :class="{ active: isPreview }">

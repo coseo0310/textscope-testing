@@ -19,7 +19,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     super();
   }
 
-  protected fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+  protected fillRect(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: RectOption
+  ) {
     ctx.fillStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
@@ -27,7 +30,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     return box;
   }
 
-  protected strokeRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+  protected strokeRect(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: RectOption
+  ) {
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     const box = new Path2D();
@@ -36,7 +42,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     return box;
   }
 
-  protected fillArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+  protected fillArc(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: ArcOption
+  ) {
     ctx.beginPath();
     ctx.fillStyle = option.color;
     ctx.arc(
@@ -49,7 +58,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ctx.fill();
   }
 
-  protected strokeArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+  protected strokeArc(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: ArcOption
+  ) {
     ctx.beginPath();
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
@@ -63,24 +75,36 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ctx.stroke();
   }
 
-  protected fillText(ctx: CanvasRenderingContext2D, option: TextOption) {
+  protected fillText(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: TextOption
+  ) {
     ctx.font = option.font;
     ctx.fillStyle = option.color;
     ctx.fillText(option.text, option.dx, option.dy);
   }
 
-  protected strokeText(ctx: CanvasRenderingContext2D, option: TextOption) {
+  protected strokeText(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: TextOption
+  ) {
     ctx.font = option.font;
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     ctx.strokeText(option.text, option.dx, option.dy);
   }
 
-  protected setScale(ctx: CanvasRenderingContext2D, option: ScaleOption) {
+  protected setScale(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: ScaleOption
+  ) {
     ctx.scale(option.x, option.y);
   }
 
-  protected drawImage(ctx: CanvasRenderingContext2D, option: ImgOption) {
+  protected drawImage(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: ImgOption
+  ) {
     ctx.drawImage(
       option.img,
       option.sx,
@@ -94,7 +118,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     );
   }
 
-  protected drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
+  protected drawRotate(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    option: RotateOption
+  ) {
     const tx = option.dx + option.dWidth / 2;
     const ty = option.dy + option.dHeight / 2;
     ctx.translate(tx, ty);
@@ -103,7 +130,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   }
 
   protected drawEditCircles(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     field: Field,
     margin: number = 0
   ) {
@@ -167,7 +194,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   }
 
   protected drawFields(
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     fields: Field[],
     margin: number = 0
   ) {
@@ -273,11 +300,9 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     if (!this.imgEl || !this.imageCache) {
       return;
     }
-
     if (this.imageCache.width === 0 || this.imageCache.height === 0) {
       return;
     }
-
     if (!this.ctx) {
       return;
     }
