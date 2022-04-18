@@ -5,7 +5,6 @@ type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
 
 export interface IEditorContorller extends IEventHandler {
-  getEditor: () => HTMLCanvasElement;
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
@@ -27,10 +26,6 @@ export default class EditorContorller
       this.canvasEl = canvas;
       this.ctx = canvas.getContext("2d")!;
     }
-  }
-
-  getEditor() {
-    return this.canvasEl;
   }
 
   async setImgUrl(url: string) {
