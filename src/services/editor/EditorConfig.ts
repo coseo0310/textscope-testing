@@ -43,8 +43,9 @@ export default class EditorConfig implements IEditorConfig {
 
   constructor() {
     this.canvasEl = document.createElement("canvas");
-    this.offCanvasEl = null;
     this.ctx = this.canvasEl.getContext("2d")!;
+
+    this.offCanvasEl = null;
 
     this.imageCache = document.createElement("canvas");
     this.imageCacheCtx = this.imageCache.getContext("2d")!;

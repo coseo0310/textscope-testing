@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useInspectionStore } from "@/store";
+import Worker from "@/services/editor/worker?worker";
 
 const inspectionStore = useInspectionStore();
 
@@ -12,6 +13,15 @@ onMounted(async () => {
   }
   await inspectionStore.editor.setCanvas(canvasEl.value);
   await inspectionStore.getInspectionItems();
+
+  //   const offscreen = canvasEl.value.transferControlToOffscreen();
+
+  //   const worker = new Worker();
+
+  //   console.log("wi", window);
+
+  //   const el = document.createElement("canvas");
+  //   worker.postMessage({ type: "init", canvas: offscreen }, [offscreen]);
 });
 </script>
 

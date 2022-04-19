@@ -225,7 +225,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           font: `38px serif`,
           color: "blue",
         };
-        this.fillText(this.ctx, textOption);
+        this.fillText(ctx, textOption);
       }
 
       if (this.isIdx) {
@@ -249,14 +249,18 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           font: `28px serif`,
           color: "white",
         };
-        this.fillArc(this.ctx, arcOption);
-        this.fillText(this.ctx, indexOption);
+        this.fillArc(ctx, arcOption);
+        this.fillText(ctx, indexOption);
       }
     }
   }
 
-  protected drawSelectPointer(field: Field, margin: number) {
-    field.circle = this.drawEditCircles(this.ctx, field, this.dMargin);
+  protected drawSelectPointer(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    field: Field,
+    margin: number
+  ) {
+    field.circle = this.drawEditCircles(ctx, field, this.dMargin);
 
     const dx = Math.floor(field.draw ? field.dx : field.dx + margin);
     const dy = Math.floor(field.draw ? field.dy : field.dy + margin);
@@ -268,25 +272,28 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       color: `rgba(255, 160, 140, 0.1)`,
       lineWidth: 5,
     };
-    this.fillRect(this.ctx, rectOption);
+    this.fillRect(ctx, rectOption);
   }
 
-  protected drawNewRect(field: Field) {
-    this.fillRect(this.ctx, {
+  protected drawNewRect(
+    ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+    field: Field
+  ) {
+    this.fillRect(ctx, {
       dx: 0,
       dy: this.crosshair.dy,
       dWidth: this.crosshair.dWidth,
       dHeight: 1,
       color: this.crosshair.color,
     });
-    this.fillRect(this.ctx, {
+    this.fillRect(ctx, {
       dx: this.crosshair.dx,
       dy: 0,
       dWidth: 1,
       dHeight: this.crosshair.dHeight,
       color: this.crosshair.color,
     });
-    this.strokeRect(this.ctx, {
+    this.strokeRect(ctx, {
       dx: field.dx,
       dy: field.dy,
       dWidth: field.dWidth,
@@ -334,10 +341,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     this.drawFields(this.ctx, this.fields, this.dMargin);
 
     if (this.editField) {
-      this.drawSelectPointer(this.editField, this.dMargin);
+      this.drawSelectPointer(this.ctx, this.editField, this.dMargin);
     }
     if (this.drawField) {
-      this.drawNewRect(this.drawField);
+      this.drawNewRect(this.ctx, this.drawField);
     }
   }
 }
