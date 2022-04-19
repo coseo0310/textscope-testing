@@ -304,6 +304,9 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   }
 
   async draw() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.imgEl || !this.imageCache) {
       return;
     }

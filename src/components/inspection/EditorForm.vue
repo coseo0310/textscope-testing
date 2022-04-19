@@ -5,14 +5,18 @@ import Worker from "@/services/editor/worker?worker";
 
 const inspectionStore = useInspectionStore();
 
-const canvasEl = ref<HTMLCanvasElement | null>(null);
+const editorWrap = ref<HTMLCanvasElement | null>(null);
 
 onMounted(async () => {
-  if (!canvasEl.value) {
+  if (!editorWrap.value) {
     return;
   }
-  await inspectionStore.editor.setCanvas(canvasEl.value);
+  //   const canvas = document.createElement("canvas");
+
+  //   await inspectionStore.editor.setCanvas(canvas);
+  const c = inspectionStore.editor.getCanvas() as HTMLCanvasElement;
   await inspectionStore.getInspectionItems();
+  editorWrap.value.appendChild(c);
 
   //   const offscreen = canvasEl.value.transferControlToOffscreen();
 
@@ -26,8 +30,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="editor">
-    <canvas ref="canvasEl" class="editor-canvas"></canvas>
+  <div ref="editorWrap" class="editor">
+    <!-- <canvas ref="canvasEl" class="editor-canvas"></canvas> -->
   </div>
 </template>
 

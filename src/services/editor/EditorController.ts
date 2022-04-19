@@ -13,6 +13,10 @@ export interface IEditorContorller extends IEventHandler {
   removeField: (id: string) => void;
   removeFields: () => void;
   setDraw: (field?: Field) => Promise<void>;
+  setCanvas: (canvas: HTMLCanvasElement) => void;
+  setCacheCanvas: (canvas: HTMLCanvasElement) => void;
+  setOffsetCanvas: (canvas: OffscreenCanvas) => void;
+  getCanvas: () => HTMLCanvasElement | OffscreenCanvas | null;
 }
 
 export default class EditorContorller
@@ -26,6 +30,30 @@ export default class EditorContorller
       this.canvasEl = canvas;
       this.ctx = canvas.getContext("2d")!;
     }
+  }
+
+  getCanvas() {
+    return this.canvasEl;
+  }
+
+  setCanvas(canvas: HTMLCanvasElement) {
+    this.canvasEl = canvas;
+    this.ctx = canvas.getContext("2d")!;
+    this.setDrawEvent();
+    this.setEditEvent();
+  }
+
+  setCacheCanvas(canvas: HTMLCanvasElement | OffscreenCanvas) {
+    this.imageCache = canvas;
+    this.ctx = canvas.getContext("2d")!;
+  }
+
+  setOffsetCanvas(offCanvas: OffscreenCanvas) {
+    this.offCanvasEl = offCanvas;
+    if (!this.offCanvasEl) {
+      return;
+    }
+    this.ctx = this.offCanvasEl.getContext("2d")!;
   }
 
   async setImgUrl(url: string) {
@@ -57,7 +85,7 @@ export default class EditorContorller
       this.setCalculatedDepth();
     }
 
-    if (!this.canvasEl.parentElement) {
+    if (!this.canvasEl?.parentElement) {
       return;
     }
 
@@ -92,6 +120,9 @@ export default class EditorContorller
   }
 
   private setImageCache() {
+    if (!this.imageCache || !this.imageCacheCtx) {
+      return;
+    }
     if (!this.imgEl) {
       return;
     }
@@ -137,6 +168,9 @@ export default class EditorContorller
   }
 
   async setDraw(field?: Field) {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     this.drawField = field
       ? field
       : {

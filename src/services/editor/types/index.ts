@@ -43,7 +43,7 @@ export declare module EditorTypes {
   };
 
   type ImgOption = {
-    img: HTMLImageElement | HTMLCanvasElement;
+    img: HTMLImageElement | HTMLCanvasElement | OffscreenCanvas;
     sx: number;
     sy: number;
     sWidth: number;

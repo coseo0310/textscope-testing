@@ -75,6 +75,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   }
 
   protected setEditEvent() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     this.canvasEl.addEventListener("mousemove", this.handleBoxHover.bind(this));
     this.canvasEl.addEventListener(
       "mousemove",
@@ -103,6 +106,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   }
 
   protected removeEditEvent() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     this.canvasEl.removeEventListener(
       "mousemove",
       this.handleBoxHover.bind(this)
@@ -143,6 +149,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   }
 
   protected setDrawEvent() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     this.canvasEl.addEventListener(
       "mousedown",
       this.handleDrawStart.bind(this)
@@ -158,6 +167,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   }
 
   protected removeDrawEvent() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     this.canvasEl.removeEventListener(
       "mousedown",
       this.handleDrawStart.bind(this)
@@ -171,6 +183,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   }
 
   private async handleCircleHover(e: MouseEvent) {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.editField?.circle || this.isResize || !this.isEdit) {
       return;
     }
@@ -198,6 +213,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleCircleSelect(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.isEdit || this.isMove || this.isResize) {
       return;
     }
@@ -212,6 +230,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleResize(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.isResize) {
       return;
     }
@@ -267,6 +288,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleResized(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.isResize) {
       return;
     }
@@ -282,6 +306,10 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleBoxHover(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+
     for (const f of this.fields) {
       if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
         if (!this.drawField) {
@@ -297,6 +325,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleBoxSelect(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
 
     if (this.editField?.circle) {
       for (const c of this.editField.circle) {
@@ -337,6 +368,10 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleBoxMove(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+
     if (!this.isMove) {
       return;
     }
@@ -366,6 +401,10 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleBoxSelected(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+
     this.isMove = false;
     this.canvasEl.style.cursor = "default";
     this.draw();
@@ -378,6 +417,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleDrawStart(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
 
     if (!this.drawField) {
       return;
@@ -397,9 +439,14 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleCrosshair(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+
     if (!this.drawField) {
       return;
     }
+
     const { offsetX, offsetY, offsetWidth, offsetHeight } =
       await this.getOffset();
     const startX = e.clientX - offsetX;
@@ -415,7 +462,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleDrawEnd(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.drawField) {
       return;
     }
@@ -442,6 +491,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
   private async handleDraw(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.isDraw) {
       return;
     }

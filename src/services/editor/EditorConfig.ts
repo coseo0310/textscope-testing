@@ -15,14 +15,18 @@ interface Crosshair {
 }
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
-  protected canvasEl: HTMLCanvasElement;
+  protected canvasEl: HTMLCanvasElement | null;
   protected offCanvasEl: OffscreenCanvas | null;
-  protected ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  protected ctx:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D
+    | null;
   protected imgEl: HTMLImageElement;
-  protected imageCache: HTMLCanvasElement;
+  protected imageCache: HTMLCanvasElement | OffscreenCanvas | null;
   protected imageCacheCtx:
     | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D;
+    | OffscreenCanvasRenderingContext2D
+    | null;
 
   // Editor setting values
   protected depth: number;
@@ -42,13 +46,19 @@ export default class EditorConfig implements IEditorConfig {
   protected editField: EditorTypes.Field | null;
 
   constructor() {
-    this.canvasEl = document.createElement("canvas");
-    this.ctx = this.canvasEl.getContext("2d")!;
+    if (document) {
+      this.canvasEl = document.createElement("canvas");
+      this.ctx = this.canvasEl.getContext("2d")!;
+      this.imageCache = document.createElement("canvas");
+      this.imageCacheCtx = this.imageCache.getContext("2d")!;
+    } else {
+      this.canvasEl = null;
+      this.ctx = null;
+      this.imageCache = null;
+      this.imageCacheCtx = null;
+    }
 
     this.offCanvasEl = null;
-
-    this.imageCache = document.createElement("canvas");
-    this.imageCacheCtx = this.imageCache.getContext("2d")!;
 
     this.imgEl = new Image();
 
@@ -81,24 +91,14 @@ export default class EditorConfig implements IEditorConfig {
     this.isIdx = isIdx;
   }
 
-  setCanvas(canvas: HTMLCanvasElement) {
-    this.canvasEl = canvas;
-    this.ctx = canvas.getContext("2d")!;
-  }
-
-  setOffsetCanvas(offCanvas: OffscreenCanvas) {
-    this.offCanvasEl = offCanvas;
-    if (!this.offCanvasEl) {
-      return;
-    }
-    this.ctx = this.offCanvasEl.getContext("2d")!;
-  }
-
   protected getMarginSize(w: number, h: number) {
     return w > h ? w : h;
   }
 
   protected async setScroll() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     const scale = this.getScale();
     const margin = this.getMarginSize(
       this.canvasEl.width,
@@ -118,6 +118,14 @@ export default class EditorConfig implements IEditorConfig {
   }
 
   protected async getOffset() {
+    if (!this.canvasEl || !this.ctx) {
+      return {
+        offsetX: 0,
+        offsetY: 0,
+        offsetWidth: 0,
+        offsetHeight: 0,
+      };
+    }
     const cOffset = this.canvasEl.getBoundingClientRect();
     return {
       offsetX: cOffset.left,
@@ -132,6 +140,9 @@ export default class EditorConfig implements IEditorConfig {
   }
 
   protected setCalculatedDepth() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
     if (!this.imgEl) {
       return;
     }
