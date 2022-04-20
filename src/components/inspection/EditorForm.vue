@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
-const { inspectionItems, editor } = storeToRefs(inspectionStore);
+const { inspectionItems, editor, observer } = storeToRefs(inspectionStore);
 
 const editorWrap = ref<HTMLDivElement | null>(null);
 
@@ -12,7 +12,9 @@ watch(inspectionItems, () => {
   if (!editorWrap.value) {
     return;
   }
+  editorWrap.value.scrollTo(0, 0);
   editorWrap.value.innerHTML = "";
+
   editor.value.forEach((e, idx) => {
     const el = e.getCanvas();
     if (!el) {
@@ -47,17 +49,14 @@ watch(inspectionItems, () => {
       }
     });
   };
-  inspectionStore.observer = new IntersectionObserver(
-    observerCallback,
-    observerOptions
-  );
+  observer.value = new IntersectionObserver(observerCallback, observerOptions);
 
   const nodes = editorWrap.value.childNodes;
 
   setTimeout(() => {
     nodes.forEach((node) => {
       const el = node as HTMLCanvasElement;
-      inspectionStore.observer?.observe(el);
+      observer.value?.observe(el);
     });
   }, 1000);
 });

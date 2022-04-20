@@ -1,10 +1,8 @@
 import { EditorTypes } from "./types";
 
+type Field = EditorTypes.Field;
 export interface IEditorConfig {
   getScale: () => number;
-  getMargin: () => number;
-  setIsText: (isText: boolean) => void;
-  setIsIdx: (isIdx: boolean) => void;
 }
 
 interface Crosshair {
@@ -28,6 +26,7 @@ export default class EditorConfig implements IEditorConfig {
   protected minDepth: number;
   protected deg: number;
   protected fields: EditorTypes.Field[];
+  protected sections: EditorTypes.Field[];
   protected dMargin: number;
   protected crosshair: Crosshair;
 
@@ -36,8 +35,9 @@ export default class EditorConfig implements IEditorConfig {
   protected isIdx: boolean;
 
   // Editor Event Handler Field values;
-  protected drawField: EditorTypes.Field | null;
-  protected editField: EditorTypes.Field | null;
+  protected drawField: Field | null;
+  protected editField: Field | null;
+  protected sectionField: Field | null;
 
   constructor() {
     if (document) {
@@ -60,6 +60,9 @@ export default class EditorConfig implements IEditorConfig {
     this.deg = 0;
     this.dMargin = 0;
     this.fields = [];
+
+    this.sections = [];
+
     this.crosshair = {
       dx: 0,
       dy: 0,
@@ -73,18 +76,7 @@ export default class EditorConfig implements IEditorConfig {
 
     this.drawField = null;
     this.editField = null;
-  }
-
-  setIsText(isText: boolean) {
-    this.isText = isText;
-  }
-
-  setIsIdx(isIdx: boolean) {
-    this.isIdx = isIdx;
-  }
-
-  getMargin() {
-    return this.dMargin;
+    this.sectionField = null;
   }
 
   protected getMarginSize(w: number, h: number) {

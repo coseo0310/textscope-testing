@@ -132,6 +132,7 @@ type States = {
   synonymList: Field[];
   isInspection: boolean;
   editor: Editor[];
+  currentEditor: number;
   currentPage: number;
   total: number;
   observer: IntersectionObserver | null;
@@ -153,6 +154,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       synonymList: [],
       isInspection: false,
       editor: [],
+      currentEditor: 0,
       currentPage: 1,
       total: 0,
       observer: null,
@@ -168,7 +170,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         }
         this.inspectionItems = this.previewList[idx].items;
         this.inspectionInfo = this.previewList[idx].info;
-        this.editor = this.inspectionItems.map((item) => {
+        this.editor = this.inspectionItems.map((item, idx) => {
           const editor = new Editor();
           const items =
             item?.prediction.key_values.length || 0 > 0
@@ -186,6 +188,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
               color: `rgba(220, 118, 118, 1)`,
               lineWidth: 5,
             });
+
+            if (idx === 0) {
+              editor.setSections(getSection(idx));
+            }
           });
           editor.setImgUrl(item.img);
           editor.setDrawEndCallback(() => {
@@ -195,7 +201,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
         });
 
         this.currentPage = 1;
-        this.total = this.inspectionItems.length;
+        this.currentEditor = 0;
+        this.total = this.editor[0].getSections().length || 1;
         return true;
       } catch (error) {
         console.error(error);
@@ -203,8 +210,15 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(page: number) {
+      this.currentEditor = page - 1;
+      this.total = this.editor[this.currentEditor].getSections().length || 1;
+      this.synonymList = this.editor[this.currentEditor].getFields();
+      this.currentPage = this.editor[this.currentEditor].getSectionIdx() + 1;
+    },
+    async setPagination(page: number) {
       this.currentPage = page;
-      this.synonymList = this.editor[page - 1].getFields();
+      this.editor[this.currentEditor].setSectionField(page - 1);
+      this.synonymList = this.editor[this.currentEditor].getFields();
     },
     async onStartInspection() {
       // alert("준비중...");
@@ -223,6 +237,40 @@ export const useInspectionStore = defineStore("inspectionStore", {
     },
   },
 });
+
+function getSection(idx: number = 0): Field[] {
+  const tmp: Field[][] = [];
+
+  const section0: Field[] = [
+    {
+      id: `${Date.now()}`,
+      text: "Section1-1",
+
+      dx: 413.59,
+      dy: 916.09,
+      dWidth: 2230,
+      dHeight: 857.5,
+      type: "stroke",
+      color: `#FFD59E`,
+      lineWidth: 5,
+    },
+    {
+      id: `${Date.now()}`,
+      text: "Section1-2",
+
+      dx: 363.59,
+      dy: 2891.1,
+      dWidth: 2305,
+      dHeight: 805,
+      type: "stroke",
+      color: `#FFD59E`,
+      lineWidth: 5,
+    },
+  ];
+  tmp.push(section0);
+
+  return tmp[idx];
+}
 
 function setInspectionList() {
   const tmp = [];
@@ -264,21 +312,21 @@ function getPreviewList(): PreviewItem[] {
       filename: "test2",
       taskId: "test-02",
     },
-    items: setInspectionList().slice(2, 7),
+    items: setInspectionList().slice(0, 7),
   };
   const l3 = {
     info: {
       filename: "test3",
       taskId: "test-03",
     },
-    items: setInspectionList().slice(4, 9),
+    items: setInspectionList().slice(0, 9),
   };
   const l4 = {
     info: {
       filename: "test4",
       taskId: "test-04",
     },
-    items: setInspectionList().slice(6, 10),
+    items: setInspectionList().slice(0, 10),
   };
   return [l1, l2, l3, l4];
 }

@@ -8,12 +8,22 @@ export interface IEditorContorller extends IEventHandler {
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
-  setField: (field: Field) => Promise<void>;
-  getFields: () => Field[];
-  removeField: (id: string) => void;
-  removeFields: () => void;
   setDraw: (field?: Field) => Promise<void>;
   getCanvas: () => HTMLCanvasElement | OffscreenCanvas | null;
+  getMargin: () => number;
+  setIsText: (isText: boolean) => Promise<void>;
+  setIsIdx: (isIdx: boolean) => Promise<void>;
+  setField: (field: Field) => Promise<void>;
+  setSection: (field: Field) => Promise<void>;
+  setSections: (fields: Field[]) => Promise<void>;
+  setSectionField: (n: number) => Promise<void>;
+  getFields: () => Field[];
+  getSections: () => Field[];
+  getSectionIdx: () => number;
+  removeField: (id: string) => void;
+  removeFields: () => void;
+  removeSection: (id: string) => void;
+  removeSections: () => void;
 }
 
 export default class EditorContorller
@@ -47,6 +57,76 @@ export default class EditorContorller
     };
   }
 
+  async setIsText(isText: boolean) {
+    this.isText = isText;
+  }
+
+  async setIsIdx(isIdx: boolean) {
+    this.isIdx = isIdx;
+  }
+
+  async setSections(fields: Field[]) {
+    this.sections = fields;
+    this.sectionField = fields[0];
+  }
+
+  async setSection(field: Field) {
+    this.sections.push(field);
+  }
+
+  async setSectionField(n: number) {
+    if (this.sections.length === 0) {
+      return;
+    }
+    this.sectionField = this.sections[n];
+    this.draw();
+  }
+
+  async setField(field: Field) {
+    this.fields.push(field);
+  }
+
+  async setFields(fields: Field[]) {
+    this.fields = fields;
+  }
+
+  async removeSection(id: string) {
+    this.sections = this.sections.filter((s) => s.id !== id);
+  }
+
+  async removeSections() {
+    this.sections = [];
+  }
+
+  async removeField(id: string) {
+    this.fields = this.fields.filter((f) => f.id !== id);
+  }
+
+  async removeFields() {
+    this.fields = [];
+  }
+
+  getMargin() {
+    return this.dMargin;
+  }
+
+  getSections() {
+    return this.sections;
+  }
+
+  getSectionIdx() {
+    return this.sectionField ? this.sections.indexOf(this.sectionField) : 0;
+  }
+
+  getFields() {
+    if (this.sectionField) {
+      return this.fields.filter((f) =>
+        this.sectionValid(f.dx, f.dy, f.dWidth, f.dHeight)
+      );
+    }
+    return this.fields;
+  }
+
   async setZoomInOut(command: ZoomCommand) {
     if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
       return;
@@ -75,25 +155,6 @@ export default class EditorContorller
     this.deg = deg;
     await this.setImageCache();
     await this.draw();
-  }
-
-  async setField(field: Field) {
-    this.fields.push(field);
-  }
-  async setFields(fields: Field[]) {
-    this.fields = fields;
-  }
-
-  getFields() {
-    return this.fields;
-  }
-
-  removeField(id: string) {
-    this.fields = this.fields.filter((f) => f.id !== id);
-  }
-
-  removeFields() {
-    this.fields = [];
   }
 
   private setImageCache() {

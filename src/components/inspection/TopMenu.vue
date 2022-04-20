@@ -5,19 +5,18 @@ import Icons from "@/components/shared/Icons.vue";
 import Dropdown from "@/components/shared/Dropdown.vue";
 import Logo from "@/assets/logo/textscope-logo.png";
 import { useInspectionStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 const inspectionStore = useInspectionStore();
+const { editor, currentEditor, isInspection } = storeToRefs(inspectionStore);
 
 const deg = ref<number>(0);
 const zoom = ref<number>(
-  Math.floor(
-    inspectionStore.editor[inspectionStore.currentPage - 1]?.getScale() ||
-      0 * 100
-  )
+  Math.floor(editor.value[currentEditor.value]?.getScale() || 0 * 100)
 );
 
 const onInspection = () => {
-  inspectionStore.isInspection = !inspectionStore.isInspection;
+  isInspection.value = !isInspection.value;
   inspectionStore.onStartInspection();
 };
 
@@ -30,15 +29,14 @@ const onRotate = (type: "left" | "right" | "90") => {
     deg.value -= 90;
   }
 
-  inspectionStore.editor[inspectionStore.currentPage - 1].setRotate(deg.value);
+  editor.value[currentEditor.value].setRotate(deg.value);
 };
 
 const onZoomInOut = (type: "in" | "out") => {
   zoom.value = Math.floor(
-    inspectionStore.editor[inspectionStore.currentPage - 1].getScale() ||
-      0 * 100
+    editor.value[currentEditor.value].getScale() || 0 * 100
   );
-  inspectionStore.editor[inspectionStore.currentPage - 1].setZoomInOut(type);
+  editor.value[currentEditor.value].setZoomInOut(type);
 };
 
 const onInit = () => {
@@ -47,7 +45,7 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  inspectionStore.editor[inspectionStore.currentPage - 1].setDraw();
+  editor.value[currentEditor.value].setDraw();
 };
 
 const onComparison = () => {
@@ -169,13 +167,9 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                inspectionStore.editor[
-                  inspectionStore.currentPage - 1
-                ].setIsText(true);
-                inspectionStore.editor[
-                  inspectionStore.currentPage - 1
-                ].setIsIdx(true);
-                inspectionStore.editor[inspectionStore.currentPage - 1].draw();
+                editor[currentEditor].setIsText(true);
+                editor[currentEditor].setIsIdx(true);
+                editor[currentEditor].draw();
               }
             "
           >
@@ -185,13 +179,9 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                inspectionStore.editor[
-                  inspectionStore.currentPage - 1
-                ].setIsText(false);
-                inspectionStore.editor[
-                  inspectionStore.currentPage - 1
-                ].setIsIdx(false);
-                inspectionStore.editor[inspectionStore.currentPage - 1].draw();
+                editor[currentEditor].setIsText(false);
+                editor[currentEditor].setIsIdx(false);
+                editor[currentEditor].draw();
               }
             "
           >

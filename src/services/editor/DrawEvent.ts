@@ -20,23 +20,28 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   }
 
   protected fillRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+    ctx.save();
     ctx.fillStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
     ctx.fill(box);
+    ctx.restore();
     return box;
   }
 
   protected strokeRect(ctx: CanvasRenderingContext2D, option: RectOption) {
+    ctx.save();
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     const box = new Path2D();
     box.rect(option.dx, option.dy, option.dWidth, option.dHeight);
     ctx.stroke(box);
+    ctx.restore();
     return box;
   }
 
   protected fillArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+    ctx.save();
     ctx.beginPath();
     ctx.fillStyle = option.color;
     ctx.arc(
@@ -47,9 +52,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       option.endArc
     );
     ctx.fill();
+    ctx.restore();
   }
 
   protected strokeArc(ctx: CanvasRenderingContext2D, option: ArcOption) {
+    ctx.save();
     ctx.beginPath();
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
@@ -61,19 +68,24 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       option.endArc
     );
     ctx.stroke();
+    ctx.restore();
   }
 
   protected fillText(ctx: CanvasRenderingContext2D, option: TextOption) {
+    ctx.save();
     ctx.font = option.font;
     ctx.fillStyle = option.color;
     ctx.fillText(option.text, option.dx, option.dy);
+    ctx.restore();
   }
 
   protected strokeText(ctx: CanvasRenderingContext2D, option: TextOption) {
+    ctx.save();
     ctx.font = option.font;
     ctx.lineWidth = option.lineWidth ? option.lineWidth : 1;
     ctx.strokeStyle = option.color;
     ctx.strokeText(option.text, option.dx, option.dy);
+    ctx.restore();
   }
 
   protected setScale(ctx: CanvasRenderingContext2D, option: ScaleOption) {
@@ -144,6 +156,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     circle7.arc(dx, dy + Math.floor(field.dHeight), 10, 0, 2 * Math.PI);
     circle8.arc(dx, dy + Math.floor(field.dHeight) / 2, 10, 0, 2 * Math.PI);
 
+    ctx.save();
     ctx.fillStyle = "blue";
     ctx.fill(circle1);
     ctx.fill(circle2);
@@ -153,6 +166,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ctx.fill(circle6);
     ctx.fill(circle7);
     ctx.fill(circle8);
+    ctx.restore();
 
     return [
       circle1,
@@ -166,6 +180,29 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     ];
   }
 
+  protected sectionValid(
+    dx: number,
+    dy: number,
+    dWidth: number,
+    dHeight: number
+  ) {
+    const sdx = this.sectionField?.dx || 0;
+    const sWidth = this.sectionField?.dWidth || 0;
+    const sw = sdx + sWidth;
+
+    const sdy = this.sectionField?.dy || 0;
+    const sHeight = this.sectionField?.dHeight || 0;
+    const sh = sdy + sHeight;
+
+    const cw = sdx <= dx && sw >= dx;
+    const ch = sdy <= dy && sh >= dy;
+
+    const ew = sdx <= dx + dWidth && sw >= dx + dWidth;
+    const eh = sdy <= dy + dHeight && sh >= dy + dHeight;
+
+    return cw && ch && ew && eh;
+  }
+
   protected drawFields(
     ctx: CanvasRenderingContext2D,
     fields: Field[],
@@ -173,6 +210,13 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   ) {
     let cnt = 1;
     for (const f of fields) {
+      if (
+        this.sectionField &&
+        !this.sectionValid(f.dx, f.dy, f.dWidth, f.dHeight)
+      ) {
+        continue;
+      }
+
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
 
@@ -225,6 +269,39 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
         this.fillArc(ctx, arcOption);
         this.fillText(ctx, indexOption);
       }
+    }
+  }
+
+  protected drawSections(
+    ctx: CanvasRenderingContext2D,
+    fields: Field[],
+    margin: number = 0
+  ) {
+    for (const f of fields) {
+      const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
+      const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+
+      if (!f.section) {
+        f.section = new Path2D();
+        f.section.rect(dx, dy, Math.floor(f.dWidth), Math.floor(f.dHeight));
+      }
+
+      if (this.sectionField?.section) {
+        ctx.save();
+        ctx.globalAlpha = 0.1;
+        ctx.fillStyle = this.sectionField.color;
+        ctx.fill(this.sectionField.section);
+        ctx.restore();
+      }
+
+      ctx.save();
+
+      ctx.strokeStyle = f.color;
+      ctx.lineWidth = f.lineWidth || 15;
+      ctx.setLineDash([25, 10]);
+      ctx.stroke(f.section);
+
+      ctx.restore();
     }
   }
 
@@ -310,6 +387,8 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     });
 
     this.setScale(this.ctx, { x: scale, y: scale });
+
+    this.drawSections(this.ctx, this.sections, this.dMargin);
 
     this.drawFields(this.ctx, this.fields, this.dMargin);
 

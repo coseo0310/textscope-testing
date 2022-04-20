@@ -11,6 +11,7 @@ export declare module EditorTypes {
     lineWidth?: number;
     draw?: boolean;
     circle?: Path2D[];
+    section?: Path2D;
     box?: Path2D;
   };
 
