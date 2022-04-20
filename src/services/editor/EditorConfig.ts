@@ -16,17 +16,10 @@ interface Crosshair {
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
   protected canvasEl: HTMLCanvasElement | null;
-  protected offCanvasEl: OffscreenCanvas | null;
-  protected ctx:
-    | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D
-    | null;
+  protected ctx: CanvasRenderingContext2D | null;
   protected imgEl: HTMLImageElement;
-  protected imageCache: HTMLCanvasElement | OffscreenCanvas | null;
-  protected imageCacheCtx:
-    | CanvasRenderingContext2D
-    | OffscreenCanvasRenderingContext2D
-    | null;
+  protected imageCache: HTMLCanvasElement | null;
+  protected imageCacheCtx: CanvasRenderingContext2D | null;
 
   // Editor setting values
   protected depth: number;
@@ -57,8 +50,6 @@ export default class EditorConfig implements IEditorConfig {
       this.imageCache = null;
       this.imageCacheCtx = null;
     }
-
-    this.offCanvasEl = null;
 
     this.imgEl = new Image();
 

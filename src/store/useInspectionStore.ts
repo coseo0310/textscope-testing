@@ -134,7 +134,7 @@ type States = {
   inspectionItem: InspectionItem | null;
   synonymList: Field[];
   isInspection: boolean;
-  editor: Editor;
+  editor: Editor[];
   currentPage: number;
   total: number;
 };
@@ -150,7 +150,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       inspectionItem: null,
       synonymList: [],
       isInspection: false,
-      editor: new Editor(),
+      editor: [],
       currentPage: 1,
       total: 0,
     };
@@ -160,9 +160,33 @@ export const useInspectionStore = defineStore("inspectionStore", {
       try {
         // TODO: Get inspection list
         this.inspectionItems = await setInspectionList();
-        this.setInspectionItem(this.inspectionItems[0], 1);
-        this.total = this.inspectionItems.length;
+        this.editor = this.inspectionItems.map((item) => {
+          const editor = new Editor();
+          const items =
+            item?.prediction.key_values.length || 0 > 0
+              ? item?.prediction.key_values
+              : item?.prediction.texts;
+          items.forEach((item) => {
+            editor.setField({
+              id: item.id,
+              text: item.text,
+              dx: item.bbox.x,
+              dy: item.bbox.y,
+              dWidth: item.bbox.w,
+              dHeight: item.bbox.h,
+              type: "stroke",
+              color: `rgba(220, 118, 118, 1)`,
+              lineWidth: 5,
+            });
+          });
+          editor.setImgUrl(item.img);
+          editor.setDrawEndCallback(() => {
+            this.synonymList = editor.getFields();
+          });
+          return editor;
+        });
 
+        this.total = this.inspectionItems.length;
         return true;
       } catch (error) {
         console.error(error);
@@ -170,48 +194,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(item: Inspection, page: number) {
-      this.editor.removeFields();
-      this.editor.init();
-      this.editor.setZoomInOut("init");
-      this.editor.setRotate(0);
-      const items =
-        item?.prediction.key_values.length || 0 > 0
-          ? item?.prediction.key_values
-          : item?.prediction.texts;
-
-      const task_id = item.request.task_id;
-      const filename = item.image_metadata.filename;
-      const bbox = items.map((item) => {
-        this.editor.setField({
-          id: item.id,
-          text: item.text,
-          dx: item.bbox.x,
-          dy: item.bbox.y,
-          dWidth: item.bbox.w,
-          dHeight: item.bbox.h,
-          type: "stroke",
-          color: `rgba(220, 118, 118, 1)`,
-          lineWidth: 5,
-        });
-        return {
-          id: item.id,
-          text: item.text,
-          x: item.bbox.x,
-          y: item.bbox.y,
-          w: item.bbox.w,
-          h: item.bbox.h,
-        };
-      });
-
-      this.inspectionItem = {
-        task_id,
-        filename,
-        bbox,
-      };
-
       this.currentPage = page;
-      this.synonymList = this.editor.getFields();
-      this.editor.setImgUrl(item.img);
+      this.synonymList = this.editor[page - 1].getFields();
     },
     async onStartInspection() {
       // alert("준비중...");

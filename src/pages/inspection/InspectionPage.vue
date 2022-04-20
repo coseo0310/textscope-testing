@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import MainLayout from "@/components/layout/MainLayout.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Button from "@/components/shared/Button.vue";
@@ -20,7 +20,7 @@ const onPreview = () => (isPreview.value = !isPreview.value);
         <TopMenu />
       </div>
       <div class="content">
-        <div class="view"><EditorForm /></div>
+        <div class="editor-wrap"><EditorForm /></div>
         <div class="synonym-wrap"><SynonymForm /></div>
       </div>
       <div class="preview-wrap" :class="{ active: isPreview }">
@@ -55,7 +55,7 @@ const onPreview = () => (isPreview.value = !isPreview.value);
     display: flex;
     align-items: center;
 
-    .view {
+    .editor-wrap {
       width: calc(100vw - 540px);
       height: calc(100vh - 124px);
     }

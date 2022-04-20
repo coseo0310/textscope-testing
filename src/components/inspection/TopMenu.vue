@@ -9,7 +9,12 @@ import { useInspectionStore } from "@/store";
 const inspectionStore = useInspectionStore();
 
 const deg = ref<number>(0);
-const zoom = ref<number>(Math.floor(inspectionStore.editor.getScale() * 100));
+const zoom = ref<number>(
+  Math.floor(
+    inspectionStore.editor[inspectionStore.currentPage - 1]?.getScale() ||
+      0 * 100
+  )
+);
 
 const onInspection = () => {
   inspectionStore.isInspection = !inspectionStore.isInspection;
@@ -25,12 +30,15 @@ const onRotate = (type: "left" | "right" | "90") => {
     deg.value -= 90;
   }
 
-  inspectionStore.editor.setRotate(deg.value);
+  inspectionStore.editor[inspectionStore.currentPage - 1].setRotate(deg.value);
 };
 
 const onZoomInOut = (type: "in" | "out") => {
-  zoom.value = Math.floor(inspectionStore.editor.getScale() * 100);
-  inspectionStore.editor.setZoomInOut(type);
+  zoom.value = Math.floor(
+    inspectionStore.editor[inspectionStore.currentPage - 1].getScale() ||
+      0 * 100
+  );
+  inspectionStore.editor[inspectionStore.currentPage - 1].setZoomInOut(type);
 };
 
 const onInit = () => {
@@ -43,7 +51,7 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  inspectionStore.editor.setDraw();
+  inspectionStore.editor[inspectionStore.currentPage - 1].setDraw();
 };
 
 const onComparison = () => {
@@ -165,9 +173,13 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                inspectionStore.editor.setIsText(true);
-                inspectionStore.editor.setIsIdx(true);
-                inspectionStore.editor.draw();
+                inspectionStore.editor[
+                  inspectionStore.currentPage - 1
+                ].setIsText(true);
+                inspectionStore.editor[
+                  inspectionStore.currentPage - 1
+                ].setIsIdx(true);
+                inspectionStore.editor[inspectionStore.currentPage - 1].draw();
               }
             "
           >
@@ -177,9 +189,13 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                inspectionStore.editor.setIsText(false);
-                inspectionStore.editor.setIsIdx(false);
-                inspectionStore.editor.draw();
+                inspectionStore.editor[
+                  inspectionStore.currentPage - 1
+                ].setIsText(false);
+                inspectionStore.editor[
+                  inspectionStore.currentPage - 1
+                ].setIsIdx(false);
+                inspectionStore.editor[inspectionStore.currentPage - 1].draw();
               }
             "
           >

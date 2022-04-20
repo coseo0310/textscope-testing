@@ -31,10 +31,11 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 const onConfirm = () => {
   inspectionStore.synonymList[props.idx - 1].text = text.value;
-  inspectionStore.editor.setFields(inspectionStore.synonymList);
+  inspectionStore.editor[inspectionStore.currentPage - 1].setFields(
+    inspectionStore.synonymList
+  );
 
-  console.log(inspectionStore.synonymList[props.idx - 1]);
-  inspectionStore.editor.draw();
+  inspectionStore.editor[inspectionStore.currentPage - 1].draw();
 };
 const onCancel = () => {};
 </script>

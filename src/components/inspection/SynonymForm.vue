@@ -7,21 +7,24 @@ import { useInspectionStore } from "@/store";
 const inspectionStore = useInspectionStore();
 
 const onPage = (n: number) => {
-  inspectionStore.setInspectionItem(inspectionStore.inspectionItems[n - 1], n);
+  const el = document.querySelector(`.idx-${n - 1}`);
+  if (!el) {
+    return;
+  }
+  el.scrollIntoView({
+    block: "center",
+    behavior: "smooth",
+  });
 };
 
 const getCurrent = computed(() => inspectionStore.currentPage);
-
-inspectionStore.editor.setDrawEndCallback(() => {
-  inspectionStore.synonymList = inspectionStore.editor.getFields();
-});
 </script>
 
 <template>
   <div class="synonym-form">
     <div class="pagination-wrap">
       <Pagination
-        class="inspection"
+        :inspection="true"
         :limit="inspectionStore.total"
         :total="inspectionStore.total"
         :current="getCurrent"

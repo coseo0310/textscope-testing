@@ -13,9 +13,6 @@ export interface IEditorContorller extends IEventHandler {
   removeField: (id: string) => void;
   removeFields: () => void;
   setDraw: (field?: Field) => Promise<void>;
-  setCanvas: (canvas: HTMLCanvasElement) => void;
-  setCacheCanvas: (canvas: HTMLCanvasElement) => void;
-  setOffsetCanvas: (canvas: OffscreenCanvas) => void;
   getCanvas: () => HTMLCanvasElement | OffscreenCanvas | null;
 }
 
@@ -29,31 +26,13 @@ export default class EditorContorller
     if (canvas) {
       this.canvasEl = canvas;
       this.ctx = canvas.getContext("2d")!;
+      this.setDrawEvent();
+      this.setEditEvent();
     }
   }
 
   getCanvas() {
     return this.canvasEl;
-  }
-
-  setCanvas(canvas: HTMLCanvasElement) {
-    this.canvasEl = canvas;
-    this.ctx = canvas.getContext("2d")!;
-    this.setDrawEvent();
-    this.setEditEvent();
-  }
-
-  setCacheCanvas(canvas: HTMLCanvasElement | OffscreenCanvas) {
-    this.imageCache = canvas;
-    this.ctx = canvas.getContext("2d")!;
-  }
-
-  setOffsetCanvas(offCanvas: OffscreenCanvas) {
-    this.offCanvasEl = offCanvas;
-    if (!this.offCanvasEl) {
-      return;
-    }
-    this.ctx = this.offCanvasEl.getContext("2d")!;
   }
 
   async setImgUrl(url: string) {
@@ -65,7 +44,6 @@ export default class EditorContorller
       await this.setCalculatedDepth();
       await this.setImageCache();
       await this.draw();
-      await this.setScroll();
     };
   }
 
@@ -91,7 +69,6 @@ export default class EditorContorller
 
     await this.setImageCache();
     await this.draw();
-    await this.setScroll();
   }
 
   async setRotate(deg: number) {

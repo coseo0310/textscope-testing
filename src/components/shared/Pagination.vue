@@ -5,6 +5,7 @@ interface Props {
   limit?: number;
   total?: number;
   current?: number;
+  inspection?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -73,9 +74,11 @@ const onPage = (n: number) => {
 </script>
 
 <template>
-  <div class="pagination">
+  <div class="pagination" :class="{ inspection: props.inspection }">
     <div class="first" @click="onFirst">[처음]</div>
-    <div class="prev" @click="onPrev">[이전]</div>
+    <div class="prev" @click="onPrev">
+      {{ props.inspection ? "<" : "[이전]" }}
+    </div>
     <div class="paging">
       <div
         v-for="n in pages"
@@ -86,7 +89,9 @@ const onPage = (n: number) => {
         {{ n }}
       </div>
     </div>
-    <div class="next" @click="onNext">[다음]</div>
+    <div class="next" @click="onNext">
+      {{ props.inspection ? ">" : "[다음]" }}
+    </div>
     <div class="last" @click="onLast">[끝]</div>
   </div>
 </template>
@@ -139,10 +144,24 @@ const onPage = (n: number) => {
     justify-content: flex-start;
 
     .first,
-    .prev,
-    .next,
     .last {
       display: none;
+    }
+
+    .prev,
+    .next {
+      /* display: none; */
+      padding: 0 10px;
+      width: 27px;
+      height: 33px;
+      background-color: $d4;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 5px;
     }
 
     .paging {
