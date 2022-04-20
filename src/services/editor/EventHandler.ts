@@ -475,7 +475,20 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.drawField.dy = this.drawField.dy - this.dMargin;
 
     if (this.drawField.dWidth > 0) {
-      this.fields = [...this.fields, this.drawField];
+      if (!this.sectionField) {
+        this.fields = [...this.fields, this.drawField];
+      } else {
+        if (
+          this.sectionValid(
+            this.drawField.dx,
+            this.drawField.dy,
+            this.drawField.dWidth,
+            this.drawField.dHeight
+          )
+        ) {
+          this.fields = [...this.fields, this.drawField];
+        }
+      }
     }
 
     if (this.drawEndCallback && this.drawField) {
