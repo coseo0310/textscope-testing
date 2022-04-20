@@ -67,8 +67,12 @@ const onLast = () => {
 };
 
 const onPage = (n: number) => {
-  current.value = n;
-  emits("change", current.value);
+  if (props.inspection) {
+    emits("change", n);
+  } else {
+    current.value = n;
+    emits("change", current.value);
+  }
 };
 </script>
 
