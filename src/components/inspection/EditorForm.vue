@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { storeToRefs } from "pinia";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
+const { inspectionItems, editor } = storeToRefs(inspectionStore);
 
 const editorWrap = ref<HTMLDivElement | null>(null);
 
-onMounted(async () => {
+watch(inspectionItems, () => {
   if (!editorWrap.value) {
     return;
   }
-  await inspectionStore.getInspectionItems();
-  inspectionStore.setInspectionItem(1);
-  inspectionStore.editor.forEach((e, idx) => {
+  editorWrap.value.innerHTML = "";
+  editor.value.forEach((e, idx) => {
     const el = e.getCanvas();
     if (!el) {
       return;
@@ -36,27 +37,34 @@ onMounted(async () => {
     entries.forEach((entry) => {
       const { target, isIntersecting, boundingClientRect, intersectionRatio } =
         entry;
-
       const idx = Number(target.classList.value.split("-")[1]);
       if (!isIntersecting && intersectionRatio <= 0) {
         if (boundingClientRect.y < 0) {
           inspectionStore.setInspectionItem(idx + 2);
         } else {
-          inspectionStore.setInspectionItem(idx);
+          inspectionStore.setInspectionItem(idx || 1);
         }
       }
     });
   };
-  const observer = new IntersectionObserver(observerCallback, observerOptions);
+  inspectionStore.observer = new IntersectionObserver(
+    observerCallback,
+    observerOptions
+  );
 
   const nodes = editorWrap.value.childNodes;
 
   setTimeout(() => {
     nodes.forEach((node) => {
       const el = node as HTMLCanvasElement;
-      observer.observe(el);
+      inspectionStore.observer?.observe(el);
     });
   }, 1000);
+});
+
+onMounted(async () => {
+  await inspectionStore.getInspectionItems();
+  inspectionStore.setInspectionItem(1);
 });
 </script>
 

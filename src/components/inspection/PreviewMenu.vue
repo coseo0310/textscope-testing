@@ -77,10 +77,10 @@ onUnmounted(() => {
       >
         <div
           class="img"
-          :style="{ backgroundImage: `url('${item[0].img}')` }"
+          :style="{ backgroundImage: `url('${item.items[0].img}')` }"
         />
         <div class="info">
-          <div class="text">{{ item[0].prediction.doc_type.name }}</div>
+          <div class="text">{{ item.items[0].prediction.doc_type.name }}</div>
           <div class="type">문서 : 비정형</div>
           <div class="status">검수 : 대기 <span class="progress"></span></div>
         </div>

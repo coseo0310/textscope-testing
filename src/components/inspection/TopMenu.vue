@@ -43,10 +43,6 @@ const onZoomInOut = (type: "in" | "out") => {
 
 const onInit = () => {
   deg.value = 0;
-  inspectionStore.setInspectionItem(
-    inspectionStore.inspectionItems[inspectionStore.currentPage - 1],
-    inspectionStore.currentPage
-  );
   //TODO: Data reset
 };
 
@@ -80,7 +76,7 @@ onMounted(() => {});
         </div>
         <div class="rows">
           <div class="column">
-            {{ inspectionStore.inspectionItem?.task_id }}
+            {{ inspectionStore.inspectionInfo?.taskId }}
           </div>
           <Button class="column category">
             <Dropdown
@@ -95,7 +91,7 @@ onMounted(() => {});
             />
           </Button>
           <div class="column">
-            {{ inspectionStore.inspectionItem?.filename }}
+            {{ inspectionStore.inspectionInfo?.filename }}
           </div>
           <div class="column">장화</div>
           <div class="column">-</div>

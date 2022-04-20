@@ -2,6 +2,7 @@ import { EditorTypes } from "./types";
 
 export interface IEditorConfig {
   getScale: () => number;
+  getMargin: () => number;
   setIsText: (isText: boolean) => void;
   setIsIdx: (isIdx: boolean) => void;
 }
@@ -80,6 +81,10 @@ export default class EditorConfig implements IEditorConfig {
 
   setIsIdx(isIdx: boolean) {
     this.isIdx = isIdx;
+  }
+
+  getMargin() {
+    return this.dMargin;
   }
 
   protected getMarginSize(w: number, h: number) {

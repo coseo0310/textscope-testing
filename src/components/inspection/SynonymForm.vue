@@ -16,8 +16,6 @@ const onPage = (n: number) => {
     behavior: "smooth",
   });
 };
-
-const getCurrent = computed(() => inspectionStore.currentPage);
 </script>
 
 <template>
@@ -25,9 +23,8 @@ const getCurrent = computed(() => inspectionStore.currentPage);
     <div class="pagination-wrap">
       <Pagination
         :inspection="true"
-        :limit="inspectionStore.total"
         :total="inspectionStore.total"
-        :current="getCurrent"
+        :current="inspectionStore.currentPage"
         @change="onPage"
       />
     </div>

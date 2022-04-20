@@ -30,7 +30,6 @@ const pages = computed(() => {
       ? (current.value / limit.value - 1) * limit.value + 1
       : Math.floor(current.value / limit.value) * limit.value + 1;
   let e = s + limit.value >= props.total ? props.total + 1 : s + limit.value;
-
   for (let i = s; i < e; i++) {
     p.push(i);
   }
@@ -140,7 +139,7 @@ const onPage = (n: number) => {
   }
 
   &.inspection {
-    padding: 10px 10px;
+    padding: 10px 5px;
     justify-content: flex-start;
 
     .first,

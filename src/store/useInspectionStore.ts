@@ -114,27 +114,27 @@ type Inspection = {
   response_metadata: ResponseMetadata;
 };
 
-type Bbox = {
-  id: string;
-  text: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-};
-
 type InspectionItems = Inspection[];
 
-type PreviewList = InspectionItems[];
+type InspectionInfo = {
+  filename: string;
+  taskId: string;
+};
+type PreviewItem = {
+  info: InspectionInfo;
+  items: InspectionItems;
+};
 
 type States = {
-  previewList: PreviewList;
+  previewList: PreviewItem[];
   inspectionItems: InspectionItems;
+  inspectionInfo: InspectionInfo;
   synonymList: Field[];
   isInspection: boolean;
   editor: Editor[];
   currentPage: number;
   total: number;
+  observer: IntersectionObserver | null;
 };
 
 // useStore could be anything like useUser, useCart
@@ -146,18 +146,28 @@ export const useInspectionStore = defineStore("inspectionStore", {
       // all these properties will have their type inferred automatically
       previewList: getPreviewList(),
       inspectionItems: [],
+      inspectionInfo: {
+        filename: "test",
+        taskId: "test-01",
+      },
       synonymList: [],
       isInspection: false,
       editor: [],
       currentPage: 1,
       total: 0,
+      observer: null,
     };
   },
   actions: {
     async getInspectionItems(idx: number = 0) {
       try {
         // TODO: Get inspection list
-        this.inspectionItems = this.previewList[idx];
+        if (this.observer) {
+          this.observer.disconnect();
+          this.observer = null;
+        }
+        this.inspectionItems = this.previewList[idx].items;
+        this.inspectionInfo = this.previewList[idx].info;
         this.editor = this.inspectionItems.map((item) => {
           const editor = new Editor();
           const items =
@@ -184,6 +194,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
           return editor;
         });
 
+        this.currentPage = 1;
         this.total = this.inspectionItems.length;
         return true;
       } catch (error) {
@@ -240,10 +251,34 @@ function setInspectionList() {
   return tmp;
 }
 
-function getPreviewList() {
-  const l1 = setInspectionList().slice(0, 10);
-  const l2 = setInspectionList().slice(0, 5);
-  const l3 = setInspectionList().slice(0, 8);
-  const l4 = setInspectionList().slice(0, 6);
+function getPreviewList(): PreviewItem[] {
+  const l1: PreviewItem = {
+    info: {
+      filename: "test1",
+      taskId: "test-01",
+    },
+    items: setInspectionList().slice(0, 10),
+  };
+  const l2 = {
+    info: {
+      filename: "test2",
+      taskId: "test-02",
+    },
+    items: setInspectionList().slice(2, 7),
+  };
+  const l3 = {
+    info: {
+      filename: "test3",
+      taskId: "test-03",
+    },
+    items: setInspectionList().slice(4, 9),
+  };
+  const l4 = {
+    info: {
+      filename: "test4",
+      taskId: "test-04",
+    },
+    items: setInspectionList().slice(6, 10),
+  };
   return [l1, l2, l3, l4];
 }
