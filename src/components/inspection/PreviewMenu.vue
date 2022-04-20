@@ -71,13 +71,16 @@ onUnmounted(() => {
     </div>
     <div class="thumbnail-wrap" ref="thumbnailEl">
       <div
-        v-for="(item, idx) in inspectionStore.inspectionItems"
+        v-for="(item, idx) in inspectionStore.previewList"
         class="thumbnail-card"
-        @click="inspectionStore.setInspectionItem(item, idx + 1)"
+        @click="inspectionStore.getInspectionItems(idx)"
       >
-        <div class="img" :style="{ backgroundImage: `url('${item.img}')` }" />
+        <div
+          class="img"
+          :style="{ backgroundImage: `url('${item[0].img}')` }"
+        />
         <div class="info">
-          <div class="text">{{ item.prediction.doc_type.name }}</div>
+          <div class="text">{{ item[0].prediction.doc_type.name }}</div>
           <div class="type">문서 : 비정형</div>
           <div class="status">검수 : 대기 <span class="progress"></span></div>
         </div>
@@ -97,9 +100,9 @@ onUnmounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 22px;
+    padding: 0 18px 0 28px;
     height: 50px;
-    width: 184px;
+    width: 100%;
 
     .btn {
       display: flex;

@@ -2,8 +2,6 @@
 import { ref, onMounted } from "vue";
 import { useInspectionStore } from "@/store";
 
-let isLoaded = false;
-
 const inspectionStore = useInspectionStore();
 
 const editorWrap = ref<HTMLDivElement | null>(null);
@@ -13,7 +11,7 @@ onMounted(async () => {
     return;
   }
   await inspectionStore.getInspectionItems();
-  inspectionStore.setInspectionItem(inspectionStore.inspectionItems[0], 1);
+  inspectionStore.setInspectionItem(1);
   inspectionStore.editor.forEach((e, idx) => {
     const el = e.getCanvas();
     if (!el) {
@@ -42,15 +40,9 @@ onMounted(async () => {
       const idx = Number(target.classList.value.split("-")[1]);
       if (!isIntersecting && intersectionRatio <= 0) {
         if (boundingClientRect.y < 0) {
-          inspectionStore.setInspectionItem(
-            inspectionStore.inspectionItems[idx],
-            idx + 2
-          );
+          inspectionStore.setInspectionItem(idx + 2);
         } else {
-          inspectionStore.setInspectionItem(
-            inspectionStore.inspectionItems[idx],
-            idx
-          );
+          inspectionStore.setInspectionItem(idx);
         }
       }
     });

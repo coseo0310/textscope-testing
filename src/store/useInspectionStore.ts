@@ -123,15 +123,13 @@ type Bbox = {
   h: number;
 };
 
-type InspectionItem = {
-  bbox: Bbox[];
-  task_id: string;
-  filename: string;
-};
+type InspectionItems = Inspection[];
+
+type PreviewList = InspectionItems[];
 
 type States = {
-  inspectionItems: Inspection[];
-  inspectionItem: InspectionItem | null;
+  previewList: PreviewList;
+  inspectionItems: InspectionItems;
   synonymList: Field[];
   isInspection: boolean;
   editor: Editor[];
@@ -146,8 +144,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
+      previewList: getPreviewList(),
       inspectionItems: [],
-      inspectionItem: null,
       synonymList: [],
       isInspection: false,
       editor: [],
@@ -156,10 +154,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
     };
   },
   actions: {
-    async getInspectionItems() {
+    async getInspectionItems(idx: number = 0) {
       try {
         // TODO: Get inspection list
-        this.inspectionItems = await setInspectionList();
+        this.inspectionItems = this.previewList[idx];
         this.editor = this.inspectionItems.map((item) => {
           const editor = new Editor();
           const items =
@@ -193,7 +191,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         return false;
       }
     },
-    async setInspectionItem(item: Inspection, page: number) {
+    async setInspectionItem(page: number) {
       this.currentPage = page;
       this.synonymList = this.editor[page - 1].getFields();
     },
@@ -217,6 +215,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
 
 function setInspectionList() {
   const tmp = [];
+
   tmp.push(JSON.parse(JSON.stringify(admission_json1)) as Inspection);
   tmp[0].img = admission1;
   tmp.push(JSON.parse(JSON.stringify(admission_json2)) as Inspection);
@@ -239,4 +238,12 @@ function setInspectionList() {
   tmp[9].img = surgery2;
 
   return tmp;
+}
+
+function getPreviewList() {
+  const l1 = setInspectionList().slice(0, 10);
+  const l2 = setInspectionList().slice(0, 5);
+  const l3 = setInspectionList().slice(0, 8);
+  const l4 = setInspectionList().slice(0, 6);
+  return [l1, l2, l3, l4];
 }
