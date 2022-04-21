@@ -410,7 +410,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
         }
       }
       if (this.boxSelectedCallback && !this.editField) {
-        this.boxSelectedCallback();
+        this.boxSelectedCallback(this.sectionField || undefined);
       }
     }
     this.draw();

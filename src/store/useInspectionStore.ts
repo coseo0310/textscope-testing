@@ -201,9 +201,13 @@ export const useInspectionStore = defineStore("inspectionStore", {
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
           });
-          editor.setBoxSelectedCallback(() => {
+          editor.setBoxSelectedCallback((field) => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
+            console.log(field);
+            if (field) {
+              this.setPagination(editor.getSectionIdx() + 1);
+            }
           });
           editor.setResizeCallback(() => {
             this.total = editor.getSectionLength();
