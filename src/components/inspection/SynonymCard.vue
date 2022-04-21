@@ -4,6 +4,7 @@ import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 interface Props {
   idx: number;
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const inspectionStore = useInspectionStore();
+const { editor, currentEditor, synonymList } = storeToRefs(inspectionStore);
 
 const text = ref<string>(props.text);
 
@@ -30,12 +32,11 @@ const onKeyup = (e: KeyboardEvent) => {
   onConfirm();
 };
 const onConfirm = () => {
-  inspectionStore.synonymList[props.idx - 1].text = text.value;
-  inspectionStore.editor[inspectionStore.currentPage - 1].setFields(
-    inspectionStore.synonymList
+  synonymList.value[props.idx - 1].text = text.value;
+  editor.value[currentEditor.value].modifyField(
+    synonymList.value[props.idx - 1]
   );
-
-  inspectionStore.editor[inspectionStore.currentPage - 1].draw();
+  editor.value[currentEditor.value].draw();
 };
 const onCancel = () => {};
 </script>

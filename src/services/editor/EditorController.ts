@@ -14,6 +14,7 @@ export interface IEditorContorller extends IEventHandler {
   setIsText: (isText: boolean) => Promise<void>;
   setIsIdx: (isIdx: boolean) => Promise<void>;
   setField: (field: Field) => Promise<void>;
+  modifyField: (field: Field) => Promise<void>;
   setSection: (field: Field) => Promise<void>;
   setSections: (fields: Field[]) => Promise<void>;
   setSectionField: (n: number) => Promise<void>;
@@ -88,6 +89,14 @@ export default class EditorContorller
 
   async setFields(fields: Field[]) {
     this.fields = fields;
+  }
+
+  async modifyField(field: Field) {
+    const f = this.fields.find((f) => f.id === field.id);
+    if (!f) {
+      return;
+    }
+    f.text = field.text;
   }
 
   async removeSection(id: string) {

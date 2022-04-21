@@ -200,6 +200,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     const ew = sdx <= dx + dWidth && sw >= dx + dWidth;
     const eh = sdy <= dy + dHeight && sh >= dy + dHeight;
 
+    console.log(`cw: ${cw}, ch: ${ch}, ew: ${ew}, eh: ${eh}`);
     return cw && ch && ew && eh;
   }
 
