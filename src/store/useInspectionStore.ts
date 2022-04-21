@@ -204,7 +204,6 @@ export const useInspectionStore = defineStore("inspectionStore", {
           editor.setBoxSelectedCallback(() => {
             this.total = editor.getSections().length || 1;
             this.synonymList = editor.getFields();
-            this.setPagination(this.currentPage);
           });
           editor.setResizeCallback(() => {
             this.total = editor.getSections().length || 1;
@@ -260,7 +259,7 @@ function getSection(idx: number = 0): Field[] {
 
   const section0: Field[] = [
     {
-      id: `${Date.now()}`,
+      id: `${Date.now() + 1}`,
       text: "Section1-1",
 
       dx: 413.59,
@@ -272,7 +271,7 @@ function getSection(idx: number = 0): Field[] {
       lineWidth: 5,
     },
     {
-      id: `${Date.now()}`,
+      id: `${Date.now() + 2}`,
       text: "Section1-2",
 
       dx: 363.59,

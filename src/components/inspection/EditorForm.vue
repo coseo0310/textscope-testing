@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
-const { inspectionItems, editors, observer } = storeToRefs(inspectionStore);
+const {
+  inspectionItems,
+  editors,
+  observer,
+  currentEditor,
+  synonymList,
+  total,
+} = storeToRefs(inspectionStore);
 
 const editorWrap = ref<HTMLDivElement | null>(null);
 
@@ -61,9 +68,38 @@ watch(inspectionItems, () => {
   }, 1000);
 });
 
+const onShoutcuts = (e: KeyboardEvent) => {
+  if (!currentEditor.value) {
+    return;
+  }
+  switch (e.key) {
+    case "Backspace":
+      const f = currentEditor.value.getEditField();
+      if (f) {
+        currentEditor.value.removeField(f.id);
+        currentEditor.value.removeSection(f.id);
+        currentEditor.value.clearEditField();
+        currentEditor.value.setSectionField(0);
+        currentEditor.value.draw();
+        synonymList.value = currentEditor.value?.getFields();
+        console.log(synonymList.value, "<>");
+        total.value = currentEditor.value.getSectionLength();
+      }
+      break;
+    default:
+      break;
+  }
+};
+
 onMounted(async () => {
   await inspectionStore.getInspectionItems();
   inspectionStore.setInspectionItem(1);
+
+  window.addEventListener("keydown", onShoutcuts);
+});
+
+onUnmounted(async () => {
+  window.removeEventListener("keydown", onShoutcuts);
 });
 </script>
 

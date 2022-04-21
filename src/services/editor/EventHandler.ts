@@ -349,7 +349,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     }
     this.isEdit = false;
     this.editField = null;
+    this.drawType = "new";
     const scale = this.getScale();
+
     for (const f of this.fields) {
       if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
         continue;
@@ -375,6 +377,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     }
 
     if (!this.editField) {
+      this.drawType = "section";
       for (const s of this.sections) {
         if (!s.box || !this.ctx.isPointInPath(s.box, e.offsetX, e.offsetY)) {
           continue;
@@ -445,6 +448,11 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
 
     this.isMove = false;
     this.canvasEl.style.cursor = "default";
+
+    if (this.editField && this.drawType === "section") {
+      this.sectionField = this.editField;
+    }
+
     this.draw();
 
     if (this.boxSelectedCallback && this.editField) {
