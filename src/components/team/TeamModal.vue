@@ -88,9 +88,13 @@ const onCancel = (e: MouseEvent) => {
           <Button class="outline" @click="onCancel">취소</Button>
         </div>
         <div class="btn-wrap">
-          <Button class="primary extra-bold" :disabled="!name" @click="onSubmit"
-            >변경</Button
+          <Button
+            class="primary extra-bold"
+            :disabled="!name"
+            @click="onSubmit"
           >
+            {{ userStore.team ? "변경" : "등록" }}
+          </Button>
         </div>
       </div>
     </div>
