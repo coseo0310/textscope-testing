@@ -70,5 +70,7 @@ export declare module EditorTypes {
 
   type ZoomCommand = "in" | "out" | "init";
 
+  type DrawType = "new" | "section";
+
   type DrawCallback = (field: Field) => void;
 }

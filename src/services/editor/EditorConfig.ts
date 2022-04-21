@@ -1,6 +1,8 @@
 import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
+type DrawType = EditorTypes.DrawType;
+
 export interface IEditorConfig {
   getScale: () => number;
 }
@@ -11,6 +13,7 @@ interface Crosshair {
   dWidth: number;
   dHeight: number;
   color: string;
+  lineWidth: number;
 }
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
@@ -35,6 +38,7 @@ export default class EditorConfig implements IEditorConfig {
   protected isIdx: boolean;
 
   // Editor Event Handler Field values;
+  protected drawType: DrawType;
   protected drawField: Field | null;
   protected editField: Field | null;
   protected sectionField: Field | null;
@@ -69,12 +73,14 @@ export default class EditorConfig implements IEditorConfig {
       dWidth: 0,
       dHeight: 0,
       color: "red",
+      lineWidth: 3,
     };
 
     this.isText = false;
     this.isIdx = false;
 
     this.drawField = null;
+    this.drawType = "new";
     this.editField = null;
     this.sectionField = null;
   }

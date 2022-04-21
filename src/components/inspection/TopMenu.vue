@@ -43,7 +43,11 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  currentEditor.value?.setDraw();
+  currentEditor.value?.setDraw("new");
+};
+
+const onSectionDraw = () => {
+  currentEditor.value?.setDraw("section");
 };
 
 const onComparison = () => {
@@ -115,6 +119,7 @@ onMounted(() => {});
         <div class="box">회전</div>
         <div class="box">초기화</div>
         <div class="box">드로우</div>
+        <div class="box">드로우 섹션</div>
         <div class="box icon">
           <Button @click="onZoomInOut('in')">
             <Icons icons="plus" />
@@ -141,6 +146,11 @@ onMounted(() => {});
         </div>
         <div class="box icon">
           <Button @click="onDraw">
+            <Icons icons="template" />
+          </Button>
+        </div>
+        <div class="box icon">
+          <Button @click="onSectionDraw">
             <Icons icons="template" />
           </Button>
         </div>
@@ -312,7 +322,7 @@ onMounted(() => {});
     .control-box {
       height: 100%;
       display: grid;
-      grid-template-columns: 0.9fr 1.2fr 0.9fr 1fr;
+      grid-template-columns: 0.9fr 1.2fr 0.9fr 1fr 1fr;
       padding: 0 1px 1px 0;
       margin: 0 0 0 1px;
       gap: 1px;

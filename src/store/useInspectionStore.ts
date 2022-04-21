@@ -195,6 +195,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
           });
           editor.setImgUrl(item.img);
           editor.setDrawEndCallback(() => {
+            this.total = editor.getSections().length || 1;
             this.synonymList = editor.getFields();
           });
           return editor;

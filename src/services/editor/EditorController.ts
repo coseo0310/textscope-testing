@@ -3,12 +3,13 @@ import { EditorTypes } from "./types";
 
 type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
+type DrawType = EditorTypes.DrawType;
 
 export interface IEditorContorller extends IEventHandler {
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
-  setDraw: (field?: Field) => Promise<void>;
+  setDraw: (drawType: DrawType, field?: Field) => Promise<void>;
   getCanvas: () => HTMLCanvasElement | OffscreenCanvas | null;
   getMargin: () => number;
   setIsText: (isText: boolean) => Promise<void>;
@@ -214,10 +215,13 @@ export default class EditorContorller
     });
   }
 
-  async setDraw(field?: Field) {
+  async setDraw(drawType: DrawType, field?: Field) {
     if (!this.canvasEl || !this.ctx) {
       return;
     }
+
+    const color = drawType === "new" ? `rgba(220, 118, 118, 1)` : "#FFD59E";
+
     this.drawField = field
       ? field
       : {
@@ -228,10 +232,12 @@ export default class EditorContorller
           dWidth: 0,
           dHeight: 0,
           type: "stroke",
-          color: `rgba(220, 118, 118, 1)`,
+          color,
           lineWidth: 5,
           draw: true,
         };
     this.canvasEl.style.cursor = "crosshair";
+    this.drawType = drawType;
+    this.crosshair.color = color;
   }
 }

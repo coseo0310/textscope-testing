@@ -330,13 +330,13 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       dx: 0,
       dy: this.crosshair.dy,
       dWidth: this.crosshair.dWidth,
-      dHeight: 1,
+      dHeight: this.crosshair.lineWidth,
       color: this.crosshair.color,
     });
     this.fillRect(ctx, {
       dx: this.crosshair.dx,
       dy: 0,
-      dWidth: 1,
+      dWidth: this.crosshair.lineWidth,
       dHeight: this.crosshair.dHeight,
       color: this.crosshair.color,
     });
