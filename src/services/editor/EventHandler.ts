@@ -320,6 +320,17 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       this.canvasEl.style.cursor = "pointer";
       break;
     }
+
+    for (const s of this.sections) {
+      if (!s.box || !this.ctx.isPointInPath(s.box, e.offsetX, e.offsetY)) {
+        if (!this.drawField) {
+          this.canvasEl.style.cursor = "default";
+        }
+        continue;
+      }
+      this.canvasEl.style.cursor = "pointer";
+      break;
+    }
   }
 
   private async handleBoxSelect(e: MouseEvent) {
@@ -360,6 +371,33 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
         const mouseY = e.clientY - offsetY;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
+      }
+    }
+
+    if (!this.editField) {
+      for (const s of this.sections) {
+        if (!s.box || !this.ctx.isPointInPath(s.box, e.offsetX, e.offsetY)) {
+          continue;
+        } else {
+          const prev: number = this.editField
+            ? this.editField.dWidth * this.editField.dHeight
+            : 0;
+          const next = s.dWidth * s.dHeight * scale;
+
+          this.isEdit = true;
+          this.isMove = true;
+          this.editField = this.editField
+            ? prev > next
+              ? s
+              : this.editField
+            : s;
+          this.sectionField = this.editField;
+          const { offsetX, offsetY } = await this.getOffset();
+          const mouseX = e.clientX - offsetX;
+          const mouseY = e.clientY - offsetY;
+          this.mouseX = mouseX;
+          this.mouseY = mouseY;
+        }
       }
     }
     this.draw();

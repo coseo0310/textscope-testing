@@ -201,6 +201,16 @@ export const useInspectionStore = defineStore("inspectionStore", {
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
           });
+          editor.setBoxSelectedCallback(() => {
+            this.total = editor.getSections().length || 1;
+            this.synonymList = editor.getFields();
+            this.setPagination(this.currentPage);
+          });
+          editor.setResizeCallback(() => {
+            this.total = editor.getSections().length || 1;
+            this.synonymList = editor.getFields();
+            this.setPagination(this.currentPage);
+          });
           return editor;
         });
 

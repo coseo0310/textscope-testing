@@ -281,16 +281,14 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
 
-      if (!f.section) {
-        f.section = new Path2D();
-        f.section.rect(dx, dy, Math.floor(f.dWidth), Math.floor(f.dHeight));
-      }
+      f.box = new Path2D();
+      f.box.rect(dx, dy, Math.floor(f.dWidth), Math.floor(f.dHeight));
 
-      if (this.sectionField?.section) {
+      if (this.sectionField?.box) {
         ctx.save();
         ctx.globalAlpha = 0.1;
         ctx.fillStyle = this.sectionField.color;
-        ctx.fill(this.sectionField.section);
+        ctx.fill(this.sectionField.box);
         ctx.restore();
       }
 
@@ -299,7 +297,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       ctx.strokeStyle = f.color;
       ctx.lineWidth = f.lineWidth || 15;
       ctx.setLineDash([25, 10]);
-      ctx.stroke(f.section);
+      ctx.stroke(f.box);
 
       ctx.restore();
     }
