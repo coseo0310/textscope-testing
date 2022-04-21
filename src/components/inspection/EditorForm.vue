@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useInspectionStore } from "@/store";
 
 const inspectionStore = useInspectionStore();
-const { inspectionItems, editor, observer } = storeToRefs(inspectionStore);
+const { inspectionItems, editors, observer } = storeToRefs(inspectionStore);
 
 const editorWrap = ref<HTMLDivElement | null>(null);
 
@@ -15,7 +15,7 @@ watch(inspectionItems, () => {
   editorWrap.value.scrollTo(0, 0);
   editorWrap.value.innerHTML = "";
 
-  editor.value.forEach((e, idx) => {
+  editors.value.forEach((e, idx) => {
     const el = e.getCanvas();
     if (!el) {
       return;

@@ -131,8 +131,8 @@ type States = {
   inspectionInfo: InspectionInfo;
   synonymList: Field[];
   isInspection: boolean;
-  editor: Editor[];
-  currentEditor: number;
+  editors: Editor[];
+  currentEditor: Editor | null;
   currentPage: number;
   total: number;
   observer: IntersectionObserver | null;
@@ -153,8 +153,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       },
       synonymList: [],
       isInspection: false,
-      editor: [],
-      currentEditor: 0,
+      editors: [],
+      currentEditor: null,
       currentPage: 1,
       total: 0,
       observer: null,
@@ -170,7 +170,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         }
         this.inspectionItems = this.previewList[idx].items;
         this.inspectionInfo = this.previewList[idx].info;
-        this.editor = this.inspectionItems.map((item, idx) => {
+        this.editors = this.inspectionItems.map((item, idx) => {
           const editor = new Editor();
           const items =
             item?.prediction.key_values.length || 0 > 0
@@ -201,8 +201,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
         });
 
         this.currentPage = 1;
-        this.currentEditor = 0;
-        this.total = this.editor[0].getSections().length || 1;
+        this.currentEditor = this.editors[0];
+        this.total = this.currentEditor.getSections().length || 1;
         return true;
       } catch (error) {
         console.error(error);
@@ -210,15 +210,15 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(page: number) {
-      this.currentEditor = page - 1;
-      this.total = this.editor[this.currentEditor].getSections().length || 1;
-      this.synonymList = this.editor[this.currentEditor].getFields();
-      this.currentPage = this.editor[this.currentEditor].getSectionIdx() + 1;
+      this.currentEditor = this.editors[page - 1];
+      this.total = this.currentEditor.getSections().length || 1;
+      this.synonymList = this.currentEditor.getFields();
+      this.currentPage = this.currentEditor.getSectionIdx() + 1;
     },
     async setPagination(page: number) {
       this.currentPage = page;
-      this.editor[this.currentEditor].setSectionField(page - 1);
-      this.synonymList = this.editor[this.currentEditor].getFields();
+      this.currentEditor?.setSectionField(page - 1);
+      this.synonymList = this.currentEditor?.getFields() || [];
     },
     async onStartInspection() {
       // alert("준비중...");

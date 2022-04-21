@@ -8,11 +8,11 @@ import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const inspectionStore = useInspectionStore();
-const { editor, currentEditor, isInspection } = storeToRefs(inspectionStore);
+const { currentEditor, isInspection } = storeToRefs(inspectionStore);
 
 const deg = ref<number>(0);
 const zoom = ref<number>(
-  Math.floor(editor.value[currentEditor.value]?.getScale() || 0 * 100)
+  Math.floor(currentEditor.value?.getScale() || 0 * 100)
 );
 
 const onInspection = () => {
@@ -29,14 +29,12 @@ const onRotate = (type: "left" | "right" | "90") => {
     deg.value -= 90;
   }
 
-  editor.value[currentEditor.value].setRotate(deg.value);
+  currentEditor.value?.setRotate(deg.value);
 };
 
 const onZoomInOut = (type: "in" | "out") => {
-  zoom.value = Math.floor(
-    editor.value[currentEditor.value].getScale() || 0 * 100
-  );
-  editor.value[currentEditor.value].setZoomInOut(type);
+  zoom.value = Math.floor(currentEditor.value?.getScale() || 0 * 100);
+  currentEditor.value?.setZoomInOut(type);
 };
 
 const onInit = () => {
@@ -45,7 +43,7 @@ const onInit = () => {
 };
 
 const onDraw = () => {
-  editor.value[currentEditor.value].setDraw();
+  currentEditor.value?.setDraw();
 };
 
 const onComparison = () => {
@@ -167,9 +165,9 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                editor[currentEditor].setIsText(true);
-                editor[currentEditor].setIsIdx(true);
-                editor[currentEditor].draw();
+                currentEditor?.setIsText(true);
+                currentEditor?.setIsIdx(true);
+                currentEditor?.draw();
               }
             "
           >
@@ -179,9 +177,9 @@ onMounted(() => {});
             class="outline"
             @click="
               () => {
-                editor[currentEditor].setIsText(false);
-                editor[currentEditor].setIsIdx(false);
-                editor[currentEditor].draw();
+                currentEditor?.setIsText(false);
+                currentEditor?.setIsIdx(false);
+                currentEditor?.draw();
               }
             "
           >

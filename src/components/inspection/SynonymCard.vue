@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const inspectionStore = useInspectionStore();
-const { editor, currentEditor, synonymList } = storeToRefs(inspectionStore);
+const { editors, currentEditor, synonymList } = storeToRefs(inspectionStore);
 
 const text = ref<string>(props.text);
 
@@ -33,10 +33,8 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 const onConfirm = () => {
   synonymList.value[props.idx - 1].text = text.value;
-  editor.value[currentEditor.value].modifyField(
-    synonymList.value[props.idx - 1]
-  );
-  editor.value[currentEditor.value].draw();
+  currentEditor.value?.modifyField(synonymList.value[props.idx - 1]);
+  currentEditor.value?.draw();
 };
 const onCancel = () => {};
 </script>
