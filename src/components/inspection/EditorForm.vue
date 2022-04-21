@@ -9,6 +9,7 @@ const {
   editors,
   observer,
   currentEditor,
+  currentPage,
   synonymList,
   total,
 } = storeToRefs(inspectionStore);
@@ -79,7 +80,7 @@ const onShoutcuts = (e: KeyboardEvent) => {
         currentEditor.value.removeField(f.id);
         currentEditor.value.removeSection(f.id);
         currentEditor.value.clearEditField();
-        currentEditor.value.setSectionField(0);
+        currentEditor.value.setSectionField(currentPage.value);
         currentEditor.value.draw();
         synonymList.value = currentEditor.value?.getFields();
         console.log(synonymList.value, "<>");
