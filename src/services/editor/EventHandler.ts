@@ -356,6 +356,12 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       if (!f.box || !this.ctx.isPointInPath(f.box, e.offsetX, e.offsetY)) {
         continue;
       } else {
+        if (
+          this.sectionField &&
+          !this.sectionValid(f.dx, f.dy, f.dWidth, f.dHeight)
+        ) {
+          continue;
+        }
         const prev: number = this.editField
           ? this.editField.dWidth * this.editField.dHeight
           : 0;
@@ -375,9 +381,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
         this.mouseY = mouseY;
       }
     }
-
     if (!this.editField) {
       this.drawType = "section";
+      this.sectionField = null;
       for (const s of this.sections) {
         if (!s.box || !this.ctx.isPointInPath(s.box, e.offsetX, e.offsetY)) {
           continue;
@@ -402,6 +408,9 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
           this.mouseY = mouseY;
           this.editField = this.isSectionControl ? this.editField : null;
         }
+      }
+      if (this.boxSelectedCallback && !this.editField) {
+        this.boxSelectedCallback();
       }
     }
     this.draw();

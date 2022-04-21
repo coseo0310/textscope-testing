@@ -197,16 +197,16 @@ export const useInspectionStore = defineStore("inspectionStore", {
           });
           editor.setImgUrl(item.img);
           editor.setDrawEndCallback(() => {
-            this.total = editor.getSections().length || 1;
+            this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
           });
           editor.setBoxSelectedCallback(() => {
-            this.total = editor.getSections().length || 1;
+            this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
           });
           editor.setResizeCallback(() => {
-            this.total = editor.getSections().length || 1;
+            this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
           });

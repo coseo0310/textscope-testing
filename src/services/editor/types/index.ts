@@ -71,5 +71,5 @@ export declare module EditorTypes {
 
   type DrawType = "new" | "section";
 
-  type DrawCallback = (field: Field) => void;
+  type DrawCallback = (field?: Field) => void;
 }

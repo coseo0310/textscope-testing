@@ -83,7 +83,6 @@ const onShoutcuts = (e: KeyboardEvent) => {
         currentEditor.value.setSectionField(currentPage.value);
         currentEditor.value.draw();
         synonymList.value = currentEditor.value?.getFields();
-        console.log(synonymList.value, "<>");
         total.value = currentEditor.value.getSectionLength();
       }
       break;
