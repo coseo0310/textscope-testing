@@ -36,6 +36,7 @@ export default class EditorConfig implements IEditorConfig {
   // Is
   protected isText: boolean;
   protected isIdx: boolean;
+  protected isSection: boolean;
 
   // Editor Event Handler Field values;
   protected drawType: DrawType;
@@ -78,6 +79,7 @@ export default class EditorConfig implements IEditorConfig {
 
     this.isText = false;
     this.isIdx = false;
+    this.isSection = false;
 
     this.drawField = null;
     this.drawType = "new";

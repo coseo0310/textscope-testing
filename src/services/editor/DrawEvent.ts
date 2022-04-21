@@ -388,7 +388,9 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
 
     this.setScale(this.ctx, { x: scale, y: scale });
 
-    this.drawSections(this.ctx, this.sections, this.dMargin);
+    if (this.isSection) {
+      this.drawSections(this.ctx, this.sections, this.dMargin);
+    }
 
     this.drawFields(this.ctx, this.fields, this.dMargin);
 

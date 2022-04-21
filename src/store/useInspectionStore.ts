@@ -172,6 +172,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
         this.inspectionInfo = this.previewList[idx].info;
         this.editors = this.inspectionItems.map((item, idx) => {
           const editor = new Editor();
+
+          editor.setSectionDraw(true);
           const items =
             item?.prediction.key_values.length || 0 > 0
               ? item?.prediction.key_values
@@ -197,13 +199,14 @@ export const useInspectionStore = defineStore("inspectionStore", {
           editor.setDrawEndCallback(() => {
             this.total = editor.getSections().length || 1;
             this.synonymList = editor.getFields();
+            this.setPagination(this.currentPage);
           });
           return editor;
         });
 
         this.currentPage = 1;
         this.currentEditor = this.editors[0];
-        this.total = this.currentEditor.getSections().length || 1;
+        this.total = this.currentEditor.getSectionLength();
         return true;
       } catch (error) {
         console.error(error);
@@ -212,11 +215,14 @@ export const useInspectionStore = defineStore("inspectionStore", {
     },
     async setInspectionItem(page: number) {
       this.currentEditor = this.editors[page - 1];
-      this.total = this.currentEditor.getSections().length || 1;
+      this.total = this.currentEditor.getSectionLength();
       this.synonymList = this.currentEditor.getFields();
       this.currentPage = this.currentEditor.getSectionIdx() + 1;
     },
     async setPagination(page: number) {
+      if (this.total <= 1) {
+        return;
+      }
       this.currentPage = page;
       this.currentEditor?.setSectionField(page - 1);
       this.synonymList = this.currentEditor?.getFields() || [];

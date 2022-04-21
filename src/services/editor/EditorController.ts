@@ -19,9 +19,11 @@ export interface IEditorContorller extends IEventHandler {
   setSection: (field: Field) => Promise<void>;
   setSections: (fields: Field[]) => Promise<void>;
   setSectionField: (n: number) => Promise<void>;
+  setSectionDraw: (b: boolean) => Promise<void>;
   getFields: () => Field[];
   getSections: () => Field[];
   getSectionIdx: () => number;
+  getSectionLength: () => number;
   removeField: (id: string) => void;
   removeFields: () => void;
   removeSection: (id: string) => void;
@@ -69,7 +71,9 @@ export default class EditorContorller
 
   async setSections(fields: Field[]) {
     this.sections = fields;
-    this.sectionField = fields[0];
+    if (this.isSection) {
+      this.sectionField = this.sections[0];
+    }
   }
 
   async setSection(field: Field) {
@@ -82,6 +86,10 @@ export default class EditorContorller
     }
     this.sectionField = this.sections[n];
     this.draw();
+  }
+
+  async setSectionDraw(b: boolean) {
+    this.isSection = b;
   }
 
   async setField(field: Field) {
@@ -126,6 +134,10 @@ export default class EditorContorller
 
   getSectionIdx() {
     return this.sectionField ? this.sections.indexOf(this.sectionField) : 0;
+  }
+
+  getSectionLength() {
+    return this.sectionField ? this.sections.length : 1;
   }
 
   getFields() {
