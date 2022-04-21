@@ -20,6 +20,7 @@ export interface IEditorContorller extends IEventHandler {
   setSections: (fields: Field[]) => Promise<void>;
   setSectionField: (n: number) => Promise<void>;
   setSectionDraw: (b: boolean) => Promise<void>;
+  setSectionControl: (b: boolean) => Promise<void>;
   setEditField: (n: number) => Promise<void>;
   getFields: () => Field[];
   getSections: () => Field[];
@@ -94,6 +95,10 @@ export default class EditorContorller
 
   async setSectionDraw(b: boolean) {
     this.isSection = b;
+  }
+
+  async setSectionControl(b: boolean) {
+    this.isSectionControl = b;
   }
 
   async setField(field: Field) {

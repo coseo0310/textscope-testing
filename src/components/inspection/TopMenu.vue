@@ -195,6 +195,27 @@ onMounted(() => {});
           >
             HIDE
           </Button>
+
+          <Button
+            class="outline"
+            @click="
+              () => {
+                currentEditor?.setSectionControl(true);
+              }
+            "
+          >
+            S Edit ON
+          </Button>
+          <Button
+            class="outline"
+            @click="
+              () => {
+                currentEditor?.setSectionControl(false);
+              }
+            "
+          >
+            S Edit OFF
+          </Button>
         </div>
         <div class="save-btn-wrap">
           <Button
