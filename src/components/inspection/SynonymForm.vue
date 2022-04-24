@@ -27,6 +27,7 @@ const onPage = (n: number) => {
       <SynonymCard
         v-for="(item, idx) in inspectionStore.synonymList"
         :idx="idx + 1"
+        :id="item.id"
         :key-text="item.id"
         :text="item.text"
         :confirm="!!item.text"

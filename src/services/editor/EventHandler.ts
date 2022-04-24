@@ -98,10 +98,10 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       this.handleBoxSelected.bind(this)
     );
     this.canvasEl.addEventListener("mouseup", this.handleResized.bind(this));
-    this.canvasEl.addEventListener(
-      "mouseleave",
-      this.handleBoxSelected.bind(this)
-    );
+    // this.canvasEl.addEventListener(
+    //   "mouseleave",
+    //   this.handleBoxSelected.bind(this)
+    // );
     this.canvasEl.addEventListener("mouseleave", this.handleResized.bind(this));
   }
 

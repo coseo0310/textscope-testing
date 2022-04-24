@@ -204,9 +204,12 @@ export const useInspectionStore = defineStore("inspectionStore", {
           editor.setBoxSelectedCallback((field) => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
-            console.log(field);
             if (field) {
-              this.setPagination(editor.getSectionIdx() + 1);
+              const idx = editor.getSectionIdx();
+              if (idx === -1) {
+                return;
+              }
+              this.setPagination(idx + 1);
             }
           });
           editor.setResizeCallback(() => {
@@ -239,6 +242,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       this.currentPage = page;
       this.currentEditor?.setSectionField(page - 1);
       this.synonymList = this.currentEditor?.getFields() || [];
+      this.currentEditor?.clearEditField();
+      this.currentEditor?.draw();
     },
     async onStartInspection() {
       // alert("준비중...");

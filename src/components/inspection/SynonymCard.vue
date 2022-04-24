@@ -8,6 +8,7 @@ import { storeToRefs } from "pinia";
 
 interface Props {
   idx: number;
+  id: string;
   keyText: string;
   text: string;
   confirm?: boolean;
@@ -18,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const inspectionStore = useInspectionStore();
-const { editors, currentEditor, synonymList } = storeToRefs(inspectionStore);
+const { currentEditor, synonymList } = storeToRefs(inspectionStore);
 
 const text = ref<string>(props.text);
 
@@ -37,10 +38,16 @@ const onConfirm = () => {
   currentEditor.value?.draw();
 };
 const onCancel = () => {};
+
+const onSelect = (e: MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  currentEditor.value?.setEditField(props.id);
+};
 </script>
 
 <template>
-  <div class="card-wrap">
+  <div class="card-wrap" @click="onSelect">
     <div class="type">
       <div class="index">{{ props.idx }}</div>
       <div class="badge-wrap">
@@ -108,6 +115,7 @@ const onCancel = () => {};
   padding: 5px;
   color: $d5;
   font-weight: 600;
+  cursor: pointer;
 
   .type {
     display: flex;
