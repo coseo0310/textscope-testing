@@ -7,7 +7,7 @@ import { useInspectionStore } from "@/store";
 const inspectionStore = useInspectionStore();
 
 const onPage = (n: number) => {
-  inspectionStore.setPagination(n);
+  inspectionStore.setPagination(n, true);
 };
 </script>
 

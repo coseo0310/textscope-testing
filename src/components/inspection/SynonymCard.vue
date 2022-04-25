@@ -5,6 +5,7 @@ import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { getScrollPosition } from "@/utils";
 
 interface Props {
   idx: number;
@@ -42,36 +43,44 @@ const onCancel = () => {};
 const onSelect = (e: MouseEvent) => {
   e.preventDefault();
   e.stopPropagation();
-  currentEditor.value?.setEditField(props.id);
-  const field = currentEditor.value?.getEditField();
-  const margin = currentEditor.value?.getMargin() || 0;
-  const scale = currentEditor.value?.getScale() || 1;
 
-  if (currentEditor.value) {
-    const c = currentEditor.value?.getCanvas();
-    c?.scrollIntoView();
-
-    const dWidth = field?.dWidth || 0;
-    const dHeight = field?.dHeight || 0;
-    const dx = field?.dx || 0;
-    const dy = field?.dy || 0;
-    const eWidth = editorForm.value?.clientWidth || 0;
-    const eHeight = editorForm.value?.clientHeight || 0;
-
-    const x = (dx + margin) * scale;
-    const y = (dy + margin) * scale;
-    const w = dWidth * scale;
-    const h = dHeight * scale;
-    const scrollTop = editorForm.value?.scrollTop || 0;
-
-    const sx = x - eWidth / 2 + w / 2;
-    const sy = y + scrollTop - eHeight / 2 + h / 2;
-
-    editorForm.value?.scrollTo({
-      left: sx,
-      top: sy,
-    });
+  if (!editorForm.value) {
+    return;
   }
+  if (!currentEditor.value) {
+    return;
+  }
+
+  currentEditor.value.setEditField(props.id);
+  const field = currentEditor.value.getEditField();
+  const margin = currentEditor.value.getMargin() || 0;
+  const scale = currentEditor.value.getScale() || 1;
+
+  if (!field) {
+    return;
+  }
+
+  const c = currentEditor.value.getCanvas();
+
+  if (!c) {
+    return;
+  }
+
+  c.scrollIntoView();
+  const { left, top } = getScrollPosition({
+    form: editorForm.value,
+    dx: field.dx,
+    dy: field.dy,
+    dWidth: 0,
+    dHeight: 0,
+    scale,
+    margin,
+  });
+
+  editorForm.value?.scrollTo({
+    left,
+    top,
+  });
 };
 </script>
 

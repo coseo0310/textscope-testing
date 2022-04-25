@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import Editor, { Field } from "@/services/editor";
+import { getScrollPosition } from "@/utils";
 
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";
@@ -208,10 +209,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
             this.synonymList = editor.getFields();
             if (field) {
               const idx = editor.getSectionIdx();
-              if (idx === -1 || this.currentPage === idx) {
+              if (idx === -1 || this.currentPage === idx + 1) {
                 return;
               }
-              // this.setPagination(idx + 1);
+              this.setPagination(idx + 1);
             }
           });
           editor.setResizeCallback(() => {
@@ -237,15 +238,63 @@ export const useInspectionStore = defineStore("inspectionStore", {
       this.synonymList = this.currentEditor.getFields();
       this.currentPage = this.currentEditor.getSectionIdx() + 1;
     },
-    async setPagination(page: number) {
+    async setPagination(page: number, scroll: boolean = false) {
       if (this.total <= 1) {
         return;
       }
+
+      if (this.currentPage === page) {
+        return;
+      }
+
       this.currentPage = page;
       this.currentEditor?.setSectionField(page - 1);
       this.synonymList = this.currentEditor?.getFields() || [];
       this.currentEditor?.clearEditField();
       this.currentEditor?.draw();
+
+      if (!scroll) {
+        return;
+      }
+
+      const field = this.currentEditor?.getSectionField();
+
+      if (!field) {
+        return;
+      }
+
+      if (!this.editorForm) {
+        return;
+      }
+
+      if (!this.currentEditor) {
+        return;
+      }
+
+      const c = this.currentEditor.getCanvas();
+
+      if (!c) {
+        return;
+      }
+
+      c.scrollIntoView();
+
+      const margin = this.currentEditor.getMargin() || 0;
+      const scale = this.currentEditor.getScale() || 1;
+      const { left, top } = getScrollPosition({
+        form: this.editorForm,
+        dx: field.dx,
+        dy: field.dy,
+        dWidth: field.dWidth,
+        dHeight: field.dHeight,
+        scale,
+        margin,
+      });
+
+      this.editorForm.scrollTo({
+        left,
+        top,
+      });
     },
     async onStartInspection() {
       // alert("준비중...");

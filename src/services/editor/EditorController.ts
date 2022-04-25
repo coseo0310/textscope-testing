@@ -26,6 +26,7 @@ export interface IEditorContorller extends IEventHandler {
   getSections: () => Field[];
   getSectionIdx: () => number;
   getSectionLength: () => number;
+  getSectionField: () => Field | null;
   getEditField: () => Field | null;
   clearEditField: () => Promise<void>;
   clearSectionField: () => Promise<void>;
@@ -163,6 +164,10 @@ export default class EditorContorller
 
   getSectionLength() {
     return this.sectionField ? this.sections.length : 1;
+  }
+
+  getSectionField() {
+    return this.sectionField;
   }
 
   getEditField() {
