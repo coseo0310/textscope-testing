@@ -208,10 +208,10 @@ export const useInspectionStore = defineStore("inspectionStore", {
             this.synonymList = editor.getFields();
             if (field) {
               const idx = editor.getSectionIdx();
-              if (idx === -1) {
+              if (idx === -1 || this.currentPage === idx) {
                 return;
               }
-              this.setPagination(idx + 1);
+              // this.setPagination(idx + 1);
             }
           });
           editor.setResizeCallback(() => {

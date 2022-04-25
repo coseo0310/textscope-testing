@@ -406,6 +406,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
           const mouseY = e.clientY - offsetY;
           this.mouseX = mouseX;
           this.mouseY = mouseY;
+
           this.editField = this.isSectionControl ? this.editField : null;
         }
       }
