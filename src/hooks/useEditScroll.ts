@@ -1,5 +1,3 @@
-import { ref, DefineComponent } from "vue";
-import Editor, { Field } from "@/services/editor";
 import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 

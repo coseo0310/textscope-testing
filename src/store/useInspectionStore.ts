@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import Editor, { Field } from "@/services/editor";
-import { getScrollPosition } from "@/utils";
 
 import admission1 from "@/assets/sample/admission/temp1.jpg";
 import admission_json1 from "@/assets/sample/admission/temp1.json";

@@ -33,37 +33,3 @@ export const notification = () => {
     });
   }
 };
-
-interface positionOption {
-  form: HTMLDivElement;
-  dx: number;
-  dy: number;
-  dWidth: number;
-  dHeight: number;
-  scale: number;
-  margin: number;
-}
-
-export const getScrollPosition = ({
-  form,
-  dx,
-  dy,
-  dWidth,
-  dHeight,
-  scale,
-  margin,
-}: positionOption): { left: number; top: number } => {
-  const eWidth = form.clientWidth;
-  const eHeight = form.clientHeight;
-
-  const x = (dx + margin) * scale;
-  const y = (dy + margin) * scale;
-  const w = dWidth * scale;
-  const h = dHeight * scale;
-  const scrollTop = form.scrollTop;
-
-  const left = x - eWidth / 2 + w / 2;
-  const top = y + scrollTop - eHeight / 2 + h / 2;
-
-  return { left, top };
-};
