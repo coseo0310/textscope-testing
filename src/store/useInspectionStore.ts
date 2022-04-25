@@ -238,7 +238,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       this.synonymList = this.currentEditor.getFields();
       this.currentPage = this.currentEditor.getSectionIdx() + 1;
     },
-    async setPagination(page: number, scroll: boolean = false) {
+    async setPagination(page: number) {
       if (this.total <= 1) {
         return;
       }
@@ -252,49 +252,6 @@ export const useInspectionStore = defineStore("inspectionStore", {
       this.synonymList = this.currentEditor?.getFields() || [];
       this.currentEditor?.clearEditField();
       this.currentEditor?.draw();
-
-      if (!scroll) {
-        return;
-      }
-
-      const field = this.currentEditor?.getSectionField();
-
-      if (!field) {
-        return;
-      }
-
-      if (!this.editorForm) {
-        return;
-      }
-
-      if (!this.currentEditor) {
-        return;
-      }
-
-      const c = this.currentEditor.getCanvas();
-
-      if (!c) {
-        return;
-      }
-
-      c.scrollIntoView();
-
-      const margin = this.currentEditor.getMargin() || 0;
-      const scale = this.currentEditor.getScale() || 1;
-      const { left, top } = getScrollPosition({
-        form: this.editorForm,
-        dx: field.dx,
-        dy: field.dy,
-        dWidth: field.dWidth,
-        dHeight: field.dHeight,
-        scale,
-        margin,
-      });
-
-      this.editorForm.scrollTo({
-        left,
-        top,
-      });
     },
     async onStartInspection() {
       // alert("준비중...");

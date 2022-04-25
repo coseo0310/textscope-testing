@@ -3,11 +3,14 @@ import { computed } from "vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import SynonymCard from "@/components/inspection/SynonymCard.vue";
 import { useInspectionStore } from "@/store";
+import { useEditScroll } from "@/hooks";
 
 const inspectionStore = useInspectionStore();
+const { setEditScroll } = useEditScroll();
 
 const onPage = (n: number) => {
-  inspectionStore.setPagination(n, true);
+  inspectionStore.setPagination(n);
+  setEditScroll("section");
 };
 </script>
 

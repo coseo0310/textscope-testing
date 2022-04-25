@@ -5,7 +5,7 @@ import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
-import { getScrollPosition } from "@/utils";
+import { useEditScroll } from "@/hooks";
 
 interface Props {
   idx: number;
@@ -20,7 +20,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const inspectionStore = useInspectionStore();
-const { currentEditor, synonymList, editorForm } = storeToRefs(inspectionStore);
+const { setEditScroll } = useEditScroll();
+const { currentEditor, synonymList } = storeToRefs(inspectionStore);
 
 const text = ref<string>(props.text);
 
@@ -44,43 +45,7 @@ const onSelect = (e: MouseEvent) => {
   e.preventDefault();
   e.stopPropagation();
 
-  if (!editorForm.value) {
-    return;
-  }
-  if (!currentEditor.value) {
-    return;
-  }
-
-  currentEditor.value.setEditField(props.id);
-  const field = currentEditor.value.getEditField();
-  const margin = currentEditor.value.getMargin() || 0;
-  const scale = currentEditor.value.getScale() || 1;
-
-  if (!field) {
-    return;
-  }
-
-  const c = currentEditor.value.getCanvas();
-
-  if (!c) {
-    return;
-  }
-
-  c.scrollIntoView();
-  const { left, top } = getScrollPosition({
-    form: editorForm.value,
-    dx: field.dx,
-    dy: field.dy,
-    dWidth: 0,
-    dHeight: 0,
-    scale,
-    margin,
-  });
-
-  editorForm.value?.scrollTo({
-    left,
-    top,
-  });
+  setEditScroll("field", props.id);
 };
 </script>
 
