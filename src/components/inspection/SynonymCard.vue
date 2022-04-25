@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const inspectionStore = useInspectionStore();
-const { currentEditor, synonymList } = storeToRefs(inspectionStore);
+const { currentEditor, synonymList, editorForm } = storeToRefs(inspectionStore);
 
 const text = ref<string>(props.text);
 
@@ -43,6 +43,32 @@ const onSelect = (e: MouseEvent) => {
   e.preventDefault();
   e.stopPropagation();
   currentEditor.value?.setEditField(props.id);
+  const field = currentEditor.value?.getEditField();
+  const margin = currentEditor.value?.getMargin() || 0;
+  const scale = currentEditor.value?.getScale() || 1;
+
+  if (currentEditor.value) {
+    const c = currentEditor.value?.getCanvas();
+    c?.scrollIntoView();
+
+    const dWidth = field?.dWidth || 0;
+    const dHeight = field?.dHeight || 0;
+    const dx = field?.dx || 0;
+    const dy = field?.dy || 0;
+    const eWidth = editorForm.value?.clientWidth || 0;
+    const eHeight = editorForm.value?.clientHeight || 0;
+
+    const x = (dx + margin) * scale;
+    const y = (dy + margin) * scale;
+    const w = dWidth * scale;
+    const h = dHeight * scale;
+    const scrollTop = editorForm.value?.scrollTop || 0;
+
+    const sx = x - eWidth / 2 + w / 2;
+    const sy = y + scrollTop - eHeight / 2 + h / 2;
+
+    editorForm.value?.scrollTo(sx, sy);
+  }
 };
 </script>
 

@@ -131,6 +131,7 @@ type States = {
   inspectionInfo: InspectionInfo;
   synonymList: Field[];
   isInspection: boolean;
+  editorForm: HTMLDivElement | null;
   editors: Editor[];
   currentEditor: Editor | null;
   currentPage: number;
@@ -153,6 +154,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       },
       synonymList: [],
       isInspection: false,
+      editorForm: null,
       editors: [],
       currentEditor: null,
       currentPage: 1,

@@ -8,6 +8,7 @@ const {
   inspectionItems,
   editors,
   observer,
+  editorForm,
   currentEditor,
   currentPage,
   synonymList,
@@ -92,6 +93,10 @@ const onShoutcuts = (e: KeyboardEvent) => {
 };
 
 onMounted(async () => {
+  if (!editorWrap.value) {
+    return;
+  }
+  editorForm.value = editorWrap.value;
   await inspectionStore.getInspectionItems();
   inspectionStore.setInspectionItem(1);
 
