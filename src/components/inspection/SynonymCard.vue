@@ -67,7 +67,10 @@ const onSelect = (e: MouseEvent) => {
     const sx = x - eWidth / 2 + w / 2;
     const sy = y + scrollTop - eHeight / 2 + h / 2;
 
-    editorForm.value?.scrollTo(sx, sy);
+    editorForm.value?.scrollTo({
+      left: sx,
+      top: sy,
+    });
   }
 };
 </script>
