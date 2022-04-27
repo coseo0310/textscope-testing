@@ -10,7 +10,7 @@ export interface IEditorContorller extends IEventHandler {
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
   setDraw: (drawType: DrawType, field?: Field) => Promise<void>;
-  getCanvas: () => HTMLCanvasElement | OffscreenCanvas | null;
+  getCanvas: () => HTMLCanvasElement | null;
   getMargin: () => number;
   setIsText: (isText: boolean) => Promise<void>;
   setIsIdx: (isIdx: boolean) => Promise<void>;
