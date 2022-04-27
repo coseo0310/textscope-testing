@@ -65,7 +65,7 @@ const onPage = (n: number) => {
   .card-list {
     width: 100%;
     height: calc(100% - 86px);
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 }
 </style>

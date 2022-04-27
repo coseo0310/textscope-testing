@@ -20,7 +20,7 @@ const menuList = ref(getSubMenu(routes.path));
   display: flex;
   width: 100%;
   height: 100vh;
-  overflow: scroll;
+  overflow: auto;
   background-color: $d2;
 }
 </style>
