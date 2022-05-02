@@ -9,14 +9,16 @@ import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
-import WorkPage from "@/pages/work/WorkPage.vue";
+import WorkPage from "@/pages/task/TaskPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
 // Admin pages
-import UserPage from "@/pages/user/UserPage.vue";
+import UserPage from "@/pages/settings/UserPage.vue";
 import TeamPage from "@/pages/team/TeamPage.vue";
 import DepartmentPage from "@/pages/team/DepartmentPage.vue";
 import MemberPage from "@/pages/team/MemberPage.vue";
+
+import TaskManagementPage from "@/pages/task/TaskManagementPage.vue";
 
 export const d: Routes.DefaultConstants = {
   root: {
@@ -277,7 +279,7 @@ export const a: Routes.AdminConstants = {
     routeRecordRaw: {
       path: "/task",
       name: "task",
-      component: DashboardPage,
+      component: TaskManagementPage,
       meta: {
         requiresAuth: true,
         title: "업무 관리",

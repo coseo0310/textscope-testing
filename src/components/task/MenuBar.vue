@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
-import Filter from "@/components/work/Filter.vue";
+import Filter from "@/components/task/Filter.vue";
 import { useAuthStore, useCommonStore, useWorkStore } from "@/store";
 import Frame from "@/assets/img/frame.png";
 

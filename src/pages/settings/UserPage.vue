@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import MainLayout from "@/components/layout/MainLayout.vue";
-import SearchBar from "@/components/user/SearchBar.vue";
-import UserForm from "@/components/user/UserForm.vue";
+import SearchBar from "@/components/settings/SearchBar.vue";
+import UserForm from "@/components/settings/UserForm.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useUserStore } from "@/store";
 

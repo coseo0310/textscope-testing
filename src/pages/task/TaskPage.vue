@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
-import MenuBar from "@/components/work/MenuBar.vue";
-import GridForm from "@/components/work/GridForm.vue";
+import MenuBar from "@/components/task/MenuBar.vue";
+import GridForm from "@/components/task/GridForm.vue";
 </script>
 
 <template>
