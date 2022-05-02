@@ -5,7 +5,7 @@ import ContextMenu, {
   Contexts,
   Translate,
 } from "@/components/shared/ContextMenu.vue";
-import { useUserStore, useCommonStore } from "@/store";
+import { useSettingsStore, useCommonStore } from "@/store";
 import Frame from "@/assets/img/frame.png";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const commonStore = useCommonStore();
 
 const isContext = ref<boolean>(false);
@@ -45,8 +45,8 @@ const onClick = (e: MouseEvent) => {
 };
 
 const onMoveTeam = () => {
-  userStore.user = props.user;
-  userStore.isTeamSelectModal = true;
+  settingsStore.user = props.user;
+  settingsStore.isTeamSelectModal = true;
 };
 
 const onDelete = () => {
@@ -54,11 +54,11 @@ const onDelete = () => {
     ["선택한 팀원을 삭제하시겠습니까?", "삭제 후 복구는 불가능합니다."],
     "warn",
     () => {
-      const list = userStore.users.filter((t) => t.id !== props.user.id);
+      const list = settingsStore.users.filter((t) => t.id !== props.user.id);
       if (!list) {
         return;
       }
-      userStore.users = list;
+      settingsStore.users = list;
     },
     () => {},
     "삭제"

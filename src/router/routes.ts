@@ -14,9 +14,9 @@ import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
 // Admin pages
 import UserPage from "@/pages/settings/UserPage.vue";
-import TeamPage from "@/pages/team/TeamPage.vue";
-import DepartmentPage from "@/pages/team/DepartmentPage.vue";
-import MemberPage from "@/pages/team/MemberPage.vue";
+import TeamPage from "@/pages/settings/settingsPage.vue";
+import DepartmentPage from "@/pages/settings/DepartmentPage.vue";
+import MemberPage from "@/pages/settings/MemberPage.vue";
 
 import TaskManagementPage from "@/pages/task/TaskManagementPage.vue";
 
@@ -240,7 +240,7 @@ export const a: Routes.AdminConstants = {
   team: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/team",
+      path: "/settings",
       name: "team",
       component: TeamPage,
       children: [

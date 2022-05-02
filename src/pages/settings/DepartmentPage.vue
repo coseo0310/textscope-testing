@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import Button from "@/components/shared/Button.vue";
-import TeamCard from "@/components/team/TeamCard.vue";
-import TeamModal from "@/components/team/TeamModal.vue";
+import TeamCard from "@/components/settings/TeamCard.vue";
+import TeamModal from "@/components/settings/TeamModal.vue";
 import Construction from "@/assets/img/construction.png";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 
 const img = `url('${Construction}')`;
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 
 const onTeamModal = () => {
-  userStore.team = null;
-  userStore.isTeamModal = true;
+  settingsStore.team = null;
+  settingsStore.isTeamModal = true;
 };
 </script>
 
 <template>
   <div class="department-page">
-    <div class="title">부서 관리 ({{ userStore.teams?.length }})</div>
+    <div class="title">부서 관리 ({{ settingsStore.teams?.length }})</div>
     <div class="top-menu">
       <div class="btn-wrap">
         <Button class="primary extra-bold" @click="onTeamModal"
@@ -26,10 +26,10 @@ const onTeamModal = () => {
       </div>
     </div>
     <div class="card-wrap">
-      <div v-for="c in userStore.teams" class="card">
+      <div v-for="c in settingsStore.teams" class="card">
         <TeamCard :id="c.id" :name="c.name" />
       </div>
-      <div v-if="userStore.teams?.length === 0" class="not-found">
+      <div v-if="settingsStore.teams?.length === 0" class="not-found">
         <div class="img"></div>
         <div class="msg">
           <p>등록된 부서가 없습니다.</p>
@@ -37,7 +37,7 @@ const onTeamModal = () => {
         </div>
       </div>
     </div>
-    <TeamModal v-if="userStore.isTeamModal" />
+    <TeamModal v-if="settingsStore.isTeamModal" />
   </div>
 </template>
 

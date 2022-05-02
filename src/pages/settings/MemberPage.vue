@@ -3,24 +3,24 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Button from "@/components/shared/Button.vue";
 import ProfileCard from "@/components/shared/ProfileCard.vue";
-import MemberModal from "@/components/team/MemberModal.vue";
-import TeamSelectModal from "@/components/team/TeamSelectModal.vue";
-import { useUserStore } from "@/store";
+import MemberModal from "@/components/settings/MemberModal.vue";
+import TeamSelectModal from "@/components/settings/TeamSelectModal.vue";
+import { useSettingsStore } from "@/store";
 import { constants } from "@/router";
 import { Routes } from "@/types";
 import Membership from "@/assets/img/membership.png";
 
 const img = `url('${Membership}')`;
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const router = useRouter();
 
 const onClick = () => {
-  userStore.isMemberModal = true;
+  settingsStore.isMemberModal = true;
 };
 
 onMounted(() => {
-  if (!userStore.team) {
+  if (!settingsStore.team) {
     const c = constants as Routes.AdminConstants;
     router.push(c.team.routeRecordRaw.path);
   }
@@ -30,7 +30,7 @@ onMounted(() => {
 <template>
   <div class="users-page">
     <div class="title">
-      {{ userStore.team?.name }} ({{ userStore.users?.length }})
+      {{ settingsStore.team?.name }} ({{ settingsStore.users?.length }})
     </div>
     <div class="top-menu">
       <div class="btn-wrap">
@@ -41,15 +41,16 @@ onMounted(() => {
       class="card-wrap"
       :style="{
         alignItems:
-          userStore.users.filter((f) => f.division === userStore.team?.name)
-            .length === 0
+          settingsStore.users.filter(
+            (f) => f.division === settingsStore.team?.name
+          ).length === 0
             ? 'center'
             : 'flex-start',
       }"
     >
       <div
-        v-for="t in userStore.users.filter(
-          (f) => f.division === userStore.team?.name
+        v-for="t in settingsStore.users.filter(
+          (f) => f.division === settingsStore.team?.name
         )"
         class="card"
       >
@@ -58,8 +59,9 @@ onMounted(() => {
 
       <div
         v-if="
-          userStore.users.filter((f) => f.division === userStore.team?.name)
-            .length === 0
+          settingsStore.users.filter(
+            (f) => f.division === settingsStore.team?.name
+          ).length === 0
         "
         class="not-found"
       >
@@ -70,8 +72,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <MemberModal v-if="userStore.isMemberModal" />
-    <TeamSelectModal v-if="userStore.isTeamSelectModal" />
+    <MemberModal v-if="settingsStore.isMemberModal" />
+    <TeamSelectModal v-if="settingsStore.isTeamSelectModal" />
   </div>
 </template>
 

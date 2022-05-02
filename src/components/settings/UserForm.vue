@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import Grid from "@/components/shared/Grid.vue";
 import Frame from "@/assets/img/frame.png";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 </script>
 
 <template>
   <div class="user-form">
     <Grid
       class="no-underline"
-      :gridList="userStore.userList"
-      :columns="userStore.userColumns"
+      :gridList="settingsStore.userList"
+      :columns="settingsStore.userColumns"
     >
       <template v-slot:image="{ item }">
         <div
@@ -22,7 +22,7 @@ const userStore = useUserStore();
         />
       </template>
     </Grid>
-    <div v-if="userStore.userList.length === 0" class="not-found">
+    <div v-if="settingsStore.userList.length === 0" class="not-found">
       <img src="@/assets/img/magnifier.png" alt="magnifier" />
       <div class="text">검색 결과가 없습니다</div>
     </div>

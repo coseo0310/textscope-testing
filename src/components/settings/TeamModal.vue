@@ -2,15 +2,15 @@
 import { ref } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
-import { useUserStore, useCommonStore } from "@/store";
+import { useSettingsStore, useCommonStore } from "@/store";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const commonStore = useCommonStore();
 
 const REGEX = /^[ㄱ-ㅎ\s|가-힣\s|a-z\s|A-Z\s|0-9\s|]+$/;
-const HEIGHT = userStore.team ? "248px" : "200px";
+const HEIGHT = settingsStore.team ? "248px" : "200px";
 
-const name = ref<string>(userStore.team?.name || "");
+const name = ref<string>(settingsStore.team?.name || "");
 
 const onKeyup = (e: KeyboardEvent) => {
   const el = e.target as HTMLInputElement;
@@ -22,7 +22,7 @@ const onKeyup = (e: KeyboardEvent) => {
 };
 
 const onSubmit = () => {
-  if (userStore.team?.name === name.value) {
+  if (settingsStore.team?.name === name.value) {
     commonStore.setToast("기존 부서명과 동일합니다.", "warn");
     return;
   }
@@ -32,25 +32,27 @@ const onSubmit = () => {
     return;
   }
 
-  const id = userStore.team?.id;
+  const id = settingsStore.team?.id;
 
-  const f = userStore.teams.find((f) => f.name === name.value && f.id !== id);
+  const f = settingsStore.teams.find(
+    (f) => f.name === name.value && f.id !== id
+  );
 
   if (f) {
     commonStore.setToast("동일한 부서명이 존재합니다.", "warn");
     return;
   }
-  if (userStore.team) {
-    userStore.team.name = name.value;
+  if (settingsStore.team) {
+    settingsStore.team.name = name.value;
   } else {
     const team = {
       id: `${Date.now()}`,
       name: name.value,
     };
-    userStore.teams.push(team);
+    settingsStore.teams.push(team);
   }
 
-  userStore.isTeamModal = false;
+  settingsStore.isTeamModal = false;
 };
 
 const onCancel = (e: MouseEvent) => {
@@ -63,14 +65,14 @@ const onCancel = (e: MouseEvent) => {
     return;
   }
 
-  userStore.isTeamModal = false;
+  settingsStore.isTeamModal = false;
 };
 </script>
 
 <template>
   <div class="team-modal" @click="onCancel">
     <div class="modal">
-      <div v-if="userStore.team" class="title">
+      <div v-if="settingsStore.team" class="title">
         변경하실 부서명을 입력해주세요.
       </div>
       <div class="input-wrap">
@@ -78,7 +80,7 @@ const onCancel = (e: MouseEvent) => {
         <Input
           type="text"
           class="placeholder-d4 border-color-d4 focus-border-color-d5"
-          :value="userStore.team?.name"
+          :value="settingsStore.team?.name"
           placeholder="부서명을 입력해주세요"
           @keyup="onKeyup"
         />
@@ -93,7 +95,7 @@ const onCancel = (e: MouseEvent) => {
             :disabled="!name"
             @click="onSubmit"
           >
-            {{ userStore.team ? "변경" : "등록" }}
+            {{ settingsStore.team ? "변경" : "등록" }}
           </Button>
         </div>
       </div>

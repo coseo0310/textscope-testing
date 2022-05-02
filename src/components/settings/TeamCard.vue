@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { constants } from "@/router";
-import { useUserStore, useCommonStore } from "@/store";
+import { useSettingsStore, useCommonStore } from "@/store";
 import { Routes } from "@/types";
 import ContextMenu, {
   Contexts,
@@ -16,7 +16,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const commonStore = useCommonStore();
 const router = useRouter();
 
@@ -34,12 +34,12 @@ const onLeftClick = (e: MouseEvent) => {
   if (!child) {
     return;
   }
-  const f = userStore.teams.find((f) => f.id === props.id);
+  const f = settingsStore.teams.find((f) => f.id === props.id);
   if (!f) {
     return;
   }
 
-  userStore.team = f;
+  settingsStore.team = f;
   const name = child[1].name;
   router.push({ name });
 };
@@ -64,16 +64,16 @@ const onClick = (e: MouseEvent) => {
 };
 
 const onModify = () => {
-  const f = userStore.teams.find((t) => t.id === props.id);
+  const f = settingsStore.teams.find((t) => t.id === props.id);
   if (!f) {
     return;
   }
-  userStore.team = f;
-  userStore.isTeamModal = true;
+  settingsStore.team = f;
+  settingsStore.isTeamModal = true;
 };
 
 const onDelete = () => {
-  const f = userStore.users.find((u) => u.division === props.name);
+  const f = settingsStore.users.find((u) => u.division === props.name);
   if (f) {
     commonStore.setToast(
       "<p>구성원이 존재합니다.</p> <p>모든 구성원을 삭제 후 부서 삭제를 진행해주세요</p>",
@@ -86,11 +86,11 @@ const onDelete = () => {
     [`${props.name}을 삭제하시겠습니까?`],
     "warn",
     () => {
-      const list = userStore.teams.filter((t) => t.id !== props.id);
+      const list = settingsStore.teams.filter((t) => t.id !== props.id);
       if (!list) {
         return;
       }
-      userStore.teams = list;
+      settingsStore.teams = list;
     },
     () => {},
     "삭제"
@@ -111,7 +111,7 @@ const contexts: Contexts = [
   >
     <div class="name">
       {{ props.name }} ({{
-        userStore.users.filter((f) => f.division === name).length
+        settingsStore.users.filter((f) => f.division === name).length
       }})
     </div>
     <ContextMenu

@@ -2,36 +2,36 @@
 import { ref, computed } from "vue";
 import Radio from "@/components/shared/Radio.vue";
 import Button from "@/components/shared/Button.vue";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 
 const select = ref<string>("");
-const total = computed(() => `${userStore.teams.length * 90}px`);
+const total = computed(() => `${settingsStore.teams.length * 90}px`);
 const radioList = computed(() => {
-  const list = userStore.teams.map((t) => {
-    t.selected = userStore.user?.division === t.name;
+  const list = settingsStore.teams.map((t) => {
+    t.selected = settingsStore.user?.division === t.name;
     return t;
   });
   return list;
 });
 const onSubmit = () => {
-  if (!userStore.user || !select.value) {
+  if (!settingsStore.user || !select.value) {
     return;
   }
 
-  userStore.users = userStore.users.map((user) => {
-    if (user.id === userStore.user?.id) {
+  settingsStore.users = settingsStore.users.map((user) => {
+    if (user.id === settingsStore.user?.id) {
       user.division = select.value;
     }
     return user;
   });
 
-  userStore.isTeamSelectModal = false;
+  settingsStore.isTeamSelectModal = false;
 };
 
 const onSelection = (name: string) => {
-  userStore.teams.forEach((t) => {
+  settingsStore.teams.forEach((t) => {
     t.selected = t.name === name;
   });
   select.value = name;
@@ -50,7 +50,7 @@ const onCancel = (e: MouseEvent) => {
     return;
   }
 
-  userStore.isTeamSelectModal = false;
+  settingsStore.isTeamSelectModal = false;
 };
 </script>
 

@@ -4,28 +4,28 @@ import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Dropdown, { DropdownItem } from "@/components/shared/Dropdown.vue";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 
 const dropDownList = ref<DropdownItem[]>([]);
 
 const onSelect = (i: DropdownItem) => {
-  userStore.team = i.id === "all" ? null : { id: i.id, name: i.value };
+  settingsStore.team = i.id === "all" ? null : { id: i.id, name: i.value };
 };
 
 const onKeyup = (e: KeyboardEvent) => {
   const el = e.target as HTMLInputElement;
-  userStore.userTerm = el.value;
+  settingsStore.userTerm = el.value;
 };
 
 const onSearch = () => {
-  userStore.onUserSearch();
+  settingsStore.onUserSearch();
 };
 
 onMounted(() => {
-  userStore.onUserSearch();
-  dropDownList.value = userStore.teams.map((t) => {
+  settingsStore.onUserSearch();
+  dropDownList.value = settingsStore.teams.map((t) => {
     return { id: t.id, text: t.name, value: t.name };
   });
   dropDownList.value.unshift({ id: "all", text: "전체 부서", value: "all" });

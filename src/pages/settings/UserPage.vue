@@ -4,9 +4,9 @@ import MainLayout from "@/components/layout/MainLayout.vue";
 import SearchBar from "@/components/settings/SearchBar.vue";
 import UserForm from "@/components/settings/UserForm.vue";
 import Pagination from "@/components/shared/Pagination.vue";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 
 const currentPage = ref<number>(1);
 
@@ -15,14 +15,14 @@ const onChgPage = (n: number) => {
 };
 
 onMounted(() => {
-  userStore.team = null;
+  settingsStore.team = null;
 });
 </script>
 
 <template>
   <MainLayout>
     <div class="user-page">
-      <div class="title">구성원 관리 ({{ userStore.users.length }})</div>
+      <div class="title">구성원 관리 ({{ settingsStore.users.length }})</div>
       <div class="search">
         <SearchBar />
       </div>

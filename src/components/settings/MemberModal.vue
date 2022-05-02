@@ -6,12 +6,12 @@ import Button from "@/components/shared/Button.vue";
 import Avatar from "@/components/shared/Avatar.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import ErrorForm from "@/components/shared/ErrorForm.vue";
-import { useUserStore } from "@/store";
+import { useSettingsStore } from "@/store";
 import { useForm } from "@/hooks";
 import { HTTP } from "@/types";
 import Frame from "@/assets/img/frame.png";
 
-const userStore = useUserStore();
+const settingsStore = useSettingsStore();
 const { register, handleSubmit, getValues, formState, errors } = useForm();
 
 const newIcon = ref<IconType>("hide");
@@ -50,7 +50,7 @@ const onSubmit = () => {
   const user: HTTP.User = {
     id: email,
     name,
-    division: userStore.team?.name || "TEST TEAM",
+    division: settingsStore.team?.name || "TEST TEAM",
     job_position: position.value.text || "부장",
     authority: "user",
     extension_number: cellphone,
@@ -58,7 +58,7 @@ const onSubmit = () => {
     profile_img: profileImg.value,
   };
 
-  userStore.users.push(user);
+  settingsStore.users.push(user);
 
   // TODO:: Submit User
 };
@@ -73,7 +73,7 @@ const onCancel = (e: MouseEvent) => {
     return;
   }
 
-  userStore.isMemberModal = false;
+  settingsStore.isMemberModal = false;
 };
 
 const imgUpload = () => {
@@ -257,7 +257,7 @@ const imgClear = () => {
       </div>
       <div class="input-wrap">
         <label>부서</label>
-        <div class="text">{{ userStore.team?.name || "TEST TEAM" }}</div>
+        <div class="text">{{ settingsStore.team?.name || "TEST TEAM" }}</div>
       </div>
       <div class="input-wrap">
         <label>직급 / 직책*</label>
