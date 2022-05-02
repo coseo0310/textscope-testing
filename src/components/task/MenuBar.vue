@@ -3,12 +3,12 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Filter from "@/components/task/Filter.vue";
-import { useAuthStore, useCommonStore, useWorkStore } from "@/store";
+import { useAuthStore, useCommonStore, useTaskStore } from "@/store";
 import Frame from "@/assets/img/frame.png";
 
 const authStore = useAuthStore();
 const commonStore = useCommonStore();
-const workStore = useWorkStore();
+const taskStore = useTaskStore();
 const isFilter = ref<boolean>(false);
 
 const defaultImg = `url('${Frame}')`;
@@ -22,7 +22,7 @@ const onReload = () => {
 };
 
 const onDelete = () => {
-  if (workStore.selected.length > 0) {
+  if (taskStore.selected.length > 0) {
     commonStore.setConfirm(
       ["삭제된 데이터는 복구할 수 없습니다.", "정말 삭제하시겠습니까?"],
       "warn",

@@ -3,22 +3,22 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Icons from "@/components/shared/Icons.vue";
 import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
-import { useWorkStore } from "@/store";
+import { useTaskStore } from "@/store";
 
-const workStore = useWorkStore();
-const columns = ref(workStore.workColumns);
-const selected = ref(workStore.selected);
+const taskStroe = useTaskStore();
+const columns = ref(taskStroe.workColumns);
+const selected = ref(taskStroe.selected);
 const currentPage = ref<number>(1);
 
 const onSelected = (list: GridList) => {
-  workStore.selected = list
+  taskStroe.selected = list
     .filter((item) => !!item.checked)
     .map((item) => ({ id: item.id as string }));
 };
 
 const onPageChange = (current: number) => {
   currentPage.value = current;
-  workStore.getGridList(currentPage.value);
+  taskStroe.getGridList(currentPage.value);
 };
 
 onMounted(() => {});
@@ -30,7 +30,7 @@ onUnmounted(() => {});
     <div class="grid-form__grid">
       <Grid
         :columns="columns"
-        :grid-list="workStore.workList"
+        :grid-list="taskStroe.workList"
         :selected="selected"
         @selected="onSelected"
       >
@@ -45,12 +45,12 @@ onUnmounted(() => {});
           </template>
         </template>
       </Grid>
-      <div v-if="workStore.workList.length === 0" class="not-found">
+      <div v-if="taskStroe.workList.length === 0" class="not-found">
         <img src="@/assets/img/magnifier.png" alt="magnifier" />
         <div class="text">검색 필터가 선택되지 않았습니다</div>
       </div>
     </div>
-    <div v-if="workStore.workList.length > 0" class="grid-form__pagination">
+    <div v-if="taskStroe.workList.length > 0" class="grid-form__pagination">
       <Pagination :current="currentPage" @change="onPageChange" />
     </div>
   </div>

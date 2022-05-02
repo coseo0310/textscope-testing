@@ -11,7 +11,7 @@ type States = {
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
-export const useWorkStore = defineStore("workStore", {
+export const useTaskStore = defineStore("taskStore", {
   // arrow function recommended for full type inference
   state: (): States => {
     return {
@@ -106,7 +106,7 @@ function getWorkColumns(): Grid.Columns {
     },
     {
       width: 178,
-      text: "작업 일자",
+      text: "검수일",
       align: "center",
       sortable: false,
       value: "date2",

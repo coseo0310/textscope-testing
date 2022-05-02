@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
 import Calendar from "@/components/shared/Calendar.vue";
-import { useWorkStore, useCommonStore } from "@/store";
+import { useTaskStore, useCommonStore } from "@/store";
 import { Work } from "@/types";
 
 export type FilterLists = Work.FilterLists;
@@ -14,14 +14,14 @@ const year = String(date.getFullYear());
 const month = String(date.getMonth() + 1);
 const day = String(date.getDate());
 
-const workStore = useWorkStore();
+const taskStore = useTaskStore();
 const commonStore = useCommonStore();
 
 const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
 const startDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
 const endDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
-const lists = ref<FilterLists>(workStore.filterLists);
+const lists = ref<FilterLists>(taskStore.filterLists);
 
 const isAllDefault = computed(() => ({
   category:
@@ -111,8 +111,8 @@ const onChange = (name: string, v: boolean, key: FilterKeys) => {
   });
 };
 const onReset = () => {
-  workStore.resetFilterLists();
-  lists.value = workStore.filterLists;
+  taskStore.resetFilterLists();
+  lists.value = taskStore.filterLists;
 };
 const onClosest = (e: MouseEvent) => {
   const el = e.target as HTMLElement;
@@ -130,7 +130,7 @@ const onClosest = (e: MouseEvent) => {
 };
 
 const onSearch = () => {
-  workStore.getGridList();
+  taskStore.getGridList();
 };
 
 onMounted(() => {
