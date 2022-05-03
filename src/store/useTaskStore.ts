@@ -7,6 +7,7 @@ type States = {
   selected: Grid.Selected[];
   workColumns: Grid.Columns;
   workList: Grid.GridList;
+  searchTerm: string;
 };
 
 // useStore could be anything like useUser, useCart
@@ -20,6 +21,7 @@ export const useTaskStore = defineStore("taskStore", {
       workColumns: getWorkColumns(),
       selected: [],
       workList: [],
+      searchTerm: "",
     };
   },
   actions: {

@@ -4,21 +4,33 @@ import Icons from "@/components/shared/Icons.vue";
 import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useTaskStore } from "@/store";
+import Job from "@/assets/img/job_1.png";
+import Magnifier from "@/assets/img/magnifier.png";
 
-const taskStroe = useTaskStore();
-const columns = ref(taskStroe.workColumns);
-const selected = ref(taskStroe.selected);
+interface Props {
+  isAdmin?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isAdmin: false,
+});
+
+const img = props.isAdmin ? Job : Magnifier;
+
+const taskStore = useTaskStore();
+const columns = ref(taskStore.workColumns);
+const selected = ref(taskStore.selected);
 const currentPage = ref<number>(1);
 
 const onSelected = (list: GridList) => {
-  taskStroe.selected = list
+  taskStore.selected = list
     .filter((item) => !!item.checked)
     .map((item) => ({ id: item.id as string }));
 };
 
 const onPageChange = (current: number) => {
   currentPage.value = current;
-  taskStroe.getGridList(currentPage.value);
+  taskStore.getGridList(currentPage.value);
 };
 
 onMounted(() => {});
@@ -30,7 +42,7 @@ onUnmounted(() => {});
     <div class="grid-form__grid">
       <Grid
         :columns="columns"
-        :grid-list="taskStroe.workList"
+        :grid-list="taskStore.workList"
         :selected="selected"
         @selected="onSelected"
       >
@@ -45,12 +57,12 @@ onUnmounted(() => {});
           </template>
         </template>
       </Grid>
-      <div v-if="taskStroe.workList.length === 0" class="not-found">
-        <img src="@/assets/img/magnifier.png" alt="magnifier" />
+      <div v-if="taskStore.workList.length === 0" class="not-found">
+        <img :src="img" alt="magnifier" />
         <div class="text">검색 필터가 선택되지 않았습니다</div>
       </div>
     </div>
-    <div v-if="taskStroe.workList.length > 0" class="grid-form__pagination">
+    <div v-if="taskStore.workList.length > 0" class="grid-form__pagination">
       <Pagination :current="currentPage" @change="onPageChange" />
     </div>
   </div>

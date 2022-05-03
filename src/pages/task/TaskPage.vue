@@ -6,11 +6,11 @@ import GridForm from "@/components/task/GridForm.vue";
 
 <template>
   <MainLayout>
-    <div class="work-page">
-      <div class="work-page__menu">
+    <div class="task-page">
+      <div class="task-page__menu">
         <MenuBar />
       </div>
-      <div class="work-page__grid">
+      <div class="task-page__grid">
         <GridForm />
       </div>
     </div>
@@ -18,11 +18,11 @@ import GridForm from "@/components/task/GridForm.vue";
 </template>
 
 <style lang="scss" scoped>
-.work-page {
+.task-page {
   width: 100%;
   height: 100vh;
   padding: 30px 40px;
-  .work-page__grid {
+  .task-page__grid {
     width: 100%;
     padding-top: 30px;
     overflow: scroll;
