@@ -5,6 +5,11 @@ type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
 type DrawType = EditorTypes.DrawType;
 
+interface Options {
+  canvas?: HTMLCanvasElement;
+  isReadonly?: boolean;
+}
+
 export interface IEditorContorller extends IEventHandler {
   setImgUrl: (url: string) => Promise<void>;
   setZoomInOut: (command: ZoomCommand) => Promise<void>;
@@ -40,14 +45,17 @@ export default class EditorContorller
   extends EventHandler
   implements IEditorContorller
 {
-  constructor(canvas?: HTMLCanvasElement) {
+  constructor(options?: Options) {
     super();
 
-    if (canvas) {
-      this.canvasEl = canvas;
-      this.ctx = canvas.getContext("2d")!;
+    if (options?.canvas) {
+      this.canvasEl = options.canvas;
+      this.ctx = options.canvas.getContext("2d")!;
       this.setDrawEvent();
       this.setEditEvent();
+    }
+    if (options?.isReadonly) {
+      this.isReadonly = options.isReadonly;
     }
   }
 

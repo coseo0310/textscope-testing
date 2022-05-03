@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useInspectionStore } from "@/store";
 
@@ -15,6 +16,7 @@ const {
   total,
 } = storeToRefs(inspectionStore);
 
+const routes = useRoute();
 const editorWrap = ref<HTMLDivElement | null>(null);
 
 const setEditor = () => {
@@ -101,7 +103,7 @@ onMounted(async () => {
     return;
   }
   editorForm.value = editorWrap.value;
-  await inspectionStore.getInspectionItems();
+  await inspectionStore.getInspectionItems(0, !!routes.params?.type);
   inspectionStore.setInspectionItem(1);
 
   window.addEventListener("keydown", onShoutcuts);

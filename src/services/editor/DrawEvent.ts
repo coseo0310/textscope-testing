@@ -308,7 +308,9 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     field: Field,
     margin: number
   ) {
-    field.circle = this.drawEditCircles(ctx, field, this.dMargin);
+    if (!this.isReadonly) {
+      field.circle = this.drawEditCircles(ctx, field, this.dMargin);
+    }
 
     const dx = Math.floor(field.draw ? field.dx : field.dx + margin);
     const dy = Math.floor(field.draw ? field.dy : field.dy + margin);

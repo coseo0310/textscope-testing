@@ -424,7 +424,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       return;
     }
 
-    if (!this.isMove) {
+    if (!this.isMove || this.isReadonly) {
       return;
     }
     if (!this.editField) {

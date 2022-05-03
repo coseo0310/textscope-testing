@@ -163,7 +163,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
     };
   },
   actions: {
-    async getInspectionItems(idx: number = 0) {
+    async getInspectionItems(idx: number = 0, isAdmin: boolean = false) {
       try {
         // TODO: Get inspection list
         if (this.observer) {
@@ -173,7 +173,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
         this.inspectionItems = this.previewList[idx].items;
         this.inspectionInfo = this.previewList[idx].info;
         this.editors = this.inspectionItems.map((item, idx) => {
-          const editor = new Editor();
+          const editor = new Editor({ isReadonly: isAdmin });
 
           editor.setSectionDraw(true);
           const items =
