@@ -17,7 +17,7 @@ const {
 
 const editorWrap = ref<HTMLDivElement | null>(null);
 
-watch(inspectionItems, () => {
+const setEditor = () => {
   if (!editorWrap.value) {
     return;
   }
@@ -68,6 +68,10 @@ watch(inspectionItems, () => {
       observer.value?.observe(el);
     });
   }, 1000);
+};
+
+watch(inspectionItems, () => {
+  setEditor();
 });
 
 const onShoutcuts = (e: KeyboardEvent) => {
@@ -101,6 +105,9 @@ onMounted(async () => {
   inspectionStore.setInspectionItem(1);
 
   window.addEventListener("keydown", onShoutcuts);
+
+  // TODO: temp
+  setEditor();
 });
 
 onUnmounted(async () => {

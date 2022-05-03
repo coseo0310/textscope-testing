@@ -9,7 +9,7 @@ import { useTaskStore, useCommonStore } from "@/store";
 const taskStore = useTaskStore();
 const commonStore = useCommonStore();
 
-const isFilter = ref<boolean>(true);
+const isFilter = ref<boolean>(false);
 
 const onFilter = () => {
   isFilter.value = !isFilter.value;
@@ -63,6 +63,7 @@ const onClosest = (e: MouseEvent) => {
 };
 
 onMounted(() => {
+  taskStore.getGridList();
   window.addEventListener("click", onClosest);
 });
 

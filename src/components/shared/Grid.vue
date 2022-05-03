@@ -5,6 +5,7 @@ import { Grid } from "@/types";
 
 export type Columns = Grid.Columns;
 export type GridList = Grid.GridList;
+export type GridItem = Grid.GridItem;
 export type Selected = Grid.Selected;
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 const props = defineProps<Props>();
 const emits = defineEmits<{
   (e: "selected", v: GridList): void;
+  (e: "row", v: GridItem): void;
 }>();
 
 const selected = ref<Selected[]>(props.selected || []);
@@ -93,6 +95,11 @@ watch(props, () => {
         <div
           class="row"
           :class="{ selected: !!g.checked, accordion: props.accordion }"
+          @click="
+            () => {
+              emits('row', g);
+            }
+          "
         >
           <div v-if="props.selected" class="col center">
             <CheckBox
@@ -180,6 +187,7 @@ watch(props, () => {
       }
       &:hover {
         background-color: $d3;
+        cursor: pointer;
       }
       .col {
         display: flex;

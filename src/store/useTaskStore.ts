@@ -34,7 +34,7 @@ export const useTaskStore = defineStore("taskStore", {
       try {
         //TODO: Get Grid list
 
-        this.workList = getWorkList(n);
+        this.taskList = getWorkList(n);
         return true;
       } catch (error) {
         console.error(error);

@@ -13,26 +13,21 @@ export declare module Routes {
   type CommonConstant =
     | "root"
     | "login"
+    | "dashboard"
     | "settings"
     | "alarm"
+    | "task"
+    | "inspection"
     | "logout"
     | "errors"
     | "catch";
 
-  type DefaultConstant =
-    | CommonConstant
-    | "dashboard"
-    | "classification"
-    | "inspection"
-    | "work"
-    | "settings";
+  type DefaultConstant = CommonConstant | "classification" | "settings";
 
   type AdminConstant =
     | CommonConstant
-    | "dashboard"
     | "user"
     | "team"
-    | "task"
     | "classification"
     | "template"
     | "notice";
@@ -92,9 +87,11 @@ export declare module Grid {
     width?: number;
   }[];
 
-  type GridList = {
+  type GridItem = {
     [k in string]: string | boolean;
-  }[];
+  };
+
+  type GridList = GridItem[];
 
   interface Selected {
     id: string;

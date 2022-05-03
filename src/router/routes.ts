@@ -9,7 +9,7 @@ import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
-import WorkPage from "@/pages/task/TaskPage.vue";
+import TaskPage from "@/pages/task/TaskPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
 // Admin pages
@@ -81,12 +81,12 @@ export const d: Routes.DefaultConstants = {
       },
     },
   },
-  work: {
+  task: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/work",
-      name: "work",
-      component: WorkPage,
+      path: "/task",
+      name: "task",
+      component: TaskPage,
       meta: {
         requiresAuth: true,
         title: "업무 리스트",
@@ -284,6 +284,19 @@ export const a: Routes.AdminConstants = {
         requiresAuth: true,
         title: "업무 관리",
         icons: "work",
+      },
+    },
+  },
+  inspection: {
+    isMenu: true,
+    routeRecordRaw: {
+      path: "/inspection",
+      name: "inspection",
+      component: InspectionPage,
+      meta: {
+        requiresAuth: true,
+        title: "검수",
+        icons: "template",
       },
     },
   },

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import Icons from "@/components/shared/Icons.vue";
-import Grid, { GridList } from "@/components/shared/Grid.vue";
+import Grid, { GridList, GridItem } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useTaskStore } from "@/store";
+import { constants } from "@/router";
 import Job from "@/assets/img/job_1.png";
 import Magnifier from "@/assets/img/magnifier.png";
 
@@ -18,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 const img = props.isAdmin ? Job : Magnifier;
 
 const taskStore = useTaskStore();
+const router = useRouter();
 const columns = ref(taskStore.taskColumns);
 const selected = ref(taskStore.selected);
 const currentPage = ref<number>(1);
@@ -33,6 +36,19 @@ const onPageChange = (current: number) => {
   taskStore.getGridList(currentPage.value);
 };
 
+const onRow = (v: GridItem) => {
+  if (typeof v.id !== "string") {
+    return;
+  }
+  router.push({
+    name: constants.inspection.routeRecordRaw.name,
+    params: {
+      id: v.id,
+      type: props.isAdmin ? "admin" : "user",
+    },
+  });
+};
+
 onMounted(() => {});
 onUnmounted(() => {});
 </script>
@@ -45,6 +61,7 @@ onUnmounted(() => {});
         :grid-list="taskStore.taskList"
         :selected="selected"
         @selected="onSelected"
+        @row="onRow"
       >
         <template v-slot:inspection="{ item }">
           <template v-if="item.inspection !== 'save'">
