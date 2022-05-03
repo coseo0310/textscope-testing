@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
+import TaskCard from "@/components/dashboard/TaskCard.vue";
 import { useAuthStore } from "@/store";
 
 const authStore = useAuthStore();
@@ -12,7 +13,9 @@ const isAdmin = import.meta.env.MODE.includes("admin");
       <div class="title">
         {{ isAdmin ? "대시보드" : authStore.user?.division }}
       </div>
-      <div class="card-wrap"></div>
+      <div class="card-wrap">
+        <TaskCard />
+      </div>
     </div>
   </MainLayout>
 </template>

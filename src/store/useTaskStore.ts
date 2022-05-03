@@ -228,7 +228,6 @@ function getWorkList(c: number = 1): Grid.GridList {
   }
   return tmp;
 }
-
 function getManagementFilterLists(): Task.ManagementFilterLists {
   return {
     category: [
