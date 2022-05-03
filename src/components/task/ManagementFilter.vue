@@ -6,8 +6,8 @@ import Calendar from "@/components/shared/Calendar.vue";
 import { useTaskStore, useCommonStore } from "@/store";
 import { Task } from "@/types";
 
-export type FilterLists = Task.FilterLists;
-export type FilterKeys = Task.FilterKeys;
+export type FilterLists = Task.ManagementFilterLists;
+export type FilterKeys = Task.ManagementFilterKeys;
 
 const date = new Date();
 const year = String(date.getFullYear());
@@ -21,29 +21,33 @@ const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
 const startDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
 const endDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
-const lists = ref<FilterLists>(taskStore.filterLists);
+const lists = ref<FilterLists>(taskStore.managementFitlerLists);
 
 const isAllDefault = computed(() => ({
   category:
     lists.value.category.length === 0
       ? false
       : !lists.value.category.find((f) => f.checked === false),
-  type:
-    lists.value.type.length === 0
+  department:
+    lists.value.department.length === 0
       ? false
-      : !lists.value.type.find((f) => f.checked === false),
-  save:
-    lists.value.save.length === 0
+      : !lists.value.department.find((f) => f.checked === false),
+  register:
+    lists.value.register.length === 0
       ? false
-      : !lists.value.save.find((f) => f.checked === false),
-  ocr:
-    lists.value.ocr.length === 0
+      : !lists.value.register.find((f) => f.checked === false),
+  inspector:
+    lists.value.inspector.length === 0
       ? false
-      : !lists.value.ocr.find((f) => f.checked === false),
+      : !lists.value.inspector.find((f) => f.checked === false),
   inspection:
     lists.value.inspection.length === 0
       ? false
       : !lists.value.inspection.find((f) => f.checked === false),
+  status:
+    lists.value.status.length === 0
+      ? false
+      : !lists.value.status.find((f) => f.checked === false),
 }));
 const getStartDt = computed(() => startDt.value.split("-").join("."));
 const getEndDt = computed(() => endDt.value.split("-").join("."));
@@ -112,7 +116,7 @@ const onChange = (name: string, v: boolean, key: FilterKeys) => {
 };
 const onReset = () => {
   taskStore.resetFilterLists();
-  lists.value = taskStore.filterLists;
+  lists.value = taskStore.managementFitlerLists;
 };
 const onClosest = (e: MouseEvent) => {
   const el = e.target as HTMLElement;
@@ -149,7 +153,7 @@ onUnmounted(() => {
       <div class="reset" @click="onReset">초기화</div>
     </div>
     <div class="filter__main">
-      <div class="category">
+      <div class="category wrap-box">
         <div class="title">카테고리</div>
         <div class="box">
           <CheckBox
@@ -167,61 +171,61 @@ onUnmounted(() => {
           />
         </div>
       </div>
-      <div class="types">
-        <div class="title">문서 유형</div>
+      <div class="department wrap-box">
+        <div class="title">부서</div>
         <div class="box">
           <CheckBox
-            :default="isAllDefault.type"
+            :default="isAllDefault.department"
             class="checkbox"
             label="전체"
-            @change="onAllChecked('type')"
+            @change="onAllChecked('department')"
           />
           <CheckBox
-            v-for="t in lists.type"
+            v-for="t in lists.department"
             class="checkbox"
             :label="t.name"
             :default="t.checked"
-            @change="(v: boolean) => {onChange(t.name, v, 'type')}"
+            @change="(v: boolean) => {onChange(t.name, v, 'department')}"
           />
         </div>
       </div>
-      <div class="save">
-        <div class="title">저장</div>
+      <div class="registor wrap-box">
+        <div class="title">등록 담당자</div>
         <div class="box">
           <CheckBox
-            :default="isAllDefault.save"
+            :default="isAllDefault.register"
             class="checkbox"
             label="전체"
-            @change="onAllChecked('save')"
+            @change="onAllChecked('register')"
           />
           <CheckBox
-            v-for="s in lists.save"
+            v-for="s in lists.register"
             class="checkbox"
             :label="s.name"
             :default="s.checked"
-            @change="(v: boolean) => {onChange(s.name, v, 'save')}"
+            @change="(v: boolean) => {onChange(s.name, v, 'register')}"
           />
         </div>
       </div>
-      <div class="ocr">
-        <div class="title">OCR</div>
+      <div class="inspector wrap-box">
+        <div class="title">검수 담당자</div>
         <div class="box">
           <CheckBox
-            :default="isAllDefault.ocr"
+            :default="isAllDefault.inspector"
             class="checkbox"
             label="전체"
-            @change="onAllChecked('ocr')"
+            @change="onAllChecked('inspector')"
           />
           <CheckBox
-            v-for="o in lists.ocr"
+            v-for="s in lists.inspector"
             class="checkbox"
-            :label="o.name"
-            :default="o.checked"
-            @change="(v: boolean) => {onChange(o.name, v, 'ocr')}"
+            :label="s.name"
+            :default="s.checked"
+            @change="(v: boolean) => {onChange(s.name, v, 'inspector')}"
           />
         </div>
       </div>
-      <div class="inspection">
+      <div class="inspection wrap-box">
         <div class="title">검수</div>
         <div class="box">
           <CheckBox
@@ -239,7 +243,26 @@ onUnmounted(() => {
           />
         </div>
       </div>
-      <div class="date">
+
+      <div class="status wrap-box">
+        <div class="title">저장</div>
+        <div class="box">
+          <CheckBox
+            :default="isAllDefault.status"
+            class="checkbox"
+            label="전체"
+            @change="onAllChecked('status')"
+          />
+          <CheckBox
+            v-for="i in lists.status"
+            class="checkbox"
+            :label="i.name"
+            :default="i.checked"
+            @change="(v: boolean) => {onChange(i.name, v, 'status')}"
+          />
+        </div>
+      </div>
+      <div class="date wrap-box">
         <div class="title">기간</div>
         <div class="box">
           <div class="start time">
@@ -283,7 +306,7 @@ onUnmounted(() => {
   left: 30px;
   display: flex;
   flex-direction: column;
-  min-width: 732px;
+  min-width: 1023px;
   min-height: 763px;
   background-color: $d2;
   border-radius: 40px;
@@ -316,12 +339,7 @@ onUnmounted(() => {
   .filter__main {
     width: 100%;
     color: $d5;
-    .category,
-    .types,
-    .save,
-    .ocr,
-    .inspection,
-    .date {
+    .wrap-box {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -331,7 +349,7 @@ onUnmounted(() => {
         justify-content: flex-start;
         align-items: center;
         flex-wrap: wrap;
-        padding: 20px 0 30px 0;
+        padding: 20px 0 20px 0;
 
         .checkbox {
           display: flex;
@@ -339,13 +357,6 @@ onUnmounted(() => {
           align-items: center;
           margin: 5px 25px 5px 0;
         }
-      }
-    }
-
-    .category {
-      .box {
-        display: grid;
-        grid-template-columns: 0.5fr 0.7fr 1fr;
       }
     }
 

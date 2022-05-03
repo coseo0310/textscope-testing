@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 const img = props.isAdmin ? Job : Magnifier;
 
 const taskStore = useTaskStore();
-const columns = ref(taskStore.workColumns);
+const columns = ref(taskStore.taskColumns);
 const selected = ref(taskStore.selected);
 const currentPage = ref<number>(1);
 
@@ -42,7 +42,7 @@ onUnmounted(() => {});
     <div class="grid-form__grid">
       <Grid
         :columns="columns"
-        :grid-list="taskStore.workList"
+        :grid-list="taskStore.taskList"
         :selected="selected"
         @selected="onSelected"
       >
@@ -57,12 +57,12 @@ onUnmounted(() => {});
           </template>
         </template>
       </Grid>
-      <div v-if="taskStore.workList.length === 0" class="not-found">
+      <div v-if="taskStore.taskList.length === 0" class="not-found">
         <img :src="img" alt="magnifier" />
         <div class="text">검색 필터가 선택되지 않았습니다</div>
       </div>
     </div>
-    <div v-if="taskStore.workList.length > 0" class="grid-form__pagination">
+    <div v-if="taskStore.taskList.length > 0" class="grid-form__pagination">
       <Pagination :current="currentPage" @change="onPageChange" />
     </div>
   </div>

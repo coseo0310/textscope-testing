@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Input from "@/components/shared/Input.vue";
 import Icons from "@/components/shared/Icons.vue";
+import ManagementFilter from "@/components/task/ManagementFilter.vue";
 import { useTaskStore, useCommonStore } from "@/store";
 
 const taskStore = useTaskStore();
 const commonStore = useCommonStore();
+
+const isFilter = ref<boolean>(true);
+
+const onFilter = () => {
+  isFilter.value = !isFilter.value;
+};
 
 const onDelete = () => {
   if (taskStore.selected.length > 0) {
@@ -40,13 +48,39 @@ const onSearch = () => {
 const onDownload = () => {
   alert("준비중");
 };
+
+const onClosest = (e: MouseEvent) => {
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+
+  const closest = el.closest(".filter-wrap");
+  if (closest) {
+    return;
+  }
+  isFilter.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener("click", onClosest);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", onClosest);
+});
 </script>
 
 <template>
   <div class="management-menu-bar">
     <div class="title-wrap">
       <div class="title">업무 관리 ({{ `302,234` }})</div>
-      <div role="button" class="filter-btn">검색 필터 선택</div>
+      <div class="filter-wrap">
+        <div role="button" class="filter-btn" @click="onFilter">
+          검색 필터 선택
+        </div>
+        <ManagementFilter v-show="isFilter" />
+      </div>
     </div>
     <div class="search-bar">
       <div class="search-wrap">
@@ -90,12 +124,17 @@ const onDownload = () => {
       padding-right: 40px;
     }
 
-    .filter-btn {
-      color: $point-blue;
-      font-size: 18px;
-      font-weight: 600;
-      text-decoration: underline;
-      cursor: pointer;
+    .filter-wrap {
+      position: relative;
+      z-index: 2;
+
+      .filter-btn {
+        color: $point-blue;
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
   .search-bar {

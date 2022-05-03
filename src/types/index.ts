@@ -59,12 +59,23 @@ export declare module Routes {
   type MenuList = MenuItem[];
 }
 
-export declare module Work {
+export declare module Task {
   type FilterLists = {
     [k in FilterKeys]: FilterItem[];
   };
 
   type FilterKeys = "category" | "type" | "save" | "inspection" | "ocr";
+  type ManagementFilterKeys =
+    | "category"
+    | "department"
+    | "register"
+    | "inspector"
+    | "inspection"
+    | "status";
+
+  type ManagementFilterLists = {
+    [k in ManagementFilterKeys]: FilterItem[];
+  };
 
   type FilterItem = {
     name: string;

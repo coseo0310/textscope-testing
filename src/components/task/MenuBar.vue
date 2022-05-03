@@ -100,7 +100,7 @@ onUnmounted(() => {
 
 <template>
   <div class="menubar-container">
-    <div class="work-team">
+    <div class="task-team">
       <div class="division">
         {{ authStore.user?.division }} ({{ authStore.user?.team?.length || 1 }})
       </div>
@@ -137,8 +137,8 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="work-menu">
-      <div class="work-menu__info">
+    <div class="task-menu">
+      <div class="task-menu__info">
         <!-- <div class="title">업무</div> -->
         <div class="total">전체: {{ "302,234" }}</div>
         <div class="reload" @click="onReload">
@@ -151,7 +151,7 @@ onUnmounted(() => {
           <Filter v-show="isFilter" />
         </div>
       </div>
-      <div class="work-menu__btn-wrap">
+      <div class="task-menu__btn-wrap">
         <div class="delete">
           <Button class="outline semi-bold color-red" @click="onDelete"
             >삭제</Button
@@ -179,7 +179,7 @@ onUnmounted(() => {
   justify-content: flex-start;
   align-items: center;
 
-  .work-team {
+  .task-team {
     width: 100%;
     height: 50px;
     display: flex;
@@ -277,11 +277,11 @@ onUnmounted(() => {
       }
     }
   }
-  .work-menu {
+  .task-menu {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    .work-menu__info {
+    .task-menu__info {
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
@@ -323,7 +323,7 @@ onUnmounted(() => {
       }
     }
 
-    .work-menu__btn-wrap {
+    .task-menu__btn-wrap {
       display: flex;
       justify-content: space-between;
       align-items: center;

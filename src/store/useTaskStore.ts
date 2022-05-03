@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
-import { Work } from "@/types";
+import { Task } from "@/types";
 import { Grid } from "@/types";
 
 type States = {
-  filterLists: Work.FilterLists;
+  filterLists: Task.FilterLists;
+  managementFitlerLists: Task.ManagementFilterLists;
   selected: Grid.Selected[];
-  workColumns: Grid.Columns;
-  workList: Grid.GridList;
+  taskColumns: Grid.Columns;
+  taskList: Grid.GridList;
   searchTerm: string;
 };
 
@@ -18,9 +19,10 @@ export const useTaskStore = defineStore("taskStore", {
     return {
       // all these properties will have their type inferred automatically
       filterLists: getFilterLists(),
-      workColumns: getWorkColumns(),
+      managementFitlerLists: getManagementFilterLists(),
+      taskColumns: getWorkColumns(),
       selected: [],
-      workList: [],
+      taskList: [],
       searchTerm: "",
     };
   },
@@ -115,7 +117,7 @@ function getWorkColumns(): Grid.Columns {
     },
   ];
 }
-function getFilterLists(): Work.FilterLists {
+function getFilterLists(): Task.FilterLists {
   return {
     category: [
       {
@@ -225,4 +227,97 @@ function getWorkList(c: number = 1): Grid.GridList {
     tmp.push(obj);
   }
   return tmp;
+}
+
+function getManagementFilterLists(): Task.ManagementFilterLists {
+  return {
+    category: [
+      {
+        name: "해외투자 신고서",
+        checked: false,
+      },
+      {
+        name: "해외투자 사업계획서",
+        checked: false,
+      },
+      {
+        name: "Invoice",
+        checked: false,
+      },
+      {
+        name: "Bill of Landing",
+        checked: false,
+      },
+      {
+        name: "Purchase Order",
+        checked: false,
+      },
+    ],
+    department: [
+      {
+        name: "검수 1팀",
+        checked: false,
+      },
+      {
+        name: "검수 2팀",
+        checked: false,
+      },
+      {
+        name: "검수 3팀",
+        checked: false,
+      },
+      {
+        name: "검수 4팀",
+        checked: false,
+      },
+      {
+        name: "검수 5팀",
+        checked: false,
+      },
+    ],
+    register: [
+      {
+        name: "장화",
+        checked: false,
+      },
+      {
+        name: "홍련",
+        checked: false,
+      },
+    ],
+    inspector: [
+      {
+        name: "장화",
+        checked: false,
+      },
+      {
+        name: "홍련",
+        checked: false,
+      },
+    ],
+    inspection: [
+      {
+        name: "대기",
+        checked: false,
+      },
+      {
+        name: "검수중",
+        checked: false,
+      },
+      {
+        name: "완료",
+        checked: false,
+      },
+    ],
+    status: [
+      {
+        name: "저장",
+        checked: false,
+      },
+      {
+        name: "저장 안함",
+        checked: false,
+      },
+    ],
+  };
 }
