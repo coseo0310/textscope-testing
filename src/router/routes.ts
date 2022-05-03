@@ -69,7 +69,7 @@ export const d: Routes.DefaultConstants = {
     },
   },
   inspection: {
-    isMenu: true,
+    isMenu: false,
     routeRecordRaw: {
       path: "/inspection",
       name: "inspection",
@@ -288,7 +288,7 @@ export const a: Routes.AdminConstants = {
     },
   },
   inspection: {
-    isMenu: true,
+    isMenu: false,
     routeRecordRaw: {
       path: "/inspection",
       name: "inspection",
