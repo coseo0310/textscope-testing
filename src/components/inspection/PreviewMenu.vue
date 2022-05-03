@@ -75,7 +75,12 @@ onUnmounted(() => {
       <div
         v-for="(item, idx) in inspectionStore.previewList"
         class="thumbnail-card"
-        @click="inspectionStore.getInspectionItems(idx, !!routes.params?.type)"
+        @click="
+          inspectionStore.getInspectionItems(
+            idx,
+            routes.params?.type === 'admin'
+          )
+        "
       >
         <div
           class="img"

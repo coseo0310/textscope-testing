@@ -103,7 +103,7 @@ onMounted(async () => {
     return;
   }
   editorForm.value = editorWrap.value;
-  await inspectionStore.getInspectionItems(0, !!routes.params?.type);
+  await inspectionStore.getInspectionItems(0, routes.params?.type === "admin");
   inspectionStore.setInspectionItem(1);
 
   window.addEventListener("keydown", onShoutcuts);
