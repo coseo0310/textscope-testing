@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useInspectionStore } from "@/store";
 
 let MAX_STEP = 0;
 
-const routes = useRoute();
 const inspectionStore = useInspectionStore();
 const previewEl = ref<HTMLDivElement | null>();
 const thumbnailEl = ref<HTMLDivElement | null>();
@@ -75,12 +73,7 @@ onUnmounted(() => {
       <div
         v-for="(item, idx) in inspectionStore.previewList"
         class="thumbnail-card"
-        @click="
-          inspectionStore.getInspectionItems(
-            idx,
-            routes.params?.type === 'admin'
-          )
-        "
+        @click="inspectionStore.getInspectionItems(idx)"
       >
         <div
           class="img"

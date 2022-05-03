@@ -1,46 +1,31 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
-import AccuracyCard from "@/components/dashboard/AccuracyCard.vue";
-import PerformanceCard from "@/components/dashboard/PerformanceCard.vue";
-import WorkCard from "@/components/dashboard/WorkCard.vue";
-import NetworkCard from "@/components/dashboard/NetworkCard.vue";
+import { useAuthStore } from "@/store";
+
+const authStore = useAuthStore();
+const isAdmin = import.meta.env.MODE.includes("admin");
 </script>
 
 <template>
   <MainLayout>
     <div class="dashboard-page">
-      <div class="s-card card">
-        <AccuracyCard />
+      <div class="title">
+        {{ isAdmin ? "대시보드" : authStore.user?.division }}
       </div>
-      <div class="s-card card">
-        <PerformanceCard />
-      </div>
-      <div class="s-card card">
-        <WorkCard />
-      </div>
-      <div class="b-card card">
-        <NetworkCard />
-      </div>
+      <div class="card-wrap"></div>
     </div>
   </MainLayout>
 </template>
 
 <style lang="scss" scoped>
 .dashboard-page {
-  padding: 50px 80px;
+  padding: 30px 60px;
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(456px, 0.8fr) minmax(501px, 0.9fr) minmax(
-      539px,
-      1.3fr
-    );
-  grid-template-rows: minmax(324px, 0.8fr) minmax(509px, 1.2fr);
-  gap: 30px;
 
-  .b-card {
-    margin-top: 10px;
-    grid-column: 1 / 4;
-    grid-row: 2 / 3;
+  .title {
+    color: $d5;
+    font-size: 24px;
+    font-weight: 600;
   }
 }
 </style>

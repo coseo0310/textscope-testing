@@ -163,8 +163,9 @@ export const useInspectionStore = defineStore("inspectionStore", {
     };
   },
   actions: {
-    async getInspectionItems(idx: number = 0, isAdmin: boolean = false) {
+    async getInspectionItems(idx: number = 0) {
       try {
+        const isAdmin = import.meta.env.MODE.includes("admin");
         // TODO: Get inspection list
         if (this.observer) {
           this.observer.disconnect();
