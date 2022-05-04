@@ -221,7 +221,7 @@ onUnmounted(() => {
       <div class="date wrap-box">
         <div class="title">기간</div>
         <div class="datepicker-wrap">
-          <DatePicker :range="true" @selected="onSelected" />
+          <DatePicker class="top-left" :range="true" @selected="onSelected" />
         </div>
       </div>
     </div>
