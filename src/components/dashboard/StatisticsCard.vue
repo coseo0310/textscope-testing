@@ -6,15 +6,13 @@ interface Props {
   columns: Columns;
   gridList: GridList;
   title: string;
+  callback: Function;
 }
 
 const props = defineProps<Props>();
 
 const onSelected = (date: string) => {
-  const sp = date.split("~");
-
-  const startDt = sp[0];
-  const endDt = sp[1];
+  props.callback(date);
 };
 </script>
 

@@ -98,6 +98,17 @@ export declare module Grid {
   }
 }
 
+export declare module Chart {
+  type BarChartData = {
+    labels: string[];
+    datasets: {
+      legend: string;
+      data: number[];
+    }[];
+    max: number;
+  };
+}
+
 export declare module Icons {
   type IconType =
     | "dash-on"
