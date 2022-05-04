@@ -8,6 +8,9 @@ type States = {
   modelColumns: Grid.Columns;
   modelList: Grid.GridList;
   modelChartData: Chart.BarChartData;
+  speedColumns: Grid.Columns;
+  speedList: Grid.GridList;
+  speedChartData: Chart.BarChartData;
 };
 
 // useStore could be anything like useUser, useCart
@@ -23,6 +26,9 @@ export const useDashboardStore = defineStore("dashboardStore", {
       modelColumns: getModelColumns(),
       modelList: getModelList(),
       modelChartData: getModelChartData(),
+      speedColumns: getSpeedColumns(),
+      speedList: getSpeedList(),
+      speedChartData: getSpeedChartData(),
     };
   },
   actions: {},
@@ -202,5 +208,64 @@ function getModelChartData(): Chart.BarChartData {
       },
     ],
     max: 15,
+  };
+}
+
+function getSpeedColumns(): Grid.Columns {
+  return [
+    {
+      width: 100,
+      text: "No.",
+      align: "center",
+      sortable: false,
+      value: "no",
+    },
+    {
+      text: "문서 분류 모델",
+      align: "center",
+      sortable: false,
+      value: "model",
+    },
+    {
+      text: "유형",
+      align: "center",
+      sortable: false,
+      value: "type",
+    },
+    {
+      text: "속도 (초)",
+      align: "center",
+      sortable: false,
+      value: "speed",
+    },
+  ];
+}
+
+function getSpeedList(): Grid.GridList {
+  let tmp: Grid.GridList = [];
+  const types = ["템플릿 OCR", "정형", "비정형"];
+  //TODO: Get Grid list
+  for (let i = 0; i < 3; i++) {
+    const obj = {
+      no: `${3 - i}`,
+      model: `AAAA-${i}`,
+      type: types[i],
+      speed: `${2.1 + i}`,
+    };
+    tmp.push(obj);
+  }
+  return tmp;
+}
+
+function getSpeedChartData(): Chart.BarChartData {
+  return {
+    labels: ["AAAA-0", "AAAA-1", "AAAA-2"],
+    datasets: [
+      {
+        legend: "속도",
+        data: [2.1, 3.1, 4.1],
+      },
+    ],
+    max: 7,
   };
 }

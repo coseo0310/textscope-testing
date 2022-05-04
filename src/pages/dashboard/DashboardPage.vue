@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import MainLayout from "@/components/layout/MainLayout.vue";
 import StatisticsCard from "@/components/dashboard/StatisticsCard.vue";
 import ChartCard from "@/components/dashboard/ChartCard.vue";
+import Resource from "@/components/dashboard/Resource.vue";
 import { useAuthStore, useDashboardStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -16,6 +17,9 @@ const {
   modelColumns,
   modelList,
   modelChartData,
+  speedColumns,
+  speedList,
+  speedChartData,
 } = storeToRefs(dashboardStore);
 const isAdmin = import.meta.env.MODE.includes("admin");
 
@@ -27,6 +31,13 @@ const onTaskData = (date: string) => {
 };
 
 const onModelData = (date: string) => {
+  const sp = date.split("~");
+
+  const startDt = sp[0];
+  const endDt = sp[1];
+};
+
+const onSpeedData = (date: string) => {
   const sp = date.split("~");
 
   const startDt = sp[0];
@@ -50,7 +61,7 @@ onMounted(() => {
         {{ isAdmin ? "대시보드" : authStore.user?.division }}
       </div>
       <div class="list-wrap">
-        <div class="task-wrap">
+        <div class="task box">
           <div class="card-wrap">
             <StatisticsCard
               title="1. 업무"
@@ -63,7 +74,7 @@ onMounted(() => {
             <ChartCard :data="taskChartData" />
           </div>
         </div>
-        <div class="model-wrap">
+        <div class="model box">
           <div class="card-wrap">
             <StatisticsCard
               title="2. 문서 모델별 분류"
@@ -75,6 +86,22 @@ onMounted(() => {
           <div class="card-wrap">
             <ChartCard :data="modelChartData" />
           </div>
+        </div>
+        <div v-if="isAdmin" class="speed box">
+          <div class="card-wrap">
+            <StatisticsCard
+              title="3. 문서 분류 학습 모델 처리 속도"
+              :columns="speedColumns"
+              :grid-list="speedList"
+              :callback="onSpeedData"
+            />
+          </div>
+          <div class="card-wrap">
+            <ChartCard :data="speedChartData" />
+          </div>
+        </div>
+        <div v-if="isAdmin" class="resource box">
+          <Resource />
         </div>
       </div>
     </div>
@@ -97,21 +124,24 @@ onMounted(() => {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    .task-wrap {
-      width: 890px;
-      padding: 10px 0;
 
+    .box {
+      padding: 40px 0;
       .card-wrap {
-        padding: 10px 0;
+        padding: 20px 0;
       }
     }
-    .model-wrap {
-      width: 1150px;
-      padding: 10px 0;
+    .task {
+      min-width: 890px;
+    }
+    .model {
+      min-width: 1150px;
+    }
 
-      .card-wrap {
-        padding: 10px 0;
-      }
+    .speed {
+      min-width: 1150px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
     }
   }
 }
