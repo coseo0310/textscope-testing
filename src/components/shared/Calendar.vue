@@ -141,15 +141,15 @@ for (let i = 0; i < 12; i++) {
   <div class="calendar-wrap">
     <div class="calrendar-wrap">
       <div class="combobox-wrap">
+        <div class="combobox year">
+          <Combobox :items="yearList" :default="1" @change="onYearSelect" />
+        </div>
         <div class="combobox month">
           <Combobox
             :items="monthList"
             :default="date.month"
             @change="onMonthSelect"
           />
-        </div>
-        <div class="combobox year">
-          <Combobox :items="yearList" :default="1" @change="onYearSelect" />
         </div>
       </div>
       <div class="calrendar" @click="onCalendarSelect">
@@ -248,7 +248,7 @@ for (let i = 0; i < 12; i++) {
         }
 
         &.selected {
-          color: $point-blue;
+          color: $d1;
           font-weight: 600;
 
           &::before {
@@ -259,7 +259,7 @@ for (let i = 0; i < 12; i++) {
             position: absolute;
             width: 35px;
             height: 35px;
-            background-color: $d2;
+            background-color: $point-blue;
             border-radius: 50%;
             z-index: -1;
           }
@@ -269,7 +269,7 @@ for (let i = 0; i < 12; i++) {
           cursor: pointer;
 
           &:hover {
-            color: $d2;
+            color: $point-blue;
             font-weight: 600;
 
             &::before {
@@ -280,7 +280,7 @@ for (let i = 0; i < 12; i++) {
               position: absolute;
               width: 35px;
               height: 35px;
-              background-color: $point-blue;
+              background-color: $d4;
               border-radius: 50%;
               z-index: -1;
             }

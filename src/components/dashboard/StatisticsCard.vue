@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import Grid from "@/components/shared/Grid.vue";
+import Grid, { Columns, GridList } from "@/components/shared/Grid.vue";
 import DatePicker from "@/components/shared/DatePicker.vue";
-import { useDashboardStore } from "@/store";
 
-const dashboardStore = useDashboardStore();
+interface Props {
+  columns: Columns;
+  gridList: GridList;
+  title: string;
+}
+
+const props = defineProps<Props>();
 
 const onSelected = (date: string) => {
   const sp = date.split("~");
 
   const startDt = sp[0];
   const endDt = sp[1];
-  console.log("date", startDt, endDt);
 };
 </script>
 
 <template>
   <div class="task-card">
     <div class="header">
-      <div class="title">1. 업무</div>
+      <div class="title">{{ props.title }}</div>
       <div class="date">
-        <DatePicker :range="true" @selected="onSelected" />
+        <DatePicker class="bottom-right" :range="true" @selected="onSelected" />
       </div>
     </div>
     <div class="grid-wrap">
-      <Grid
-        :columns="dashboardStore.taskColumns"
-        :grid-list="dashboardStore.taskList"
-      ></Grid>
+      <Grid :columns="props.columns" :grid-list="props.gridList"></Grid>
     </div>
   </div>
 </template>

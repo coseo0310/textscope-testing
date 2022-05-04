@@ -4,17 +4,13 @@ import Calendar from "@/components/shared/Calendar.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useCommonStore } from "@/store";
 
-type Position = "bottom-left" | "bottom-right";
-
 interface Props {
   range?: boolean;
-  position?: Position;
   default?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   range: false,
-  position: "bottom-left",
 });
 
 const emits = defineEmits<{
@@ -28,7 +24,7 @@ const year = String(date.getFullYear());
 const month = String(date.getMonth() + 1);
 const day = String(date.getDate());
 
-const isStartDt = ref<boolean>(true);
+const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
 const startDt = ref<string>(
   props.default
@@ -100,6 +96,12 @@ const onClosest = (e: MouseEvent) => {
   }
   const closestStart = el.closest(".start");
   const closestEnd = el.closest(".end");
+  const combobox = el.closest(".list");
+
+  if (combobox) {
+    return;
+  }
+
   if (!closestStart) {
     isStartDt.value = false;
   }
@@ -176,6 +178,8 @@ onUnmounted(() => {
     .text {
       display: flex;
       align-items: center;
+      font-size: 18px;
+      font-weight: 600;
     }
   }
 
@@ -185,8 +189,47 @@ onUnmounted(() => {
     .calendar {
       position: absolute;
       top: 40px;
-      left: -180px;
+      left: 0;
       z-index: 2;
+    }
+  }
+
+  &.bottom-right {
+    .start,
+    .end {
+      position: relative;
+      .calendar {
+        position: absolute;
+        top: 40px;
+        left: -180px;
+        z-index: 2;
+      }
+    }
+  }
+
+  &.top-left {
+    .start,
+    .end {
+      position: relative;
+      .calendar {
+        position: absolute;
+        top: -440px;
+        left: 0;
+        z-index: 2;
+      }
+    }
+  }
+
+  &.top-right {
+    .start,
+    .end {
+      position: relative;
+      .calendar {
+        position: absolute;
+        top: -440px;
+        left: -180px;
+        z-index: 2;
+      }
     }
   }
 }

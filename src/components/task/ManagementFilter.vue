@@ -2,25 +2,17 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import Button from "@/components/shared/Button.vue";
-import Calendar from "@/components/shared/Calendar.vue";
+import DatePicker from "@/components/shared/DatePicker.vue";
 import { useTaskStore, useCommonStore } from "@/store";
 import { Task } from "@/types";
 
 export type FilterLists = Task.ManagementFilterLists;
 export type FilterKeys = Task.ManagementFilterKeys;
 
-const date = new Date();
-const year = String(date.getFullYear());
-const month = String(date.getMonth() + 1);
-const day = String(date.getDate());
-
 const taskStore = useTaskStore();
-const commonStore = useCommonStore();
 
 const isStartDt = ref<boolean>(false);
 const isEndDt = ref<boolean>(false);
-const startDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
-const endDt = ref<string>(`${year}-${month.padStart(2, "0")}-${day}`);
 const lists = ref<FilterLists>(taskStore.managementFitlerLists);
 
 const isAllDefault = computed(() => ({
@@ -49,49 +41,6 @@ const isAllDefault = computed(() => ({
       ? false
       : !lists.value.status.find((f) => f.checked === false),
 }));
-const getStartDt = computed(() => startDt.value.split("-").join("."));
-const getEndDt = computed(() => endDt.value.split("-").join("."));
-
-const onCalendar = (t: "start" | "end") => {
-  if (t === "start") {
-    isStartDt.value = !isStartDt.value;
-    isEndDt.value = false;
-  } else {
-    isEndDt.value = !isEndDt.value;
-    isStartDt.value = false;
-  }
-};
-
-const dateVaildate = (s: string, e: string) => {
-  const sDate = new Date(s).getTime();
-  const eDate = new Date(e).getTime();
-
-  if (sDate > eDate) {
-    commonStore.setToast("선택하신 기간을 다시 확인해주세요.", "warn");
-
-    return true;
-  }
-  return false;
-};
-
-const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
-  if (t === "start") {
-    if (dateVaildate(d, endDt.value)) {
-      return;
-    }
-    startDt.value = d;
-    isStartDt.value = false;
-  } else if (t === "end") {
-    if (dateVaildate(startDt.value, d)) {
-      return;
-    }
-    endDt.value = d;
-    isEndDt.value = false;
-  } else {
-    isStartDt.value = false;
-    isEndDt.value = false;
-  }
-};
 
 const onAllChecked = (key: FilterKeys) => {
   if (!!lists.value[key].find((f) => f.checked === false)) {
@@ -135,6 +84,13 @@ const onClosest = (e: MouseEvent) => {
 
 const onSearch = () => {
   taskStore.getGridList();
+};
+
+const onSelected = (date: string) => {
+  const sp = date.split("~");
+
+  const startDt = sp[0];
+  const endDt = sp[1];
 };
 
 onMounted(() => {
@@ -264,32 +220,8 @@ onUnmounted(() => {
       </div>
       <div class="date wrap-box">
         <div class="title">기간</div>
-        <div class="box">
-          <div class="start time">
-            <div class="text" @click="onCalendar('start')">
-              {{ getStartDt }}
-            </div>
-            <div class="calendar">
-              <Calendar
-                v-if="isStartDt"
-                :date="startDt"
-                @confirm="(d) => onDateConfirm(d, 'start')"
-                @cancel="(d) => onDateConfirm(d, 'cancel')"
-              />
-            </div>
-          </div>
-          <div class="divider">~</div>
-          <div class="end time">
-            <div class="text" @click="onCalendar('end')">{{ getEndDt }}</div>
-            <div class="calendar">
-              <Calendar
-                v-if="isEndDt"
-                :date="endDt"
-                @confirm="(d) => onDateConfirm(d, 'end')"
-                @cancel="(d) => onDateConfirm(d, 'cancel')"
-              />
-            </div>
-          </div>
+        <div class="datepicker-wrap">
+          <DatePicker :range="true" @selected="onSelected" />
         </div>
       </div>
     </div>
@@ -361,35 +293,8 @@ onUnmounted(() => {
     }
 
     .date {
-      .box {
-        .time {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 160px;
-          height: 34px;
-          background-color: $d3;
-          border-radius: 20px;
-          font-weight: 400;
-          color: $d5;
-          cursor: pointer;
-        }
-
-        .start,
-        .end {
-          position: relative;
-          margin-right: 15px;
-
-          .calendar {
-            position: absolute;
-            top: -440px;
-            left: 0;
-            z-index: 2;
-          }
-        }
-        .end {
-          margin-left: 15px;
-        }
+      .datepicker-wrap {
+        padding: 15px 0;
       }
     }
   }

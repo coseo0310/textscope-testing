@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import MainLayout from "@/components/layout/MainLayout.vue";
-import TaskCard from "@/components/dashboard/TaskCard.vue";
-import { useAuthStore } from "@/store";
+import StatisticsCard from "@/components/dashboard/StatisticsCard.vue";
+import { useAuthStore, useDashboardStore } from "@/store";
 
 const authStore = useAuthStore();
+const dashboardStore = useDashboardStore();
 const isAdmin = import.meta.env.MODE.includes("admin");
 </script>
 
@@ -14,7 +15,11 @@ const isAdmin = import.meta.env.MODE.includes("admin");
         {{ isAdmin ? "대시보드" : authStore.user?.division }}
       </div>
       <div class="card-wrap">
-        <TaskCard />
+        <StatisticsCard
+          title="1. 업무"
+          :columns="dashboardStore.taskColumns"
+          :grid-list="dashboardStore.taskList"
+        />
       </div>
     </div>
   </MainLayout>
