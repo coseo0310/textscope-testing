@@ -80,7 +80,7 @@ export default class EditorConfig implements IEditorConfig {
     };
 
     this.isText = false;
-    this.isIdx = false;
+    this.isIdx = true;
     this.isSection = false;
     this.isSectionControl = false;
     this.isReadonly = false;

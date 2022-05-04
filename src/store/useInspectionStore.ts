@@ -181,7 +181,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
             item?.prediction.key_values.length || 0 > 0
               ? item?.prediction.key_values
               : item?.prediction.texts;
-          items.forEach((item) => {
+          items.forEach((item, idx) => {
             editor.setField({
               id: item.id,
               text: item.text,
@@ -189,8 +189,11 @@ export const useInspectionStore = defineStore("inspectionStore", {
               dy: item.bbox.y,
               dWidth: item.bbox.w,
               dHeight: item.bbox.h,
-              type: "stroke",
-              color: `rgba(220, 118, 118, 1)`,
+              type: "fill",
+              color:
+                idx % 2 === 0
+                  ? `rgba(103, 121, 215, 1)`
+                  : `rgba(255, 119, 119, 1)`,
               lineWidth: 5,
             });
 

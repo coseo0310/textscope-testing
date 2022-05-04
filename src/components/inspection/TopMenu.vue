@@ -188,7 +188,7 @@ onMounted(() => {});
             @click="
               () => {
                 currentEditor?.setIsText(false);
-                currentEditor?.setIsIdx(false);
+                // currentEditor?.setIsIdx(false);
                 currentEditor?.draw();
               }
             "

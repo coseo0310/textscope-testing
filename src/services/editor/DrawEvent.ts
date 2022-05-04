@@ -157,7 +157,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     circle8.arc(dx, dy + Math.floor(field.dHeight) / 2, 10, 0, 2 * Math.PI);
 
     ctx.save();
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = field.color;
     ctx.fill(circle1);
     ctx.fill(circle2);
     ctx.fill(circle3);
@@ -230,7 +230,10 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       };
 
       if (f.type === "fill") {
+        ctx.save();
+        ctx.globalAlpha = 0.5;
         f.box = this.fillRect(ctx, rectOption);
+        ctx.restore();
       } else if (f.type === "stroke") {
         f.box = this.strokeRect(ctx, rectOption);
       }
@@ -239,7 +242,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           text: f.text,
           dx: dx,
           dy: dy - 10,
-          font: `38px serif`,
+          font: `38px Pretendard serif`,
           color: "blue",
         };
         this.fillText(ctx, textOption);
@@ -247,26 +250,34 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
 
       if (this.isIdx) {
         const arcOption: ArcOption = {
-          dx: dx - 28,
-          dy: dy - 28,
+          dx: dx - 40,
+          dy: dy + 30,
           startArc: 0,
           endArc: 2 * Math.PI,
-          color: "blue",
-          radius: 26,
+          color: f.color,
+          radius: 30,
         };
-
+        const rectOption: RectOption = {
+          dx: dx - 40,
+          dy: dy,
+          dWidth: 40,
+          dHeight: 60,
+          color: f.color,
+          lineWidth: 5,
+        };
         const len = String(cnt).length;
-        const sx = 36;
-        const sy = 18;
+        const sx = len === 1 ? 40 : 40 + 5 * len;
+        const sy = -42;
 
         const indexOption: TextOption = {
           text: `${cnt++}`,
-          dx: Math.floor(dx - ((sx * (len - 1)) / 4 + sx)),
+          dx: Math.floor(dx - sx),
           dy: dy - sy,
-          font: `28px serif`,
+          font: `32px Pretendard serif`,
           color: "white",
         };
         this.fillArc(ctx, arcOption);
+        this.fillRect(ctx, rectOption);
         this.fillText(ctx, indexOption);
       }
     }
@@ -308,10 +319,6 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     field: Field,
     margin: number
   ) {
-    if (!this.isReadonly) {
-      field.circle = this.drawEditCircles(ctx, field, this.dMargin);
-    }
-
     const dx = Math.floor(field.draw ? field.dx : field.dx + margin);
     const dy = Math.floor(field.draw ? field.dy : field.dy + margin);
     const rectOption: RectOption = {
@@ -319,10 +326,13 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       dy,
       dWidth: Math.floor(field.dWidth),
       dHeight: Math.floor(field.dHeight),
-      color: `rgba(255, 160, 140, 0.1)`,
+      color: field.color,
       lineWidth: 5,
     };
-    this.fillRect(ctx, rectOption);
+    this.strokeRect(ctx, rectOption);
+    if (!this.isReadonly) {
+      field.circle = this.drawEditCircles(ctx, field, this.dMargin);
+    }
   }
 
   protected drawNewRect(ctx: CanvasRenderingContext2D, field: Field) {
