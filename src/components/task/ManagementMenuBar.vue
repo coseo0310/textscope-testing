@@ -63,7 +63,6 @@ const onClosest = (e: MouseEvent) => {
 };
 
 onMounted(() => {
-  taskStore.getGridList();
   window.addEventListener("click", onClosest);
 });
 
