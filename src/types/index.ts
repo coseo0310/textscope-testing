@@ -14,23 +14,17 @@ export declare module Routes {
     | "root"
     | "login"
     | "dashboard"
-    | "settings"
     | "alarm"
     | "task"
     | "inspection"
+    | "classification"
     | "logout"
     | "errors"
     | "catch";
 
-  type DefaultConstant = CommonConstant | "classification" | "settings";
+  type DefaultConstant = CommonConstant | "settings";
 
-  type AdminConstant =
-    | CommonConstant
-    | "user"
-    | "team"
-    | "classification"
-    | "template"
-    | "notice";
+  type AdminConstant = CommonConstant | "user" | "team" | "template" | "notice";
 
   interface Routes {
     isMenu: boolean;

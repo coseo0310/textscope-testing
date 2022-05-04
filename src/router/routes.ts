@@ -6,6 +6,7 @@ import NotFound from "@/pages/auth/404.vue";
 import DashboardPage from "@/pages/dashboard/DashboardPage.vue";
 import SettingsPage from "@/pages/settings/SettingsPage.vue";
 import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
+import ClassificationManagementPage from "@/pages/classification/ClassificationManagementPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
@@ -305,7 +306,7 @@ export const a: Routes.AdminConstants = {
     routeRecordRaw: {
       path: "/classification",
       name: "classification",
-      component: DashboardPage,
+      component: ClassificationManagementPage,
       meta: {
         requiresAuth: true,
         title: "문서 분류 모델 관리",
@@ -336,54 +337,6 @@ export const a: Routes.AdminConstants = {
         requiresAuth: true,
         title: "공지사항",
         icons: "notice",
-      },
-    },
-  },
-  settings: {
-    isMenu: true,
-    routeRecordRaw: {
-      path: "/settings",
-      name: "settings",
-      component: SettingsPage,
-      children: [
-        {
-          path: "",
-          name: "profile",
-          component: ProfilePage,
-          meta: {
-            isMenu: true,
-            requiresAuth: true,
-            title: "프로필",
-            icons: "user",
-          },
-        },
-        {
-          path: "group",
-          name: "group",
-          component: GroupPage,
-          meta: {
-            isMenu: true,
-            requiresAuth: true,
-            title: "조직",
-            icons: "group",
-          },
-        },
-        {
-          path: "push",
-          name: "push",
-          component: PushPage,
-          meta: {
-            isMenu: true,
-            requiresAuth: true,
-            title: "푸시알림",
-            icons: "bell",
-          },
-        },
-      ],
-      meta: {
-        requiresAuth: true,
-        title: "설정",
-        icons: "setting",
       },
     },
   },
