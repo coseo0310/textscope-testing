@@ -3,7 +3,7 @@ import MainLayout from "@/components/layout/MainLayout.vue";
 </script>
 
 <template>
-  <MainLayout> 관리 </MainLayout>
+  <MainLayout>테스트</MainLayout>
 </template>
 
 <style lang="scss" scoped></style>

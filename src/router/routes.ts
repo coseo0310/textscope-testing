@@ -7,6 +7,9 @@ import DashboardPage from "@/pages/dashboard/DashboardPage.vue";
 import SettingsPage from "@/pages/settings/SettingsPage.vue";
 import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ClassificationManagementPage from "@/pages/classification/ClassificationManagementPage.vue";
+import ClassificationRegisterPage from "@/pages/classification/ClassificationRegisterPage.vue";
+import ClassificationProgressPage from "@/pages/classification/ClassificationProgressPage.vue";
+import ClassificationTestPage from "@/pages/classification/ClassificationTestPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
@@ -306,7 +309,53 @@ export const a: Routes.AdminConstants = {
     routeRecordRaw: {
       path: "/classification",
       name: "classification",
-      component: ClassificationManagementPage,
+      component: ClassificationPage,
+      children: [
+        {
+          path: "",
+          name: "management",
+          component: ClassificationManagementPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "관리",
+            icons: "user",
+          },
+        },
+        {
+          path: "register",
+          name: "register",
+          component: ClassificationRegisterPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "조직",
+            icons: "group",
+          },
+        },
+        {
+          path: "progress",
+          name: "progress",
+          component: ClassificationProgressPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "푸시알림",
+            icons: "bell",
+          },
+        },
+        {
+          path: "test",
+          name: "test",
+          component: ClassificationTestPage,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "푸시알림",
+            icons: "bell",
+          },
+        },
+      ],
       meta: {
         requiresAuth: true,
         title: "문서 분류 모델 관리",
