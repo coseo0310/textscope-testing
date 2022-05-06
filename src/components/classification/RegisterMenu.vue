@@ -16,7 +16,16 @@ const { modelSelected, model, modelList } = storeToRefs(classificationStore);
 
 const fileEl = ref<HTMLInputElement | null>(null);
 
-const onDelete = () => {};
+const onDelete = () => {
+  if (!model.value?.items) {
+    return;
+  }
+
+  model.value.items = model.value.items.filter(
+    (f) => !modelSelected.value.some((s) => s.id === f.id)
+  );
+  modelSelected.value = [];
+};
 
 const onUpload = () => {
   if (errors.value.title?.type === "required") {
@@ -98,7 +107,9 @@ const onUploadZip = async () => {
   }
 };
 
-const onLearning = () => {};
+const onLearning = () => {
+  alert("준비중...");
+};
 
 onMounted(() => {
   setValidate();

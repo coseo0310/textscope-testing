@@ -41,15 +41,13 @@ const gridTemplateColumns = ref<string>(
 );
 
 const onSelected = (id: string) => {
-  console.log(id, list.value);
+  selected.value = [];
   list.value = list.value.map((g) => {
     if (g.id === id) {
       g.checked = !g.checked;
-      if (g.checked) {
-        selected.value.push({ id: g.id });
-      } else {
-        selected.value.filter((f) => f.id !== id);
-      }
+    }
+    if (g.checked) {
+      selected.value.push({ id: g.id as string });
     }
     return g;
   });
@@ -76,6 +74,10 @@ const onAllSelected = (c: boolean) => {
 
 watch(props, () => {
   list.value = props.gridList;
+  if (!props.selected) {
+    return;
+  }
+  selected.value = props.selected;
 });
 </script>
 
