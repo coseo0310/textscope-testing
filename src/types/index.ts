@@ -148,7 +148,8 @@ export declare module Icons {
     | "cancel"
     | "notice"
     | "reset"
-    | "search";
+    | "search"
+    | "info";
 
   interface SvgType {
     width: string;
@@ -171,6 +172,16 @@ export declare module Icons {
       height: string;
       rx: string;
       fill: string;
+    };
+    line?: {
+      x1: string;
+      y1: string;
+      x2: string;
+      y2: string;
+      stroke?: string;
+      strokeWidth?: string;
+      strokeLinecap?: "butt" | "round" | "square" | "inherit";
+      strokeLinejoin?: "miter" | "round" | "bevel" | "inherit";
     };
     circle?: {
       cx: string;

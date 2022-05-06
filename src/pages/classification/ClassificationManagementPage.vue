@@ -57,12 +57,11 @@ const onRegister = () => {
 .classification-register {
   width: 100%;
   height: 100vh;
-  padding: 100px 90px;
+  padding: 80px 70px;
 
   .menu-bar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
 
     .title {
       font-size: 24px;

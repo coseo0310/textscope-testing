@@ -52,6 +52,23 @@ const svg = computed(() => svgs[props.icons]);
         :stroke-linejoin="p.strokeLinejoin ? p.strokeLinejoin : 'round'"
       />
     </template>
+    <template v-if="svg.line">
+      <line
+        :x1="svg.line.x1"
+        :y1="svg.line.y1"
+        :x2="svg.line.x2"
+        :y2="svg.line.y2"
+        :stroke="svg.line.stroke"
+        :stroke-width="svg.line.strokeWidth"
+        :stroke-linecap="
+          svg.line.strokeLinecap ? svg.line.strokeLinecap : 'round'
+        "
+        :stroke-linejoin="
+          svg.line.strokeLinejoin ? svg.line.strokeLinejoin : 'round'
+        "
+      />
+    </template>
+
     <template v-if="svg.circle">
       <circle
         :cx="svg.circle.cx"

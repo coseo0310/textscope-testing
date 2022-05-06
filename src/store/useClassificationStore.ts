@@ -1,7 +1,19 @@
 import { defineStore } from "pinia";
 
+interface ModelItem {
+  category: string;
+  name: string;
+}
+
+interface Model {
+  title: string;
+  items: ModelItem[];
+}
+
 type States = {
-  modelList: string[];
+  modelList: Model[];
+  model: Model | null;
+  itemSelected: string[];
 };
 
 // useStore could be anything like useUser, useCart
@@ -12,6 +24,8 @@ export const useClassificationStore = defineStore("classificationStore", {
     return {
       // all these properties will have their type inferred automatically
       modelList: [],
+      model: null,
+      itemSelected: [],
     };
   },
   actions: {},
