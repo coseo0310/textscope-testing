@@ -41,7 +41,7 @@ const onPosition = (item: DropdownItem) => {
 };
 
 const onSubmit = () => {
-  const { email, newPassword, name, phone, cellphone } = getValues();
+  const { email, name, phone, cellphone } = getValues();
 
   if (!position.value) {
     return;

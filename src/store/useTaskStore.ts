@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import { Task } from "@/types";
-import { Grid } from "@/types";
+import { Task, Grid } from "@/types";
 
 type States = {
   filterLists: Task.FilterLists;

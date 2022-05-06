@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
+import { Grid } from "@/types";
 
 interface ModelItem {
+  id: string;
   category: string;
   name: string;
 }
@@ -13,7 +15,8 @@ interface Model {
 type States = {
   modelList: Model[];
   model: Model | null;
-  itemSelected: string[];
+  modelSelected: Grid.Selected[];
+  modelColumns: Grid.Columns;
 };
 
 // useStore could be anything like useUser, useCart
@@ -25,8 +28,33 @@ export const useClassificationStore = defineStore("classificationStore", {
       // all these properties will have their type inferred automatically
       modelList: [],
       model: null,
-      itemSelected: [],
+      modelSelected: [],
+      modelColumns: getModelColumns(),
     };
   },
   actions: {},
 });
+
+function getModelColumns(): Grid.Columns {
+  return [
+    {
+      width: 100,
+      text: "No",
+      align: "center",
+      sortable: false,
+      value: "no",
+    },
+    {
+      text: "카테고리",
+      align: "center",
+      sortable: false,
+      value: "category",
+    },
+    {
+      text: "문서명",
+      align: "center",
+      sortable: false,
+      value: "name",
+    },
+  ];
+}

@@ -1,10 +1,49 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import Grid, { GridList, GridItem } from "@/components/shared/Grid.vue";
 import homeworkImg from "@/assets/img/homework1.png";
+import { useClassificationStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const classificationStore = useClassificationStore();
+
+const { model, modelColumns, modelSelected } = storeToRefs(classificationStore);
+
+const getFileList = computed(() => {
+  if (!model.value) {
+    return [];
+  }
+  const gridList: GridList = model.value.items.map((item, idx) => {
+    const no = `${(model.value?.items.length || 10) - idx}`;
+    const obj: GridItem = {
+      id: item.id,
+      no,
+      category: item.category,
+      name: item.name,
+    };
+    return obj;
+  });
+  return gridList;
+});
+
+const onSelected = (list: GridList) => {
+  modelSelected.value = list
+    .filter((item) => !!item.checked)
+    .map((item) => ({ id: item.id as string }));
+};
 </script>
 
 <template>
   <div class="register-form">
-    <div class="not-found">
+    <div v-if="model" class="grid-wrap">
+      <Grid
+        :columns="modelColumns"
+        :grid-list="getFileList"
+        :selected="modelSelected"
+        @selected="onSelected"
+      />
+    </div>
+    <div v-else class="not-found">
       <img :src="homeworkImg" alt="homework" />
       <div class="text">
         `업로드` 버튼을 물러 문서 분류 모델 학습에 사용될 zip 압축파일을
@@ -27,6 +66,9 @@ import homeworkImg from "@/assets/img/homework1.png";
   justify-content: center;
   align-items: center;
 
+  .grid-wrap {
+    width: 100%;
+  }
   .not-found {
     padding-top: 15vh;
     display: flex;

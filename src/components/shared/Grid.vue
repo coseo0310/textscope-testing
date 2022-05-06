@@ -23,10 +23,9 @@ const emits = defineEmits<{
 
 const selected = ref<Selected[]>(props.selected || []);
 const list = ref<GridList>(props.gridList);
+
 const allSelected = computed(() => {
-  return list.value.length === 0
-    ? false
-    : !list.value.find((f) => f.checked === false);
+  return selected.value.length === list.value.length;
 });
 
 const getGridTemplateColumns = () => {
@@ -42,17 +41,25 @@ const gridTemplateColumns = ref<string>(
 );
 
 const onSelected = (id: string) => {
+  console.log(id, list.value);
   list.value = list.value.map((g) => {
     if (g.id === id) {
       g.checked = !g.checked;
+      if (g.checked) {
+        selected.value.push({ id: g.id });
+      } else {
+        selected.value.filter((f) => f.id !== id);
+      }
     }
     return g;
   });
+
   emits("selected", list.value);
 };
 
 const onAllSelected = (c: boolean) => {
-  if (!c && selected.value.length > 0) {
+  selected.value = [];
+  if (!c) {
     list.value = list.value.map((g) => {
       g.checked = false;
       return g;
@@ -60,6 +67,7 @@ const onAllSelected = (c: boolean) => {
   } else {
     list.value = list.value.map((g) => {
       g.checked = true;
+      selected.value.push({ id: g.id as string });
       return g;
     });
   }
@@ -96,7 +104,7 @@ watch(props, () => {
           class="row"
           :class="{ selected: !!g.checked, accordion: props.accordion }"
           @click="
-            () => {
+            (e) => {
               emits('row', g);
             }
           "

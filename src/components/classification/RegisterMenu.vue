@@ -1,25 +1,123 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
-import { useClassificationStore } from "@/store";
+import { useForm } from "@/hooks";
+import { useClassificationStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
+import JSZip from "jszip";
 
+const commonStore = useCommonStore();
 const classificationStore = useClassificationStore();
+const { register, getValues, errors, setValidate } = useForm();
 
-const { itemSelected, model } = storeToRefs(classificationStore);
+const { modelSelected, model, modelList } = storeToRefs(classificationStore);
+
+const fileEl = ref<HTMLInputElement | null>(null);
 
 const onDelete = () => {};
 
-const onUpload = () => {};
+const onUpload = () => {
+  if (errors.value.title?.type === "required") {
+    commonStore.setToast("문서 분류 모델 이름을 입력해주세요", "warn");
+    return;
+  } else if (errors.value.title?.type === "pattern") {
+    commonStore.setToast(
+      "<p>카테고리명이 올바르지 않습니다.</p><p>문서분류 모델명 작성 규칙을 참고해서 수정</p><p>해주세요</p>",
+      "warn"
+    );
+    return;
+  }
+  const { title } = getValues();
+
+  for (const m of modelList.value) {
+    if (m.title === title) {
+      commonStore.setToast("카테고리명이 올바르지 않습니다.", "warn");
+      return;
+    }
+  }
+  if (new Blob([title]).size > 40) {
+    commonStore.setToast("문류 모델명이 40bytes를 초과하였습니다.", "warn");
+    return;
+  }
+  if (!fileEl.value) {
+    return;
+  }
+  fileEl.value.click();
+};
+
+const zip_create_instance = (file: File) => {
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+  reader.onload = function (e) {
+    const result = e.target?.result;
+    if (!result) {
+      return;
+    }
+    JSZip.loadAsync(result)
+      .then((zip) => {
+        const { title } = getValues();
+        model.value = {
+          title,
+          items: [],
+        };
+        let cnt = 0;
+        for (const [k, v] of Object.entries(zip.files)) {
+          const sp = k.split("/");
+          const category = sp[0];
+          const name = sp[1].toLocaleLowerCase();
+
+          if (v.dir || !/\.(jpg|jpeg|pdf|png|tiff)/gm.test(name)) {
+            continue;
+          }
+          model.value.items.push({
+            id: `${Date.now() + cnt++}`,
+            category,
+            name,
+          });
+        }
+      })
+      .catch(console.error);
+  };
+};
+
+const onUploadZip = async () => {
+  if (!fileEl.value) {
+    return;
+  }
+  if (!fileEl.value.files) {
+    return;
+  }
+  for (let i = 0; i < fileEl.value.files.length; i++) {
+    const file = fileEl.value.files[i];
+    if (!file) {
+      continue;
+    }
+    zip_create_instance(file);
+  }
+};
 
 const onLearning = () => {};
+
+onMounted(() => {
+  setValidate();
+});
 </script>
 
 <template>
   <div class="register-menu-container">
     <div class="input-wrap">
-      <Input class="border-color-d4 color-d5" />
+      <Input
+        class="border-color-d4 color-d5"
+        name="title"
+        :ref="
+          register({
+            required: true,
+            pattern: /^[ㄱ-ㅎ\s|가-힣\s|a-z\s|A-Z\s|0-9\s|]+$/,
+          })
+        "
+      />
       <div class="icon-wrap">
         <Icons icons="info" />
         <div class="info">
@@ -58,7 +156,7 @@ const onLearning = () => {};
               문서 분류 모델 이름은 띄어쓰기 포함 40bytes를 초과할 수 없습니다.
             </div>
             <div class="subject">
-              <p>∙ 한글 1자는 2bytes</p>
+              <p>∙ 한글 1자는 2~3bytes</p>
               <p>∙ 띄어쓰기 공백은 1bytes</p>
               <p>∙ 알파벳 한자는 1bytes</p>
             </div>
@@ -70,7 +168,7 @@ const onLearning = () => {};
       <div class="btn-wrap">
         <Button
           class="primary color-red extra-bold"
-          :disabled="itemSelected.length === 0"
+          :disabled="modelSelected.length === 0"
           @click="onDelete"
         >
           삭제
@@ -78,6 +176,13 @@ const onLearning = () => {};
       </div>
       <div class="btn-wrap">
         <Button class="primary extra-bold" @click="onUpload">업로드</Button>
+        <input
+          ref="fileEl"
+          style="display: none"
+          accept="zip/*,.zip"
+          type="file"
+          @change="onUploadZip"
+        />
       </div>
       <div class="btn-wrap">
         <Button

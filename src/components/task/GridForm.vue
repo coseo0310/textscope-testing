@@ -36,15 +36,11 @@ const onPageChange = (current: number) => {
   taskStore.getGridList(currentPage.value);
 };
 
-const onRow = (v: GridItem) => {
-  if (typeof v.id !== "string") {
-    return;
-  }
+const onRow = (id: string) => {
   router.push({
     name: path.inspection.name,
-    params: {
-      id: v.id,
-      type: props.isAdmin ? "admin" : "user",
+    query: {
+      id: id,
     },
   });
 };
@@ -61,8 +57,12 @@ onUnmounted(() => {});
         :grid-list="taskStore.taskList"
         :selected="selected"
         @selected="onSelected"
-        @row="onRow"
       >
+        <template v-slot:name="{ item }">
+          <div class="name" @click="onRow(item.id)">
+            {{ item.name }}
+          </div>
+        </template>
         <template v-slot:inspection="{ item }">
           <template v-if="item.inspection !== 'save'">
             {{ item.inspection }}
