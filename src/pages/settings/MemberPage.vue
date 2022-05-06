@@ -6,7 +6,7 @@ import ProfileCard from "@/components/shared/ProfileCard.vue";
 import MemberModal from "@/components/settings/MemberModal.vue";
 import TeamSelectModal from "@/components/settings/TeamSelectModal.vue";
 import { useSettingsStore } from "@/store";
-import { constants } from "@/router";
+import { path } from "@/router";
 import { Routes } from "@/types";
 import Membership from "@/assets/img/membership.png";
 
@@ -21,8 +21,7 @@ const onClick = () => {
 
 onMounted(() => {
   if (!settingsStore.team) {
-    const c = constants as Routes.AdminConstants;
-    router.push(c.team.routeRecordRaw.path);
+    router.push(path.team.path);
   }
 });
 </script>

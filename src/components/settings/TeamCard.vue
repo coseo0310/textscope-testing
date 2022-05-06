@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { constants } from "@/router";
+import { path } from "@/router";
 import { useSettingsStore, useCommonStore } from "@/store";
 import { Routes } from "@/types";
 import ContextMenu, {
@@ -29,19 +29,12 @@ const onRightClick = (e: MouseEvent) => {
 };
 
 const onLeftClick = (e: MouseEvent) => {
-  const c = constants as Routes.AdminConstants;
-  const child = c.team.routeRecordRaw.children;
-  if (!child) {
-    return;
-  }
   const f = settingsStore.teams.find((f) => f.id === props.id);
   if (!f) {
     return;
   }
-
   settingsStore.team = f;
-  const name = child[1].name;
-  router.push({ name });
+  router.push({ name: path.team_memeber.name });
 };
 
 const onClick = (e: MouseEvent) => {

@@ -4,6 +4,7 @@ import { useTaskStore } from "@/store/useTaskStore";
 import { useInspectionStore } from "@/store/useInspectionStore";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { useDashboardStore } from "@/store/useDashboardStore";
+import { useClassificationStore } from "@/store/useClassificationStore";
 
 export {
   useAuthStore,
@@ -12,4 +13,5 @@ export {
   useInspectionStore,
   useSettingsStore,
   useDashboardStore,
+  useClassificationStore,
 };

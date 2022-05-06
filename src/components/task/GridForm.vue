@@ -5,7 +5,7 @@ import Icons from "@/components/shared/Icons.vue";
 import Grid, { GridList, GridItem } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useTaskStore } from "@/store";
-import { constants } from "@/router";
+import { path } from "@/router";
 import Job from "@/assets/img/job_1.png";
 import Magnifier from "@/assets/img/magnifier.png";
 
@@ -41,7 +41,7 @@ const onRow = (v: GridItem) => {
     return;
   }
   router.push({
-    name: constants.inspection.routeRecordRaw.name,
+    name: path.inspection.name,
     params: {
       id: v.id,
       type: props.isAdmin ? "admin" : "user",

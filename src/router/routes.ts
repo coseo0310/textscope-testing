@@ -21,8 +21,122 @@ import UserPage from "@/pages/settings/UserPage.vue";
 import TeamPage from "@/pages/settings/settingsPage.vue";
 import DepartmentPage from "@/pages/settings/DepartmentPage.vue";
 import MemberPage from "@/pages/settings/MemberPage.vue";
-
 import TaskManagementPage from "@/pages/task/TaskManagementPage.vue";
+
+type Keys =
+  | Routes.CommonConstant
+  | Routes.AdminConstant
+  | Routes.DefaultConstant
+  | Routes.DefaultConstantChild
+  | Routes.AdminConstantChild;
+
+interface PathItem {
+  path: string;
+  name: string;
+}
+
+type Path = {
+  [k in Keys]: PathItem;
+};
+
+export const path: Path = {
+  root: {
+    path: "/",
+    name: "/",
+  },
+  login: {
+    path: "/login",
+    name: "login",
+  },
+  dashboard: {
+    path: "/dashboard",
+    name: "dashboard",
+  },
+  alarm: {
+    path: "/alarm",
+    name: "alarm",
+  },
+  task: {
+    path: "/task",
+    name: "task",
+  },
+  inspection: {
+    path: "/inspection",
+    name: "inspection",
+  },
+  classification: {
+    path: "/classification",
+    name: "classification",
+  },
+  classification_management: {
+    path: "/classification",
+    name: "classification_management",
+  },
+  classification_register: {
+    path: "/classification/classification_register",
+    name: "classification_register",
+  },
+  classification_progress: {
+    path: "/classification/classification_progress",
+    name: "classification_progress",
+  },
+  classification_test: {
+    path: "/classification/classification_test",
+    name: "classification_test",
+  },
+  logout: {
+    path: "/logout",
+    name: "logout",
+  },
+  errors: {
+    path: "/errors",
+    name: "errors",
+  },
+  catch: {
+    path: "/404",
+    name: "404",
+  },
+  settings: {
+    path: "/settings",
+    name: "settings",
+  },
+  settings_profile: {
+    path: "/settings",
+    name: "settings_profile",
+  },
+  settings_group: {
+    path: "/settings/settings_group",
+    name: "settings_group",
+  },
+  settings_push: {
+    path: "/settings/settings_push",
+    name: "settings_push",
+  },
+  user: {
+    path: "/user",
+    name: "user",
+  },
+  team: {
+    path: "/team",
+    name: "team",
+  },
+  team_department: {
+    path: "/team",
+    name: "team_department",
+  },
+  team_memeber: {
+    path: "/team/team_memeber",
+    name: "team_memeber",
+  },
+  template: {
+    path: "/template",
+    name: "template",
+  },
+  notice: {
+    path: "/notice",
+    name: "notice",
+  },
+};
 
 export const d: Routes.DefaultConstants = {
   root: {
@@ -107,7 +221,7 @@ export const d: Routes.DefaultConstants = {
       children: [
         {
           path: "",
-          name: "profile",
+          name: "settings_profile",
           component: ProfilePage,
           meta: {
             isMenu: true,
@@ -117,8 +231,8 @@ export const d: Routes.DefaultConstants = {
           },
         },
         {
-          path: "group",
-          name: "group",
+          path: "settings_group",
+          name: "settings_group",
           component: GroupPage,
           meta: {
             isMenu: true,
@@ -128,8 +242,8 @@ export const d: Routes.DefaultConstants = {
           },
         },
         {
-          path: "push",
-          name: "push",
+          path: "settings_push",
+          name: "settings_push",
           component: PushPage,
           meta: {
             isMenu: true,
@@ -244,13 +358,13 @@ export const a: Routes.AdminConstants = {
   team: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/settings",
+      path: "/team",
       name: "team",
       component: TeamPage,
       children: [
         {
           path: "",
-          name: "department",
+          name: "team_department",
           component: DepartmentPage,
           meta: {
             isMenu: false,
@@ -260,8 +374,8 @@ export const a: Routes.AdminConstants = {
           },
         },
         {
-          path: "memeber",
-          name: "memeber",
+          path: "/team/team_memeber",
+          name: "team_memeber",
           component: MemberPage,
           meta: {
             isMenu: false,
@@ -313,7 +427,7 @@ export const a: Routes.AdminConstants = {
       children: [
         {
           path: "",
-          name: "management",
+          name: "classification_management",
           component: ClassificationManagementPage,
           meta: {
             isMenu: false,
@@ -323,8 +437,8 @@ export const a: Routes.AdminConstants = {
           },
         },
         {
-          path: "register",
-          name: "register",
+          path: "classification_register",
+          name: "classification_register",
           component: ClassificationRegisterPage,
           meta: {
             isMenu: false,
@@ -334,8 +448,8 @@ export const a: Routes.AdminConstants = {
           },
         },
         {
-          path: "progress",
-          name: "progress",
+          path: "classification_progress",
+          name: "classification_progress",
           component: ClassificationProgressPage,
           meta: {
             isMenu: false,
@@ -345,8 +459,8 @@ export const a: Routes.AdminConstants = {
           },
         },
         {
-          path: "test",
-          name: "test",
+          path: "classification_test",
+          name: "classification_test",
           component: ClassificationTestPage,
           meta: {
             isMenu: false,

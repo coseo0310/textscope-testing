@@ -24,7 +24,20 @@ export declare module Routes {
 
   type DefaultConstant = CommonConstant | "settings";
 
+  type DefaultConstantChild =
+    | "settings_profile"
+    | "settings_group"
+    | "settings_push";
+
   type AdminConstant = CommonConstant | "user" | "team" | "template" | "notice";
+
+  type AdminConstantChild =
+    | "classification_register"
+    | "classification_management"
+    | "classification_progress"
+    | "classification_test"
+    | "team_department"
+    | "team_memeber";
 
   interface Routes {
     isMenu: boolean;

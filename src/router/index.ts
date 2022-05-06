@@ -1,9 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import { d, a } from "./routes";
+import { d, a, path } from "./routes";
 import { getCookie } from "@/utils";
 import { TOKEN } from "@/constants";
-import { Routes } from "@/types";
-import { Icons } from "@/types";
+import { Routes, Icons } from "@/types";
 
 export const constants: Routes.DefaultConstants | Routes.AdminConstants =
   import.meta.env.MODE.includes("admin") ? a : d;
@@ -69,3 +68,5 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
 });
+
+export { path };

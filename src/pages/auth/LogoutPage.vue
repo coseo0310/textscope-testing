@@ -3,12 +3,12 @@ import { useRouter } from "vue-router";
 import WaveForm from "@/components/layout/WaveForm.vue";
 import AlertForm from "@/components/auth/AlertForm.vue";
 import Button from "@/components/shared/Button.vue";
-import * as Router from "@/router/index";
+import { path } from "@/router";
 import CopyRight from "@/components/layout/CopyRight.vue";
 
 const router = useRouter();
 const toLogin = () => {
-  router.push(Router.constants.login.routeRecordRaw.path);
+  router.push(path.login.path);
 };
 </script>
 

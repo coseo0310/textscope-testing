@@ -5,9 +5,7 @@ import MenuBar from "@/components/classification/MenuBar.vue";
 
 <template>
   <MainLayout>
-    <div class="classification-page">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </MainLayout>
 </template>
 

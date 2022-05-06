@@ -7,7 +7,7 @@ import ErrorForm from "@/components/shared/ErrorForm.vue";
 import Icons, { IconType } from "@/components/shared/Icons.vue";
 import { useAuthStore } from "@/store";
 import { useForm } from "@/hooks";
-import { constants } from "@/router";
+import { path } from "@/router";
 
 const icon = ref<IconType>("hide");
 const loader = ref<boolean>(false);
@@ -31,7 +31,7 @@ const onLogin = async () => {
     return;
   }
 
-  router.push(constants.dashboard.routeRecordRaw.path);
+  router.push(path.dashboard.path);
 };
 
 const onSingleSignOne = async () => {
@@ -41,7 +41,7 @@ const onSingleSignOne = async () => {
     return;
   }
 
-  router.push(constants.dashboard.routeRecordRaw.path);
+  router.push(path.dashboard.path);
 };
 
 const onEnter = () => {

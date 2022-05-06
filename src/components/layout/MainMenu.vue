@@ -6,7 +6,7 @@ import Badge from "@/components/shared/Badge.vue";
 import Avatar from "@/components/shared/Avatar.vue";
 import Logo from "@/assets/logo/textscope-logo.png";
 import { useAuthStore } from "@/store";
-import { constants } from "@/router";
+import { path } from "@/router";
 import { Routes } from "@/types";
 
 interface Props {
@@ -44,7 +44,7 @@ const onClosest = (e: MouseEvent) => {
 
 const onLogout = async () => {
   await authStore.onLogout();
-  router.push(constants.logout.routeRecordRaw.path);
+  router.push(path.logout.path);
 };
 
 const onMouseenter = () => {
@@ -62,7 +62,7 @@ const onMouseleave = () => {
 };
 
 const toDashboard = () => {
-  router.push(constants.dashboard.routeRecordRaw.path);
+  router.push(path.dashboard.path);
 };
 
 onMounted(() => {
@@ -106,7 +106,7 @@ onUnmounted(() => {
         <li
           class="list"
           :class="{
-            active: routes.path.includes(constants.alarm.routeRecordRaw.path),
+            active: routes.path.includes(path.alarm.path),
           }"
         >
           <router-link :to="routes.path">
@@ -137,7 +137,7 @@ onUnmounted(() => {
   </div>
   <div v-if="isTab" class="sub" :class="{ extend }">
     <div class="item" @click="() => {}">
-      <router-link :to="constants.alarm.routeRecordRaw.path">
+      <router-link :to="path.alarm.path">
         <span class="icon">
           <Icons icons="bell" />
         </span>
