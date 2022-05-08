@@ -104,7 +104,11 @@ watch(props, () => {
       <template v-for="g in list">
         <div
           class="row"
-          :class="{ selected: !!g.checked, accordion: props.accordion }"
+          :class="{
+            selected: !!g.checked,
+            accordion: props.accordion,
+            divider: g.divider,
+          }"
           @click="
             (e) => {
               emits('row', g);
@@ -183,6 +187,14 @@ watch(props, () => {
       align-items: center;
       width: 100%;
       background-color: $d2;
+
+      &.divider {
+        border-bottom: 2px solid $d4;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
 
       &.accordion-section {
         padding: 20px 30px;

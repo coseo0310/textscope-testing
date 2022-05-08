@@ -12,19 +12,29 @@ const commonStore = useCommonStore();
 const classificationStore = useClassificationStore();
 const { register, getValues, errors, setValidate } = useForm();
 
-const { modelSelected, model, modelList } = storeToRefs(classificationStore);
+const { modelSelected, model, modelList, isProgress, uploadPercent } =
+  storeToRefs(classificationStore);
 
 const fileEl = ref<HTMLInputElement | null>(null);
 
 const onDelete = () => {
-  if (!model.value?.items) {
-    return;
-  }
+  commonStore.setConfirm(
+    ["삭제된 데이터는 복구할 수 없습니다.", "정말 삭제하시겠습니까?"],
+    "warn",
+    () => {
+      if (!model.value?.items) {
+        return;
+      }
 
-  model.value.items = model.value.items.filter(
-    (f) => !modelSelected.value.some((s) => s.id === f.id)
+      model.value.items = model.value.items.filter(
+        (f) => !modelSelected.value.some((s) => s.id === f.id)
+      );
+      modelSelected.value = [];
+    },
+    () => {
+      // TODO: Cancel Func
+    }
   );
-  modelSelected.value = [];
 };
 
 const onUpload = () => {
@@ -56,7 +66,13 @@ const onUpload = () => {
   fileEl.value.click();
 };
 
-const zip_create_instance = (file: File) => {
+const fileUpload = () => {
+  // TODO: File Upload
+  isProgress.value = true;
+  uploadPercent.value = 30;
+};
+
+const zipCreateInstance = (file: File) => {
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
   reader.onload = function (e) {
@@ -71,7 +87,10 @@ const zip_create_instance = (file: File) => {
           title,
           items: [],
         };
+
         let cnt = 0;
+        let tmp = "";
+
         for (const [k, v] of Object.entries(zip.files)) {
           const sp = k.split("/");
           const category = sp[0];
@@ -84,8 +103,12 @@ const zip_create_instance = (file: File) => {
             id: `${Date.now() + cnt++}`,
             category,
             name,
+            divider: tmp === category,
           });
+          tmp = category;
         }
+
+        fileUpload();
       })
       .catch(console.error);
   };
@@ -103,7 +126,7 @@ const onUploadZip = async () => {
     if (!file) {
       continue;
     }
-    zip_create_instance(file);
+    zipCreateInstance(file);
   }
 };
 

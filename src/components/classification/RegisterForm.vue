@@ -20,6 +20,7 @@ const getFileList = computed(() => {
       no,
       category: item.category,
       name: item.name,
+      divider: !!item.divider,
     };
     return obj;
   });

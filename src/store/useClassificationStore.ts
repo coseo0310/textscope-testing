@@ -5,6 +5,7 @@ interface ModelItem {
   id: string;
   category: string;
   name: string;
+  divider?: boolean;
 }
 
 interface Model {
@@ -17,6 +18,8 @@ type States = {
   model: Model | null;
   modelSelected: Grid.Selected[];
   modelColumns: Grid.Columns;
+  uploadPercent: number;
+  isProgress: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -30,6 +33,8 @@ export const useClassificationStore = defineStore("classificationStore", {
       model: null,
       modelSelected: [],
       modelColumns: getModelColumns(),
+      uploadPercent: 0,
+      isProgress: false,
     };
   },
   actions: {},

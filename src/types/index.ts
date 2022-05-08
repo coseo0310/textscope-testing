@@ -34,7 +34,7 @@ export declare module Routes {
   type AdminConstantChild =
     | "classification_register"
     | "classification_management"
-    | "classification_progress"
+    | "classification_learning"
     | "classification_test"
     | "team_department"
     | "team_memeber";

@@ -1,5 +1,6 @@
+import { RouteComponent } from "vue-router";
 import { Routes } from "@/types";
-// Default pages
+
 import LoginPage from "@/pages/auth/LoginPage.vue";
 import LogoutPage from "@/pages/auth/LogoutPage.vue";
 import NotFound from "@/pages/auth/404.vue";
@@ -8,7 +9,7 @@ import SettingsPage from "@/pages/settings/SettingsPage.vue";
 import ClassificationPage from "@/pages/classification/ClassificationPage.vue";
 import ClassificationManagementPage from "@/pages/classification/ClassificationManagementPage.vue";
 import ClassificationRegisterPage from "@/pages/classification/ClassificationRegisterPage.vue";
-import ClassificationProgressPage from "@/pages/classification/ClassificationProgressPage.vue";
+import ClassificationLearningPage from "@/pages/classification/ClassificationLearningPage.vue";
 import ClassificationTestPage from "@/pages/classification/ClassificationTestPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
@@ -16,12 +17,13 @@ import GroupPage from "@/pages/settings/GroupPage.vue";
 import TaskPage from "@/pages/task/TaskPage.vue";
 import InspectionPage from "@/pages/inspection/InspectionPage.vue";
 import AlarmPage from "@/pages/auth/AlarmPage.vue";
-// Admin pages
 import UserPage from "@/pages/settings/UserPage.vue";
 import TeamPage from "@/pages/settings/settingsPage.vue";
 import DepartmentPage from "@/pages/settings/DepartmentPage.vue";
 import MemberPage from "@/pages/settings/MemberPage.vue";
 import TaskManagementPage from "@/pages/task/TaskManagementPage.vue";
+import TemplatePage from "@/pages/template/TemplatePage.vue";
+import NoticePage from "@/pages/notice/NoticePage.vue";
 
 type Keys =
   | Routes.CommonConstant
@@ -33,108 +35,135 @@ type Keys =
 interface PathItem {
   path: string;
   name: string;
+  component: RouteComponent;
 }
 
 type Path = {
   [k in Keys]: PathItem;
 };
 
+const isAdmin = import.meta.env.MODE.includes("admin");
+
 export const path: Path = {
   root: {
     path: "/",
     name: "/",
+    component: DashboardPage,
   },
   login: {
     path: "/login",
     name: "login",
+    component: LoginPage,
   },
   dashboard: {
     path: "/dashboard",
     name: "dashboard",
+    component: DashboardPage,
   },
   alarm: {
     path: "/alarm",
     name: "alarm",
+    component: AlarmPage,
   },
   task: {
     path: "/task",
     name: "task",
+    component: isAdmin ? TaskManagementPage : TaskPage,
   },
   inspection: {
     path: "/inspection",
     name: "inspection",
+    component: InspectionPage,
   },
   classification: {
     path: "/classification",
     name: "classification",
+    component: ClassificationPage,
   },
   classification_management: {
     path: "/classification",
     name: "classification_management",
+    component: ClassificationManagementPage,
   },
   classification_register: {
     path: "/classification/classification_register",
     name: "classification_register",
+    component: ClassificationRegisterPage,
   },
-  classification_progress: {
-    path: "/classification/classification_progress",
-    name: "classification_progress",
+  classification_learning: {
+    path: "/classification/classification_learning",
+    name: "classification_learning",
+    component: ClassificationLearningPage,
   },
   classification_test: {
     path: "/classification/classification_test",
     name: "classification_test",
+    component: ClassificationTestPage,
   },
   logout: {
     path: "/logout",
     name: "logout",
+    component: LogoutPage,
   },
   errors: {
     path: "/errors",
     name: "errors",
+    component: NotFound,
   },
   catch: {
     path: "/404",
     name: "404",
+    component: NotFound,
   },
   settings: {
     path: "/settings",
     name: "settings",
+    component: SettingsPage,
   },
   settings_profile: {
     path: "/settings",
     name: "settings_profile",
+    component: ProfilePage,
   },
   settings_group: {
     path: "/settings/settings_group",
     name: "settings_group",
+    component: GroupPage,
   },
   settings_push: {
     path: "/settings/settings_push",
     name: "settings_push",
+    component: PushPage,
   },
   user: {
     path: "/user",
     name: "user",
+    component: UserPage,
   },
   team: {
     path: "/team",
     name: "team",
+    component: TeamPage,
   },
   team_department: {
     path: "/team",
     name: "team_department",
+    component: DepartmentPage,
   },
   team_memeber: {
     path: "/team/team_memeber",
     name: "team_memeber",
+    component: MemberPage,
   },
   template: {
     path: "/template",
     name: "template",
+    component: TemplatePage,
   },
   notice: {
     path: "/notice",
     name: "notice",
+    component: NoticePage,
   },
 };
 
@@ -142,8 +171,8 @@ export const d: Routes.DefaultConstants = {
   root: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/",
-      redirect: "/login",
+      path: path.root.path,
+      redirect: path.login.path,
       meta: {
         requiresAuth: false,
       },
@@ -152,9 +181,9 @@ export const d: Routes.DefaultConstants = {
   login: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/login",
-      name: "login",
-      component: LoginPage,
+      path: path.login.path,
+      name: path.login.name,
+      component: path.login.component,
       meta: {
         requiresAuth: false,
       },
@@ -163,9 +192,9 @@ export const d: Routes.DefaultConstants = {
   dashboard: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/dashboard",
-      name: "dashboard",
-      component: DashboardPage,
+      path: path.dashboard.path,
+      name: path.dashboard.name,
+      component: path.dashboard.component,
       meta: {
         requiresAuth: true,
         title: "대시보드",
@@ -176,9 +205,9 @@ export const d: Routes.DefaultConstants = {
   classification: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/classification",
-      name: "classification",
-      component: ClassificationPage,
+      path: path.classification.path,
+      name: path.classification.name,
+      component: path.classification.component,
       meta: {
         requiresAuth: true,
         title: "문서 분류",
@@ -189,9 +218,9 @@ export const d: Routes.DefaultConstants = {
   inspection: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/inspection",
-      name: "inspection",
-      component: InspectionPage,
+      path: path.inspection.path,
+      name: path.inspection.name,
+      component: path.inspection.component,
       meta: {
         requiresAuth: true,
         title: "검수",
@@ -202,9 +231,9 @@ export const d: Routes.DefaultConstants = {
   task: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/task",
-      name: "task",
-      component: TaskPage,
+      path: path.task.path,
+      name: path.task.name,
+      component: path.task.component,
       meta: {
         requiresAuth: true,
         title: "업무 리스트",
@@ -215,14 +244,14 @@ export const d: Routes.DefaultConstants = {
   settings: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/settings",
-      name: "settings",
-      component: SettingsPage,
+      path: path.settings.path,
+      name: path.settings.name,
+      component: path.settings.component,
       children: [
         {
           path: "",
-          name: "settings_profile",
-          component: ProfilePage,
+          name: path.settings_profile.name,
+          component: path.settings_profile.component,
           meta: {
             isMenu: true,
             requiresAuth: true,
@@ -231,9 +260,9 @@ export const d: Routes.DefaultConstants = {
           },
         },
         {
-          path: "settings_group",
-          name: "settings_group",
-          component: GroupPage,
+          path: path.settings_group.path,
+          name: path.settings_group.name,
+          component: path.settings_group.component,
           meta: {
             isMenu: true,
             requiresAuth: true,
@@ -242,9 +271,9 @@ export const d: Routes.DefaultConstants = {
           },
         },
         {
-          path: "settings_push",
-          name: "settings_push",
-          component: PushPage,
+          path: path.settings_push.path,
+          name: path.settings_push.name,
+          component: path.settings_group.component,
           meta: {
             isMenu: true,
             requiresAuth: true,
@@ -263,9 +292,9 @@ export const d: Routes.DefaultConstants = {
   alarm: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/alarm",
-      name: "alarm",
-      component: AlarmPage,
+      path: path.alarm.path,
+      name: path.alarm.name,
+      component: path.alarm.component,
       meta: {
         requiresAuth: true,
         title: "alarm",
@@ -276,9 +305,9 @@ export const d: Routes.DefaultConstants = {
   logout: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/logout",
-      name: "logout",
-      component: LogoutPage,
+      path: path.logout.path,
+      name: path.logout.name,
+      component: path.login.component,
       meta: {
         requiresAuth: false,
       },
@@ -287,9 +316,9 @@ export const d: Routes.DefaultConstants = {
   errors: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/404",
-      name: "404",
-      component: NotFound,
+      path: path.errors.path,
+      name: path.errors.name,
+      component: path.errors.component,
       meta: {
         requiresAuth: false,
       },
@@ -299,7 +328,7 @@ export const d: Routes.DefaultConstants = {
     isMenu: false,
     routeRecordRaw: {
       path: "/:catchAll(.*)",
-      redirect: "/404",
+      redirect: path.errors.path,
       meta: {
         requiresAuth: false,
       },
@@ -311,8 +340,8 @@ export const a: Routes.AdminConstants = {
   root: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/",
-      redirect: "/login",
+      path: path.root.path,
+      redirect: path.login.path,
       meta: {
         requiresAuth: false,
       },
@@ -321,9 +350,9 @@ export const a: Routes.AdminConstants = {
   login: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/login",
-      name: "login",
-      component: LoginPage,
+      path: path.login.path,
+      name: path.login.name,
+      component: path.login.component,
       meta: {
         requiresAuth: false,
       },
@@ -332,9 +361,9 @@ export const a: Routes.AdminConstants = {
   dashboard: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/dashboard",
-      name: "dashboard",
-      component: DashboardPage,
+      path: path.dashboard.path,
+      name: path.dashboard.name,
+      component: path.dashboard.component,
       meta: {
         requiresAuth: true,
         title: "대시보드",
@@ -345,9 +374,9 @@ export const a: Routes.AdminConstants = {
   user: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/user",
-      name: "user",
-      component: UserPage,
+      path: path.user.path,
+      name: path.user.name,
+      component: path.user.component,
       meta: {
         requiresAuth: true,
         title: "구성원 관리",
@@ -358,30 +387,30 @@ export const a: Routes.AdminConstants = {
   team: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/team",
-      name: "team",
-      component: TeamPage,
+      path: path.team.path,
+      name: path.team.name,
+      component: path.team.component,
       children: [
         {
           path: "",
-          name: "team_department",
-          component: DepartmentPage,
-          meta: {
-            isMenu: false,
-            requiresAuth: true,
-            title: "프로필",
-            icons: "user",
-          },
-        },
-        {
-          path: "/team/team_memeber",
-          name: "team_memeber",
-          component: MemberPage,
+          name: path.team_department.name,
+          component: path.team_department.component,
           meta: {
             isMenu: false,
             requiresAuth: true,
             title: "조직",
             icons: "group",
+          },
+        },
+        {
+          path: path.team_memeber.path,
+          name: path.team_memeber.name,
+          component: path.team_memeber.component,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "사용자",
+            icons: "user",
           },
         },
       ],
@@ -395,9 +424,9 @@ export const a: Routes.AdminConstants = {
   task: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/task",
-      name: "task",
-      component: TaskManagementPage,
+      path: path.task.path,
+      name: path.task.name,
+      component: path.task.component,
       meta: {
         requiresAuth: true,
         title: "업무 관리",
@@ -408,9 +437,9 @@ export const a: Routes.AdminConstants = {
   inspection: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/inspection",
-      name: "inspection",
-      component: InspectionPage,
+      path: path.inspection.path,
+      name: path.inspection.name,
+      component: path.inspection.component,
       meta: {
         requiresAuth: true,
         title: "검수",
@@ -421,51 +450,51 @@ export const a: Routes.AdminConstants = {
   classification: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/classification",
-      name: "classification",
+      path: path.classification.path,
+      name: path.classification.name,
       component: ClassificationPage,
       children: [
         {
           path: "",
-          name: "classification_management",
+          name: path.classification_management.name,
           component: ClassificationManagementPage,
           meta: {
             isMenu: false,
             requiresAuth: true,
-            title: "관리",
+            title: "문서 모델 관리",
             icons: "user",
           },
         },
         {
-          path: "classification_register",
-          name: "classification_register",
+          path: path.classification_register.path,
+          name: path.classification_register.name,
           component: ClassificationRegisterPage,
           meta: {
             isMenu: false,
             requiresAuth: true,
-            title: "조직",
+            title: "문서 모델 등록",
             icons: "group",
           },
         },
         {
-          path: "classification_progress",
-          name: "classification_progress",
-          component: ClassificationProgressPage,
+          path: path.classification_learning.path,
+          name: path.classification_learning.name,
+          component: path.classification_learning.component,
           meta: {
             isMenu: false,
             requiresAuth: true,
-            title: "푸시알림",
+            title: "문서 모델 학습",
             icons: "bell",
           },
         },
         {
-          path: "classification_test",
-          name: "classification_test",
-          component: ClassificationTestPage,
+          path: path.classification_test.path,
+          name: path.classification_test.name,
+          component: path.classification_test.component,
           meta: {
             isMenu: false,
             requiresAuth: true,
-            title: "푸시알림",
+            title: "문서 모델 테스트",
             icons: "bell",
           },
         },
@@ -480,9 +509,9 @@ export const a: Routes.AdminConstants = {
   template: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/template",
-      name: "template",
-      component: DashboardPage,
+      path: path.template.path,
+      name: path.template.name,
+      component: path.template.component,
       meta: {
         requiresAuth: true,
         title: "템플릿 OCR 관리",
@@ -493,9 +522,9 @@ export const a: Routes.AdminConstants = {
   notice: {
     isMenu: true,
     routeRecordRaw: {
-      path: "/notice",
-      name: "notice",
-      component: DashboardPage,
+      path: path.notice.path,
+      name: path.notice.name,
+      component: path.notice.component,
       meta: {
         requiresAuth: true,
         title: "공지사항",
@@ -506,9 +535,9 @@ export const a: Routes.AdminConstants = {
   alarm: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/alarm",
-      name: "alarm",
-      component: AlarmPage,
+      path: path.alarm.path,
+      name: path.alarm.name,
+      component: path.alarm.component,
       meta: {
         requiresAuth: true,
         title: "alarm",
@@ -519,9 +548,9 @@ export const a: Routes.AdminConstants = {
   logout: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/logout",
-      name: "logout",
-      component: LogoutPage,
+      path: path.logout.path,
+      name: path.logout.name,
+      component: path.logout.component,
       meta: {
         requiresAuth: false,
       },
@@ -530,9 +559,9 @@ export const a: Routes.AdminConstants = {
   errors: {
     isMenu: false,
     routeRecordRaw: {
-      path: "/404",
-      name: "404",
-      component: NotFound,
+      path: path.errors.path,
+      name: path.errors.name,
+      component: path.errors.component,
       meta: {
         requiresAuth: false,
       },
@@ -542,7 +571,7 @@ export const a: Routes.AdminConstants = {
     isMenu: false,
     routeRecordRaw: {
       path: "/:catchAll(.*)",
-      redirect: "/404",
+      redirect: path.errors.path,
       meta: {
         requiresAuth: false,
       },

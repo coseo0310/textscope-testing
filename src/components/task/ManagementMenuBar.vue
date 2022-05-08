@@ -16,20 +16,16 @@ const onFilter = () => {
 };
 
 const onDelete = () => {
-  if (taskStore.selected.length > 0) {
-    commonStore.setConfirm(
-      ["삭제된 데이터는 복구할 수 없습니다.", "정말 삭제하시겠습니까?"],
-      "warn",
-      () => {
-        // TODO: COnfirm Func
-      },
-      () => {
-        // TODO: Cancel Func
-      }
-    );
-  } else {
-    commonStore.setToast("삭제 할 수 없습니다.", "warn");
-  }
+  commonStore.setConfirm(
+    ["삭제된 데이터는 복구할 수 없습니다.", "정말 삭제하시겠습니까?"],
+    "warn",
+    () => {
+      // TODO: COnfirm Func
+    },
+    () => {
+      // TODO: Cancel Func
+    }
+  );
 };
 
 const onKeyup = (e: KeyboardEvent) => {
@@ -97,7 +93,11 @@ onUnmounted(() => {
 
       <div class="func-wrap">
         <div class="btn-wrap">
-          <Button class="outline extra-bold color-red" @click="onDelete">
+          <Button
+            class="outline extra-bold color-red"
+            :disabled="taskStore.selected.length === 0"
+            @click="onDelete"
+          >
             삭제
           </Button>
         </div>

@@ -104,6 +104,12 @@ onUnmounted(() => {});
       cursor: pointer;
     }
 
+    .name {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     .not-found {
       display: flex;
       flex-direction: column;
