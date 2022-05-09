@@ -40,7 +40,7 @@ const onSelected = (list: GridList) => {
       <Grid
         :columns="modelColumns"
         :grid-list="getFileList"
-        :selected="modelSelected"
+        :selected="model?.isTest ? undefined : modelSelected"
         @selected="onSelected"
       />
     </div>

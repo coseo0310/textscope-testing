@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import Input from "@/components/shared/Input.vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import { useForm } from "@/hooks";
 import { useClassificationStore, useCommonStore } from "@/store";
+import { path } from "@/router";
 import { storeToRefs } from "pinia";
 import JSZip from "jszip";
 
 const commonStore = useCommonStore();
 const classificationStore = useClassificationStore();
+const router = useRouter();
 const { register, getValues, errors, setValidate } = useForm();
 
 const { modelSelected, model, modelList, isProgress, uploadPercent } =
@@ -84,7 +87,9 @@ const zipCreateInstance = (file: File) => {
       .then((zip) => {
         const { title } = getValues();
         model.value = {
+          id: `model-${Date.now()}`,
           title,
+          isTest: false,
           items: [],
         };
 
@@ -107,6 +112,7 @@ const zipCreateInstance = (file: File) => {
           });
           tmp = category;
         }
+        modelList.value.push(model.value);
 
         fileUpload();
       })
@@ -131,7 +137,23 @@ const onUploadZip = async () => {
 };
 
 const onLearning = () => {
-  alert("준비중...");
+  if (!model.value) {
+    return;
+  }
+  router.push({
+    name: path.classification_learning.name,
+    query: { id: model.value.id },
+  });
+};
+
+const onTesting = () => {
+  if (!model.value) {
+    return;
+  }
+  router.push({
+    name: path.classification_test.name,
+    query: { id: model.value.id },
+  });
 };
 
 onMounted(() => {
@@ -141,7 +163,10 @@ onMounted(() => {
 
 <template>
   <div class="register-menu-container">
-    <div class="input-wrap">
+    <div v-if="model?.isTest" class="title">
+      {{ model?.title }}
+    </div>
+    <div v-else class="input-wrap">
       <Input
         class="border-color-d4 color-d5"
         name="title"
@@ -199,7 +224,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="btn-group">
-      <div class="btn-wrap">
+      <div v-if="!model?.isTest" class="btn-wrap">
         <Button
           class="primary color-red extra-bold"
           :disabled="modelSelected.length === 0"
@@ -208,7 +233,7 @@ onMounted(() => {
           삭제
         </Button>
       </div>
-      <div class="btn-wrap">
+      <div v-if="!model?.isTest" class="btn-wrap">
         <Button class="primary extra-bold" @click="onUpload">업로드</Button>
         <input
           ref="fileEl"
@@ -218,13 +243,22 @@ onMounted(() => {
           @change="onUploadZip"
         />
       </div>
-      <div class="btn-wrap">
+      <div v-if="!model?.isTest" class="btn-wrap">
         <Button
           class="primary extra-bold"
           :disabled="!model"
           @click="onLearning"
         >
           학습시작
+        </Button>
+      </div>
+      <div v-if="model?.isTest" class="btn-wrap">
+        <Button
+          class="primary extra-bold"
+          :disabled="!model"
+          @click="onTesting"
+        >
+          테스트
         </Button>
       </div>
     </div>
@@ -238,6 +272,11 @@ onMounted(() => {
   align-items: center;
   padding: 20px 0;
 
+  .title {
+    color: $d5;
+    font-size: 18px;
+    font-weight: 600;
+  }
   .input-wrap {
     width: 542px;
     height: 46px;
