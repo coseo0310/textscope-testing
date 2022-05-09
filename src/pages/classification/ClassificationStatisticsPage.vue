@@ -94,8 +94,9 @@ onMounted(() => {
 
     .card-wrap {
       &:not(:first-child) {
-        padding-top: 140px;
+        padding-top: 50px;
       }
+      padding-bottom: 50px;
 
       .true-class-wrap {
         .row {
@@ -159,7 +160,7 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-
+        padding: 20px 0;
         .text {
           font-size: 24px;
           font-weight: 600;
