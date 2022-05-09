@@ -119,6 +119,7 @@ onMounted(() => {
     font-weight: 600;
     color: $d5;
     position: fixed;
+    z-index: 2;
   }
 
   .list-wrap {
