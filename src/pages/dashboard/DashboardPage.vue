@@ -110,13 +110,15 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dashboard-page {
-  padding: 40px 80px;
+  position: relative;
+  padding: 50px 80px;
   width: 100%;
 
   .title {
     font-size: 24px;
     font-weight: 600;
     color: $d5;
+    position: fixed;
   }
 
   .list-wrap {
