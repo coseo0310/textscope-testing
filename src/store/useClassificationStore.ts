@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Grid } from "@/types";
+import { Grid, Chart } from "@/types";
 
 interface ModelItem {
   id: string;
@@ -15,13 +15,35 @@ interface Model {
   isTest: boolean;
 }
 
+interface TestModel extends Model {
+  accuracy: number;
+}
+
+interface StatisticsClass {
+  labels: string[];
+  datasets: number[][];
+}
+
+interface Statistics {
+  modelId: string;
+  id: string;
+  totalAccuracy: number;
+  totalF1Score: number;
+  accuracy: Chart.BarChartData;
+  class: StatisticsClass;
+}
+
 type States = {
   modelList: Model[];
   model: Model | null;
+  testModel: TestModel | null;
   modelSelected: Grid.Selected[];
   modelColumns: Grid.Columns;
+  testModelColumns: Grid.Columns;
+  testStatistics: Statistics | null;
   uploadPercent: number;
   isProgress: boolean;
+  isTesting: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -35,7 +57,7 @@ export const useClassificationStore = defineStore("classificationStore", {
         {
           id: "model-1652056697466",
           title: "미국 수출입 20종",
-          isTest: false,
+          isTest: true,
           items: [
             {
               id: "1652056697466",
@@ -101,35 +123,95 @@ export const useClassificationStore = defineStore("classificationStore", {
         },
       ],
       model: null,
+      testModel: null,
       modelSelected: [],
       modelColumns: getModelColumns(),
+      testModelColumns: getModelColumns("test"),
+      testStatistics: {
+        modelId: "model-1652056697466",
+        id: "test-model-1652056697466",
+        totalAccuracy: 77.2,
+        totalF1Score: 77.2,
+        accuracy: {
+          labels: ["해외투자 사업계획서", "해외투자 신고서", "Invoice"],
+          datasets: [
+            { legend: "정확도 (%)", data: [72.7, 81.0, 77.8] },
+            { legend: "F-1 Score (%)", data: [77.1, 74.6, 71.2] },
+          ],
+          max: 100,
+        },
+        class: {
+          labels: ["해외투자 사업계획서", "해외투자 신고서", "Invoice"],
+          datasets: [
+            [7, 8, 9],
+            [1, 2, 3],
+            [3, 2, 1],
+          ],
+        },
+      },
       uploadPercent: 0,
       isProgress: false,
+      isTesting: false,
     };
   },
   actions: {},
 });
 
-function getModelColumns(): Grid.Columns {
-  return [
-    {
-      width: 100,
-      text: "No",
-      align: "center",
-      sortable: false,
-      value: "no",
-    },
-    {
-      text: "카테고리",
-      align: "center",
-      sortable: false,
-      value: "category",
-    },
-    {
-      text: "문서명",
-      align: "center",
-      sortable: false,
-      value: "name",
-    },
-  ];
+function getModelColumns(type: "model" | "test" = "model"): Grid.Columns {
+  return type === "model"
+    ? [
+        {
+          width: 100,
+          text: "No",
+          align: "center",
+          sortable: false,
+          value: "no",
+        },
+        {
+          text: "카테고리",
+          align: "center",
+          sortable: false,
+          value: "category",
+        },
+        {
+          text: "문서명",
+          align: "center",
+          sortable: false,
+          value: "name",
+        },
+      ]
+    : [
+        {
+          width: 100,
+          text: "No",
+          align: "center",
+          sortable: false,
+          value: "no",
+        },
+        {
+          text: "카테고리",
+          align: "center",
+          sortable: false,
+          value: "category",
+        },
+        {
+          text: "문서명",
+          align: "center",
+          sortable: false,
+          value: "name",
+        },
+        {
+          text: "매칭 카테고리",
+          align: "center",
+          sortable: false,
+          value: "matchCategory",
+        },
+        {
+          width: 200,
+          text: "결과",
+          align: "center",
+          sortable: false,
+          value: "result",
+        },
+      ];
 }

@@ -11,6 +11,7 @@ import ClassificationManagementPage from "@/pages/classification/ClassificationM
 import ClassificationRegisterPage from "@/pages/classification/ClassificationRegisterPage.vue";
 import ClassificationLearningPage from "@/pages/classification/ClassificationLearningPage.vue";
 import ClassificationTestPage from "@/pages/classification/ClassificationTestPage.vue";
+import ClassificationStatisticsPage from "@/pages/classification/ClassificationStatisticsPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
@@ -99,6 +100,11 @@ export const path: Path = {
     path: "/classification/classification_test",
     name: "classification_test",
     component: ClassificationTestPage,
+  },
+  classification_statistics: {
+    path: "/classification/classification_statistics",
+    name: "classification_statistics",
+    component: ClassificationStatisticsPage,
   },
   logout: {
     path: "/logout",
@@ -491,6 +497,17 @@ export const a: Routes.AdminConstants = {
           path: path.classification_test.path,
           name: path.classification_test.name,
           component: path.classification_test.component,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "문서 모델 테스트",
+            icons: "bell",
+          },
+        },
+        {
+          path: path.classification_statistics.path,
+          name: path.classification_statistics.name,
+          component: path.classification_statistics.component,
           meta: {
             isMenu: false,
             requiresAuth: true,

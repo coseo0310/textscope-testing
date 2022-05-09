@@ -163,11 +163,12 @@ onMounted(() => {
 
 <template>
   <div class="register-menu-container">
-    <div v-if="model?.isTest" class="title">
-      {{ model?.title }}
-    </div>
-    <div v-else class="input-wrap">
+    <div class="input-wrap">
+      <div v-if="model?.isTest" class="title">
+        {{ model?.title }}
+      </div>
       <Input
+        v-else
         class="border-color-d4 color-d5"
         name="title"
         :ref="
@@ -272,16 +273,17 @@ onMounted(() => {
   align-items: center;
   padding: 20px 0;
 
-  .title {
-    color: $d5;
-    font-size: 18px;
-    font-weight: 600;
-  }
   .input-wrap {
     width: 542px;
     height: 46px;
     display: flex;
     align-items: center;
+
+    .title {
+      color: $d5;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
     .icon-wrap {
       position: relative;

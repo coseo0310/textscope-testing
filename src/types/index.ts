@@ -35,6 +35,7 @@ export declare module Routes {
     | "classification_register"
     | "classification_management"
     | "classification_learning"
+    | "classification_statistics"
     | "classification_test"
     | "team_department"
     | "team_memeber";
