@@ -511,7 +511,7 @@ export const a: Routes.AdminConstants = {
           meta: {
             isMenu: false,
             requiresAuth: true,
-            title: "문서 모델 테스트",
+            title: "문서 모델 통계",
             icons: "bell",
           },
         },

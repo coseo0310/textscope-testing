@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Button from "@/components/shared/Button.vue";
 import FormImg from "@/assets/img/form1.png";
@@ -8,7 +9,7 @@ import { path } from "@/router";
 
 const commonStore = useCommonStore();
 const classificationStore = useClassificationStore();
-const { modelList } = storeToRefs(classificationStore);
+const { modelList, model, testModel } = storeToRefs(classificationStore);
 const router = useRouter();
 
 const onMapping = () => {
@@ -25,6 +26,11 @@ const onRegister = () => {
     name: path.classification_register.name,
   });
 };
+
+onMounted(() => {
+  model.value = null;
+  testModel.value = null;
+});
 </script>
 
 <template>

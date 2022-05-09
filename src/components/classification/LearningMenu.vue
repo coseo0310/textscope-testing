@@ -26,17 +26,20 @@ const onStopLearning = () => {
   );
 };
 
-const onTesting = () => {};
+const onTesting = () => {
+  const id = routes.query.id;
+  router.push({ name: path.classification_test.name, query: { id } });
+};
 
 onMounted(() => {
   const id = routes.query.id;
   if (!id) {
-    router.push(path.classification.path);
+    router.push(path.classification_management.path);
     return;
   }
   const find = modelList.value.find((f) => f.id === id);
   if (!find) {
-    router.push(path.classification.path);
+    router.push(path.classification_management.path);
     return;
   }
   model.value = find;

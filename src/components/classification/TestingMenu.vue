@@ -21,6 +21,7 @@ const {
   uploadPercent,
   testModel,
   isTesting,
+  testStatistics,
 } = storeToRefs(classificationStore);
 
 const fileEl = ref<HTMLInputElement | null>(null);
@@ -68,14 +69,17 @@ const zipCreateInstance = (file: File) => {
     }
     JSZip.loadAsync(result)
       .then((zip) => {
+        const id = `test-model-${Date.now()}`;
         testModel.value = {
-          id: `test-model-${Date.now()}`,
+          id,
           title: model.value?.title || "",
           isTest: false,
           items: [],
           accuracy: 0,
         };
-
+        if (testStatistics.value) {
+          testStatistics.value.id = id;
+        }
         let cnt = 0;
         let tmp = "";
 
@@ -171,12 +175,12 @@ const onStatistics = () => {
 onMounted(() => {
   const id = routes.query.id;
   if (!id) {
-    router.push({ name: path.classification.name });
+    router.push({ name: path.classification_management.name });
     return;
   }
   const find = modelList.value.find((f) => f.id == id);
   if (!find) {
-    router.push({ name: path.classification.name });
+    router.push({ name: path.classification_management.name });
     return;
   }
   model.value = find;

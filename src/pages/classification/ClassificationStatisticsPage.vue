@@ -14,14 +14,14 @@ const { model, testStatistics, modelList } = storeToRefs(classificationStore);
 onMounted(() => {
   const id = routes.query.id;
   if (!id || !testStatistics.value || testStatistics.value.id !== id) {
-    router.push({ name: path.classification.name });
+    router.push({ name: path.classification_management.name });
     return;
   }
   const find = modelList.value.find(
     (f) => f.id === testStatistics.value?.modelId
   );
   if (!find) {
-    router.push({ name: path.classification.name });
+    router.push({ name: path.classification_management.name });
     return;
   }
   model.value = find;
