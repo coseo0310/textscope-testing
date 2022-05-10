@@ -33,10 +33,12 @@ type Keys =
   | Routes.DefaultConstantChild
   | Routes.AdminConstantChild;
 
+type Lazy<T> = () => Promise<T>;
+
 interface PathItem {
   path: string;
   name: string;
-  component: RouteComponent;
+  component: RouteComponent | Lazy<RouteComponent>;
 }
 
 type Path = {
