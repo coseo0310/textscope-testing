@@ -7,7 +7,7 @@ set -e
 npm run build:admin
 
 # navigate into the build output directory
-cd dist
+cd dist_admin
 
 # if you are deploying to a custom domain
 # echo 'www.example.com' > CNAME

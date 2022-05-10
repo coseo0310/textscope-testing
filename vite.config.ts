@@ -20,6 +20,9 @@ export default defineConfig(({ command, mode }) => {
         "@": path.resolve(__dirname, "src"),
       },
     },
+    build: {
+      outDir: mode.includes("admin") ? "dist_admin" : "dist",
+    },
     css: {
       preprocessorOptions: {
         scss: {
