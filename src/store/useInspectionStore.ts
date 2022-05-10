@@ -173,15 +173,15 @@ export const useInspectionStore = defineStore("inspectionStore", {
         }
         this.inspectionItems = this.previewList[idx].items;
         this.inspectionInfo = this.previewList[idx].info;
-        this.editors = this.inspectionItems.map((item, idx) => {
+        this.editors = this.inspectionItems.map((data, i) => {
           const editor = new Editor({ isReadonly: isAdmin });
 
           editor.setSectionDraw(true);
           const items =
-            item?.prediction.key_values.length || 0 > 0
-              ? item?.prediction.key_values
-              : item?.prediction.texts;
-          items.forEach((item, idx) => {
+            data?.prediction.key_values.length || 0 > 0
+              ? data?.prediction.key_values
+              : data?.prediction.texts;
+          items.forEach((item, i) => {
             editor.setField({
               id: item.id,
               text: item.text,
@@ -191,17 +191,18 @@ export const useInspectionStore = defineStore("inspectionStore", {
               dHeight: item.bbox.h,
               type: "fill",
               color:
-                idx % 2 === 0
+                i % 2 === 0
                   ? `rgba(103, 121, 215, 1)`
                   : `rgba(255, 119, 119, 1)`,
               lineWidth: 5,
             });
-
-            if (idx === 0) {
-              editor.setSections(getSection(idx));
-            }
           });
-          editor.setImgUrl(item.img);
+
+          if (i === 0) {
+            editor.setSections(getSection(i));
+          }
+
+          editor.setImgUrl(data.img);
           editor.setDrawEndCallback(() => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
