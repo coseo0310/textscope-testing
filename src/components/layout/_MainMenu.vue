@@ -171,24 +171,15 @@ onUnmounted(() => {
     width: 240px;
     .logo {
       &::before {
-        transform: translateX(250px);
-        transition: transform 0.5s;
+        display: none;
       }
     }
 
     ul {
       .list {
-        &.active {
-          &::before {
-            // width: 250px;
-            transform: translateX(250px);
-            transition: transform 0.5s;
-            // background-color: red;
-          }
-        }
         a {
           b {
-            width: 250px;
+            width: 230px;
             transition: width 0.5s;
           }
         }
@@ -209,12 +200,10 @@ onUnmounted(() => {
       position: absolute;
       left: 55px;
       display: flex;
-      width: 20px;
+      width: 160px;
       height: 50px;
       background-color: $d3;
       z-index: 1;
-      transform: translateX(0px);
-      transition: transform 0.5s;
     }
   }
 
@@ -306,17 +295,9 @@ onUnmounted(() => {
       }
 
       &.active {
-        &::before {
-          position: absolute;
-          content: "";
-          width: 70px;
-          height: 70px;
-          background-color: $d2;
-          border-top-left-radius: 40px;
-          border-bottom-left-radius: 40px;
-          transform: translateX(0px);
-          transition: transform 0.5s;
-        }
+        background-color: $d2;
+        border-top-left-radius: 40px;
+        border-bottom-left-radius: 40px;
 
         a {
           color: $point-blue;
