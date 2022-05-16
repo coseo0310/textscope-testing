@@ -49,6 +49,8 @@ const onEnter = () => {
 };
 
 const isAdmin = import.meta.env.DEV;
+
+const n = navigator;
 </script>
 
 <template>

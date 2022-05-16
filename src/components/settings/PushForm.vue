@@ -8,7 +8,7 @@ import Switch from "@/components/shared/Switch.vue";
       <div class="text">문서 분류 AI 모델 학습</div>
       <div class="switch-wrap">
         <div class="switch">
-          <Switch />
+          <Switch :default="false" />
         </div>
         <div class="description">
           *새로운 문서 분류 AI 모델이 학습되어 등록되면 알림을 받습니다.
@@ -19,7 +19,7 @@ import Switch from "@/components/shared/Switch.vue";
       <div class="text">템플릿 OCR</div>
       <div class="switch-wrap">
         <div class="switch">
-          <Switch />
+          <Switch :default="false" />
         </div>
         <div class="description">
           *새로운 템플릿 OCR모델이 등록되면 알림을 받습니다.
@@ -30,7 +30,7 @@ import Switch from "@/components/shared/Switch.vue";
       <div class="text">권한</div>
       <div class="switch-wrap">
         <div class="switch">
-          <Switch />
+          <Switch :default="false" />
         </div>
         <div class="description">
           *관리자가 팀의 구성원을 추가 / 삭제 시 알림을 받습니다.

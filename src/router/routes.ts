@@ -24,7 +24,6 @@ import DepartmentPage from "@/pages/settings/DepartmentPage.vue";
 import MemberPage from "@/pages/settings/MemberPage.vue";
 import TaskManagementPage from "@/pages/task/TaskManagementPage.vue";
 import TemplatePage from "@/pages/template/TemplatePage.vue";
-import NoticePage from "@/pages/notice/NoticePage.vue";
 
 type Keys =
   | Routes.CommonConstant
@@ -168,11 +167,6 @@ export const path: Path = {
     name: "template",
     component: TemplatePage,
   },
-  notice: {
-    path: "/notice",
-    name: "notice",
-    component: NoticePage,
-  },
 };
 
 export const d: Routes.DefaultConstants = {
@@ -281,7 +275,7 @@ export const d: Routes.DefaultConstants = {
         {
           path: path.settings_push.path,
           name: path.settings_push.name,
-          component: path.settings_group.component,
+          component: path.settings_push.component,
           meta: {
             isMenu: true,
             requiresAuth: true,
@@ -535,19 +529,6 @@ export const a: Routes.AdminConstants = {
         requiresAuth: true,
         title: "템플릿 OCR 관리",
         icons: "template",
-      },
-    },
-  },
-  notice: {
-    isMenu: true,
-    routeRecordRaw: {
-      path: path.notice.path,
-      name: path.notice.name,
-      component: path.notice.component,
-      meta: {
-        requiresAuth: true,
-        title: "공지사항",
-        icons: "notice",
       },
     },
   },

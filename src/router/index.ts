@@ -39,7 +39,7 @@ export const getSubMenu = (path: string): Routes.MenuList => {
 
   return menu.map((m): Routes.MenuItem => {
     return {
-      path: `${find.routeRecordRaw.path}${m.path ? `/${m.path}` : ""}`,
+      path: m.path ? m.path : find.routeRecordRaw.path,
       icons: m.meta!.icons as Icons.IconType,
       title: m.meta!.title as string,
     };

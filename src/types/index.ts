@@ -29,7 +29,7 @@ export declare module Routes {
     | "settings_group"
     | "settings_push";
 
-  type AdminConstant = CommonConstant | "user" | "team" | "template" | "notice";
+  type AdminConstant = CommonConstant | "user" | "team" | "template";
 
   type AdminConstantChild =
     | "classification_register"
