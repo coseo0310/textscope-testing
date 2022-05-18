@@ -2,7 +2,6 @@
 import { ref, watch } from "vue";
 import Button from "@/components/shared/Button.vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
-import { m } from "../../../dist/assets/vendor.9bc7e985";
 
 export interface Model {
   id: string;
