@@ -1,13 +1,34 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Grid from "@/components/shared/Grid.vue";
 import Icons from "@/components/shared/Icons.vue";
+import ModelMappingModal, {
+  Model,
+} from "@/components/classification/ModelMappingModal.vue";
 import { useClassificationStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const classificationStore = useClassificationStore();
 const { mappingColumns } = storeToRefs(classificationStore);
 
+const selected = ref<string[]>([]);
+const isModal = ref<boolean>(false);
+
+const models: Model[] = [
+  { id: "0", text: "Invoice" },
+  { id: "1", text: "해외투자 사업계획서" },
+  { id: "2", text: "해외투자 신고서" },
+  { id: "3", text: "Bill of Landing" },
+  { id: "4", text: "Purchase Order" },
+];
+
+const department = [
+  { id: "1", text: "검수 1팀", models: ["0", "1"] },
+  { id: "2", text: "검수 2팀", models: ["2", "3"] },
+  { id: "3", text: "검수 3팀", models: ["3", "4"] },
+  { id: "4", text: "검수 4팀", models: ["0", "1", "2", "3", "4"] },
+];
 const gridlist = [
   {
     id: "4",
@@ -35,6 +56,21 @@ const gridlist = [
     model: " 영국 7종 중국 출입국 관련 싱가폴 발주건 v1.4",
   },
 ];
+
+const onModal = (id: string) => {
+  const f = department.find((f) => f.id === id);
+  if (!f) {
+    return;
+  }
+  selected.value = f.models;
+  console.log("sle", selected.value);
+  isModal.value = true;
+};
+
+const onClose = (selection: string[]) => {
+  isModal.value = false;
+  console.log(selection);
+};
 </script>
 
 <template>
@@ -84,12 +120,20 @@ const gridlist = [
               {{ item.model }}
             </div>
             <div class="btn-wrap">
-              <Button class="primary semi-bold">맵핑</Button>
+              <Button class="primary semi-bold" @click="onModal(item.id)">
+                맵핑
+              </Button>
             </div>
           </div>
         </template>
       </Grid>
     </div>
+    <ModelMappingModal
+      :class="{ open: isModal }"
+      :models="models"
+      :selected="selected"
+      @close="onClose"
+    />
   </div>
 </template>
 

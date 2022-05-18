@@ -69,6 +69,11 @@ const zipCreateInstance = (file: File) => {
     }
     JSZip.loadAsync(result)
       .then((zip) => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+
         const id = `test-model-${Date.now()}`;
         testModel.value = {
           id,
@@ -76,6 +81,9 @@ const zipCreateInstance = (file: File) => {
           isTest: false,
           items: [],
           accuracy: 0,
+          date: `${year}.${month.toString().padStart(2, "0")}.${day
+            .toString()
+            .padStart(2, "0")}`,
         };
         if (testStatistics.value) {
           testStatistics.value.id = id;
