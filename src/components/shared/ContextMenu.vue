@@ -111,6 +111,7 @@ onUnmounted(() => {
   .btn {
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
 
     &.blue {
       color: $point-blue;

@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Button from "@/components/shared/Button.vue";
+import ModelCard from "@/components/classification/ModelCard.vue";
 import FormImg from "@/assets/img/form1.png";
 import { useClassificationStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
@@ -14,8 +15,7 @@ const router = useRouter();
 
 const onMapping = () => {
   if (modelList.value.length > 0) {
-    // TODO::
-    alert("준비중...");
+    router.push({ name: path.classification_mapping.name });
   } else {
     commonStore.setToast("등록된 모델이 없습니다.", "warn");
   }
@@ -39,18 +39,26 @@ onMounted(() => {
       <div class="title">문서분류 모델 관리({{ modelList.length }})</div>
       <div class="btn-group">
         <div class="btn-wrap">
-          <Button class="outline extra-bold" @click="onMapping"
-            >모델 맵핑</Button
-          >
+          <Button class="outline extra-bold" @click="onMapping">
+            모델 맵핑
+          </Button>
         </div>
         <div class="btn-wrap">
-          <Button class="primary extra-bold" @click="onRegister"
-            >모델 등록</Button
-          >
+          <Button class="primary extra-bold" @click="onRegister">
+            모델 등록
+          </Button>
         </div>
       </div>
     </div>
-    <div class="form">
+    <div v-if="modelList.length > 0" class="card-wrap">
+      <ModelCard
+        v-for="m in modelList"
+        :id="m.id"
+        :title="m.title"
+        :date="m.date"
+      />
+    </div>
+    <div v-else class="form">
       <img :src="FormImg" alt="form" />
       <div class="text">
         `모델 등록` 버튼을 눌러 문서 분류 모델을 등록해주세요.
@@ -83,6 +91,17 @@ onMounted(() => {
         height: 46px;
         padding-left: 20px;
       }
+    }
+  }
+
+  .card-wrap {
+    padding: 40px 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    div {
+      margin-right: 50px;
+      margin-bottom: 30px;
     }
   }
 

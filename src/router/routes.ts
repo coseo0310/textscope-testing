@@ -12,6 +12,7 @@ import ClassificationRegisterPage from "@/pages/classification/ClassificationReg
 import ClassificationLearningPage from "@/pages/classification/ClassificationLearningPage.vue";
 import ClassificationTestPage from "@/pages/classification/ClassificationTestPage.vue";
 import ClassificationStatisticsPage from "@/pages/classification/ClassificationStatisticsPage.vue";
+import ClassificationMappingPage from "@/pages/classification/ClassificationMappingPage.vue";
 import ProfilePage from "@/pages/settings/ProfilePage.vue";
 import PushPage from "@/pages/settings/PushPage.vue";
 import GroupPage from "@/pages/settings/GroupPage.vue";
@@ -106,6 +107,11 @@ export const path: Path = {
     path: "/classification/classification_statistics",
     name: "classification_statistics",
     component: ClassificationStatisticsPage,
+  },
+  classification_mapping: {
+    path: "/classification/classification_mapping",
+    name: "classification_mapping",
+    component: ClassificationMappingPage,
   },
   logout: {
     path: "/logout",
@@ -508,6 +514,17 @@ export const a: Routes.AdminConstants = {
             isMenu: false,
             requiresAuth: true,
             title: "문서 모델 통계",
+            icons: "bell",
+          },
+        },
+        {
+          path: path.classification_mapping.path,
+          name: path.classification_mapping.name,
+          component: path.classification_mapping.component,
+          meta: {
+            isMenu: false,
+            requiresAuth: true,
+            title: "문서 모델 맵핑",
             icons: "bell",
           },
         },

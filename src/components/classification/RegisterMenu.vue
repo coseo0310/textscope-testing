@@ -85,12 +85,20 @@ const zipCreateInstance = (file: File) => {
     }
     JSZip.loadAsync(result)
       .then((zip) => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+
         const { title } = getValues();
         model.value = {
           id: `model-${Date.now()}`,
           title,
           isTest: false,
           items: [],
+          date: `${year}.${month.toString().padStart(2, "0")}.${day
+            .toString()
+            .padStart(2, "0")}`,
         };
 
         let cnt = 0;

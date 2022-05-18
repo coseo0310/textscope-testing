@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
 import { useSettingsStore, useCommonStore } from "@/store";
-import { Routes } from "@/types";
 import ContextMenu, {
   Contexts,
   Translate,

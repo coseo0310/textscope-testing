@@ -13,6 +13,7 @@ interface Model {
   title: string;
   items: ModelItem[];
   isTest: boolean;
+  date: string;
 }
 
 interface TestModel extends Model {
@@ -40,6 +41,7 @@ type States = {
   modelSelected: Grid.Selected[];
   modelColumns: Grid.Columns;
   testModelColumns: Grid.Columns;
+  mappingColumns: Grid.Columns;
   testStatistics: Statistics | null;
   uploadPercent: number;
   isProgress: boolean;
@@ -58,6 +60,7 @@ export const useClassificationStore = defineStore("classificationStore", {
           id: "model-1652056697466",
           title: "미국 수출입 20종",
           isTest: true,
+          date: "2022.01.31",
           items: [
             {
               id: "1652056697466",
@@ -127,6 +130,7 @@ export const useClassificationStore = defineStore("classificationStore", {
       modelSelected: [],
       modelColumns: getModelColumns(),
       testModelColumns: getModelColumns("test"),
+      mappingColumns: getModelColumns("mapping"),
       testStatistics: {
         modelId: "model-1652056697466",
         id: "test-model-1652056697466",
@@ -157,7 +161,9 @@ export const useClassificationStore = defineStore("classificationStore", {
   actions: {},
 });
 
-function getModelColumns(type: "model" | "test" = "model"): Grid.Columns {
+function getModelColumns(
+  type: "model" | "test" | "mapping" = "model"
+): Grid.Columns {
   return type === "model"
     ? [
         {
@@ -180,7 +186,8 @@ function getModelColumns(type: "model" | "test" = "model"): Grid.Columns {
           value: "name",
         },
       ]
-    : [
+    : type === "test"
+    ? [
         {
           width: 100,
           text: "No",
@@ -212,6 +219,28 @@ function getModelColumns(type: "model" | "test" = "model"): Grid.Columns {
           align: "center",
           sortable: false,
           value: "result",
+        },
+      ]
+    : [
+        {
+          width: 100,
+          text: "No",
+          align: "center",
+          sortable: false,
+          value: "no",
+        },
+        {
+          width: 150,
+          text: "부서",
+          align: "center",
+          sortable: false,
+          value: "department",
+        },
+        {
+          text: "맵핑된 문서 분류 학습 모델",
+          align: "start",
+          sortable: false,
+          value: "model",
         },
       ];
 }
