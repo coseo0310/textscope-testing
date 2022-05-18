@@ -1,3 +1,4 @@
+import { type } from "os";
 import EditorConfig, { IEditorConfig } from "./EditorConfig";
 
 import { EditorTypes } from "./types";
@@ -157,7 +158,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     circle8.arc(dx, dy + Math.floor(field.dHeight) / 2, 10, 0, 2 * Math.PI);
 
     ctx.save();
-    ctx.fillStyle = field.color;
+    ctx.fillStyle = this.color.pointer;
     ctx.fill(circle1);
     ctx.fill(circle2);
     ctx.fill(circle3);
@@ -219,24 +220,26 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
 
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
       const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+      const color =
+        f.type === "confirm"
+          ? this.color.confirm
+          : f.type === "miss"
+          ? this.color.miss
+          : this.color.error;
 
       const rectOption: RectOption = {
         dx,
         dy,
         dWidth: Math.floor(f.dWidth),
         dHeight: Math.floor(f.dHeight),
-        color: f.color,
+        color,
         lineWidth: 5,
       };
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      f.box = this.fillRect(ctx, rectOption);
+      ctx.restore();
 
-      if (f.type === "fill") {
-        ctx.save();
-        ctx.globalAlpha = 0.5;
-        f.box = this.fillRect(ctx, rectOption);
-        ctx.restore();
-      } else if (f.type === "stroke") {
-        f.box = this.strokeRect(ctx, rectOption);
-      }
       if (this.isText) {
         const textOption: TextOption = {
           text: f.text,
@@ -254,7 +257,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           dy: dy + 30,
           startArc: 0,
           endArc: 2 * Math.PI,
-          color: f.color,
+          color,
           radius: 30,
         };
         const rectOption: RectOption = {
@@ -262,7 +265,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
           dy: dy,
           dWidth: 40,
           dHeight: 60,
-          color: f.color,
+          color,
           lineWidth: 5,
         };
         const len = String(cnt).length;
@@ -286,7 +289,8 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawSections(
     ctx: CanvasRenderingContext2D,
     fields: Field[],
-    margin: number = 0
+    margin: number = 0,
+    color: string
   ) {
     for (const f of fields) {
       const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
@@ -298,14 +302,14 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       if (this.sectionField?.box) {
         ctx.save();
         ctx.globalAlpha = 0.1;
-        ctx.fillStyle = this.sectionField.color;
+        ctx.fillStyle = color;
         ctx.fill(this.sectionField.box);
         ctx.restore();
       }
 
       ctx.save();
 
-      ctx.strokeStyle = f.color;
+      ctx.strokeStyle = color;
       ctx.lineWidth = f.lineWidth || 15;
       ctx.setLineDash([25, 10]);
       ctx.stroke(f.box);
@@ -326,7 +330,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       dy,
       dWidth: Math.floor(field.dWidth),
       dHeight: Math.floor(field.dHeight),
-      color: field.color,
+      color: this.color.pointer,
       lineWidth: 5,
     };
     this.strokeRect(ctx, rectOption);
@@ -341,21 +345,21 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       dy: this.crosshair.dy,
       dWidth: this.crosshair.dWidth,
       dHeight: this.crosshair.lineWidth,
-      color: this.crosshair.color,
+      color: this.color.crosshair,
     });
     this.fillRect(ctx, {
       dx: this.crosshair.dx,
       dy: 0,
       dWidth: this.crosshair.lineWidth,
       dHeight: this.crosshair.dHeight,
-      color: this.crosshair.color,
+      color: this.color.crosshair,
     });
     this.strokeRect(ctx, {
       dx: field.dx,
       dy: field.dy,
       dWidth: field.dWidth,
       dHeight: field.dHeight,
-      color: field.color,
+      color: this.color.pointer,
       lineWidth: field.lineWidth,
     });
   }
@@ -399,7 +403,12 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     this.setScale(this.ctx, { x: scale, y: scale });
 
     if (this.isSection) {
-      this.drawSections(this.ctx, this.sections, this.dMargin);
+      this.drawSections(
+        this.ctx,
+        this.sections,
+        this.dMargin,
+        this.color.section
+      );
     }
 
     this.drawFields(this.ctx, this.fields, this.dMargin);

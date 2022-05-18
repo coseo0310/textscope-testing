@@ -349,7 +349,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     }
     this.isEdit = false;
     this.editField = null;
-    this.drawType = "new";
+    // this.drawType = "new";
     const scale = this.getScale();
 
     for (const f of this.fields) {
@@ -382,7 +382,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       }
     }
     if (!this.editField) {
-      this.drawType = "section";
+      // this.drawType = "section";
       this.sectionField = null;
       for (const s of this.sections) {
         if (!s.box || !this.ctx.isPointInPath(s.box, e.offsetX, e.offsetY)) {
@@ -482,6 +482,8 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
       return;
     }
 
+    console.log("start", this.drawType);
+
     const { offsetX, offsetY } = await this.getOffset();
     this.startX = e.clientX - offsetX;
     this.startY = e.clientY - offsetY;
@@ -555,7 +557,7 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     if (this.drawEndCallback && this.drawField) {
       this.drawEndCallback(this.drawField);
     }
-
+    console.log("end:>>", this.drawType);
     this.drawField = null;
 
     this.canvasEl.style.cursor = "default";

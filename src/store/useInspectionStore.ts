@@ -189,11 +189,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
               dy: item.bbox.y,
               dWidth: item.bbox.w,
               dHeight: item.bbox.h,
-              type: "fill",
-              color:
-                i % 2 === 0
-                  ? `rgba(103, 121, 215, 1)`
-                  : `rgba(255, 119, 119, 1)`,
+              type: i % 3 === 0 ? "miss" : i % 2 === 0 ? "confirm" : "error",
               lineWidth: 5,
             });
           });
@@ -287,8 +283,7 @@ function getSection(idx: number = 0): Field[] {
       dy: 916.09,
       dWidth: 2230,
       dHeight: 857.5,
-      type: "stroke",
-      color: `#FFD59E`,
+      type: "section",
       lineWidth: 5,
     },
     {
@@ -299,8 +294,7 @@ function getSection(idx: number = 0): Field[] {
       dy: 2891.1,
       dWidth: 2305,
       dHeight: 805,
-      type: "stroke",
-      color: `#FFD59E`,
+      type: "section",
       lineWidth: 5,
     },
   ];

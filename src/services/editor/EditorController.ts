@@ -273,9 +273,7 @@ export default class EditorContorller
     if (!this.canvasEl || !this.ctx) {
       return;
     }
-
-    const color = drawType === "new" ? `rgba(220, 118, 118, 1)` : "#FFD59E";
-
+    console.log("set", drawType);
     this.drawField = field
       ? field
       : {
@@ -285,13 +283,11 @@ export default class EditorContorller
           dy: 0,
           dWidth: 0,
           dHeight: 0,
-          type: "stroke",
-          color,
+          type: "new",
           lineWidth: 5,
           draw: true,
         };
     this.canvasEl.style.cursor = "crosshair";
     this.drawType = drawType;
-    this.crosshair.color = color;
   }
 }

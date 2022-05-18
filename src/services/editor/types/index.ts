@@ -6,8 +6,7 @@ export declare module EditorTypes {
     dy: number;
     dWidth: number;
     dHeight: number;
-    type: "fill" | "stroke";
-    color: string;
+    type: "confirm" | "miss" | "error" | "section" | "new";
     lineWidth?: number;
     draw?: boolean;
     circle?: Path2D[];

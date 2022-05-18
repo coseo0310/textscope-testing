@@ -12,8 +12,17 @@ interface Crosshair {
   dy: number;
   dWidth: number;
   dHeight: number;
-  color: string;
   lineWidth: number;
+}
+
+interface Colors {
+  confirm: string;
+  miss: string;
+  error: string;
+  crosshair: string;
+  bubble: string;
+  section: string;
+  pointer: string;
 }
 export default class EditorConfig implements IEditorConfig {
   // Editor Elements values
@@ -45,6 +54,7 @@ export default class EditorConfig implements IEditorConfig {
   protected drawField: Field | null;
   protected editField: Field | null;
   protected sectionField: Field | null;
+  protected color: Colors;
 
   constructor() {
     if (document) {
@@ -75,7 +85,6 @@ export default class EditorConfig implements IEditorConfig {
       dy: 0,
       dWidth: 0,
       dHeight: 0,
-      color: "red",
       lineWidth: 3,
     };
 
@@ -89,6 +98,16 @@ export default class EditorConfig implements IEditorConfig {
     this.drawType = "new";
     this.editField = null;
     this.sectionField = null;
+
+    this.color = {
+      confirm: "rgba(103, 121, 215, 1)",
+      miss: "rgba(255,164, 37, 1)",
+      error: "rgba(255, 119, 119, 1)",
+      crosshair: "rgba(0, 148, 247, 1)",
+      bubble: "",
+      section: "#FFD59E",
+      pointer: "blue",
+    };
   }
 
   protected getMarginSize(w: number, h: number) {
