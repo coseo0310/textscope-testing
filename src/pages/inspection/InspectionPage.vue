@@ -8,7 +8,7 @@ import TopMenu from "@/components/inspection/TopMenu.vue";
 import EditorForm from "@/components/inspection/EditorForm.vue";
 import SynonymForm from "@/components/inspection/SynonymForm.vue";
 
-const isPreview = ref<boolean>(false);
+const isPreview = ref<boolean>(true);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
 </script>

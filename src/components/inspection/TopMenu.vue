@@ -224,7 +224,7 @@ onMounted(() => {});
     border-bottom: 1px solid $d4;
 
     .control-box {
-      max-width: 800px;
+      max-width: 550px;
       height: 100%;
       display: flex;
       justify-content: flex-start;
