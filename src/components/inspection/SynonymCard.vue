@@ -53,11 +53,10 @@ const onSelect = (e: MouseEvent) => {
   <div class="card-wrap" @click="onSelect">
     <div class="type">
       <div class="index">{{ props.idx }}</div>
+      <div class="key">{{ props.keyText }}</div>
       <div class="badge-wrap">
         <span class="badge hangle">가</span>
         <span class="badge number">123</span>
-      </div>
-      <div class="badge-wrap">
         <span class="badge english">A</span>
         <span class="badge check">
           <svg
@@ -79,12 +78,6 @@ const onSelect = (e: MouseEvent) => {
       </div>
     </div>
     <div class="form">
-      <div class="menu">
-        <div class="key">{{ props.keyText }}</div>
-        <div class="btn">
-          <Button class="primary semi-bold">유의어</Button>
-        </div>
-      </div>
       <div class="input">
         <Input
           :id="`value-${props.idx}`"
@@ -113,6 +106,7 @@ const onSelect = (e: MouseEvent) => {
   min-height: 92px;
   border-bottom: 1px solid $d4;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 5px;
@@ -122,34 +116,34 @@ const onSelect = (e: MouseEvent) => {
 
   .type {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-direction: column;
-    width: 62px;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 5px 0;
 
-    .index {
-      font-weight: 400;
+    .index,
+    .key {
+      font-weight: 600;
       font-size: 14px;
+      padding-right: 10px;
     }
 
     .badge-wrap {
-      display: grid;
+      display: flex;
       justify-content: center;
       align-items: center;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      margin-top: 10px;
 
       .badge {
-        width: 20px;
-        height: 16px;
-        border-radius: 5px;
+        width: 30px;
+        height: 20px;
+        border-radius: 20px;
         font-size: 10px;
-        font-weight: 400;
+        font-weight: 600;
         color: $d1;
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-right: 10px;
 
         &.hangle {
           background-color: $point-peacook;
@@ -171,24 +165,6 @@ const onSelect = (e: MouseEvent) => {
     width: 100%;
     height: 100%;
 
-    .menu {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      height: 50%;
-
-      .key {
-        padding-top: 5px;
-        font-size: 14px;
-      }
-
-      .btn {
-        width: 97px;
-        height: 30px;
-        margin-bottom: 10px;
-      }
-    }
-
     .input {
       position: relative;
       height: 50%;
@@ -204,7 +180,7 @@ const onSelect = (e: MouseEvent) => {
       }
 
       .confirm {
-        display: none;
+        display: flex;
         position: absolute;
         right: 0px;
         top: -2px;
@@ -237,10 +213,6 @@ const onSelect = (e: MouseEvent) => {
         padding: 10px 60px 10px 10px;
         border-color: $d4;
       }
-
-      /* input:focus ~ .confirm {
-        display: flex;
-      } */
     }
   }
 }

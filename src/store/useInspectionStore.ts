@@ -134,6 +134,7 @@ type States = {
   editorForm: HTMLDivElement | null;
   editors: Editor[];
   currentEditor: Editor | null;
+  currentEditorIdx: number;
   currentPage: number;
   total: number;
   observer: IntersectionObserver | null;
@@ -157,6 +158,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       editorForm: null,
       editors: [],
       currentEditor: null,
+      currentEditorIdx: 0,
       currentPage: 1,
       total: 0,
       observer: null,
@@ -194,9 +196,9 @@ export const useInspectionStore = defineStore("inspectionStore", {
             });
           });
 
-          if (i === 0) {
-            editor.setSections(getSection(i));
-          }
+          // if (i === 0) {
+          //   editor.setSections(getSection(i));
+          // }
 
           editor.setImgUrl(data.img);
           editor.setDrawEndCallback(() => {
@@ -224,7 +226,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
         });
 
         this.currentPage = 1;
-        this.currentEditor = this.editors[0];
+        this.currentEditorIdx = 0;
+        this.currentEditor = this.editors[this.currentEditorIdx];
         this.total = this.currentEditor.getSectionLength();
         return true;
       } catch (error) {
@@ -233,7 +236,8 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
     async setInspectionItem(page: number) {
-      this.currentEditor = this.editors[page - 1];
+      this.currentEditorIdx = page - 1;
+      this.currentEditor = this.editors[this.currentEditorIdx];
       this.total = this.currentEditor.getSectionLength();
       this.synonymList = this.currentEditor.getFields();
       this.currentPage = this.currentEditor.getSectionIdx() + 1;

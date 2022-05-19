@@ -8,77 +8,53 @@ import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const inspectionStore = useInspectionStore();
-const { currentEditor, isInspection } = storeToRefs(inspectionStore);
+const { currentEditor, isInspection, currentEditorIdx } =
+  storeToRefs(inspectionStore);
 
 const deg = ref<number>(0);
-const zoom = ref<number>(
-  Math.floor(currentEditor.value?.getScale() || 0 * 100)
-);
 
 const onInspection = () => {
   isInspection.value = !isInspection.value;
   inspectionStore.onStartInspection();
 };
 
-const onRotate = (type: "left" | "right" | "90") => {
+const onRotate = (type: "left" | "right") => {
   if (type == "left") {
-    deg.value -= 1;
-  } else if (type == "right") {
-    deg.value += 1;
-  } else {
     deg.value -= 90;
+  } else if (type == "right") {
+    deg.value += 90;
   }
 
   currentEditor.value?.setRotate(deg.value);
-};
-
-const onZoomInOut = (type: "in" | "out") => {
-  zoom.value = Math.floor(currentEditor.value?.getScale() || 0 * 100);
-  currentEditor.value?.setZoomInOut(type);
 };
 
 const onInit = () => {
   deg.value = 0;
   //TODO: Data reset
 };
-
-const onDraw = () => {
-  currentEditor.value?.setDraw("new");
-};
-
-const onSectionDraw = () => {
-  currentEditor.value?.setDraw("section");
-};
-
-const onComparison = () => {
-  // TODO: comparison
-  alert("준비중...");
-};
-
 onMounted(() => {});
 </script>
 
 <template>
   <div class="top-menu">
     <div class="info">
-      <div class="logo" :style="{ backgroundImage: `url(${Logo})` }"></div>
       <div class="grid">
         <div class="header">
           <div class="column">Task ID</div>
-          <div class="column">카테고리</div>
+          <div class="column">문서모델</div>
+          <div class="column">문서유형</div>
           <div class="column">문서명</div>
           <div class="column">등록 담당자</div>
           <div class="column">검수 담당자</div>
           <div class="column">검수</div>
           <div class="column">정확도</div>
-          <div class="column">문서비교</div>
           <div class="column">완료일</div>
         </div>
         <div class="rows">
           <div class="column">
             {{ inspectionStore.inspectionInfo?.taskId }}
           </div>
-          <Button class="column category">
+          <Button class="column model">
             <Dropdown
               default="2"
               class="minimal"
@@ -90,6 +66,7 @@ onMounted(() => {});
               ]"
             />
           </Button>
+          <div class="column">템플릿 OCR</div>
           <div class="column">
             {{ inspectionStore.inspectionInfo?.filename }}
           </div>
@@ -97,141 +74,52 @@ onMounted(() => {});
           <div class="column">-</div>
           <div class="column">-</div>
           <div class="column">93.1%</div>
-          <Button class="column icon" @click="onComparison">
-            <Icons icons="show" />보기
-          </Button>
           <div class="column">-</div>
         </div>
       </div>
       <div class="btn-wrap">
-        <Button
-          class="primary extra-bold"
-          :class="{ ['color-red']: inspectionStore.isInspection }"
-          @click="onInspection"
-        >
-          {{ inspectionStore.isInspection ? "검수 취소" : "검수 시작" }}
+        <Button class="primary extra-bold" @click="onInspection">
+          <Icons v-if="inspectionStore.isInspection" icons="save" />
+          <div>
+            {{ inspectionStore.isInspection ? "저장" : "검수 시작" }}
+          </div>
         </Button>
       </div>
     </div>
     <div class="control-wrap">
       <div class="control-box">
-        <div class="box">크기</div>
-        <div class="box">회전</div>
-        <div class="box">초기화</div>
-        <div class="box">드로우</div>
-        <div class="box">드로우 섹션</div>
-        <div class="box icon">
-          <Button @click="onZoomInOut('in')">
-            <Icons icons="plus" />
-          </Button>
-          <Button @click="onZoomInOut('out')">
-            <Icons icons="minus" />
-          </Button>
-        </div>
+        <div class="box title">Page No.</div>
+        <div class="box content">1-{{ currentEditorIdx + 1 }}</div>
+        <div class="box title">문서회전</div>
+        <div class="box content">90º</div>
+        <div class="box title">회전</div>
         <div class="box icon">
           <Button @click="onRotate('left')">
             <Icons icons="rotate-left" />
           </Button>
+        </div>
+
+        <div class="box icon">
           <Button @click="onRotate('right')">
             <Icons icons="rotate-right" />
           </Button>
-          <Button @click="onRotate('90')">
-            <Icons icons="reload" />
-          </Button>
         </div>
+        <div class="box title">초기화</div>
         <div class="box icon">
           <Button @click="onInit">
             <Icons icons="reset" />
           </Button>
         </div>
-        <div class="box icon">
-          <Button @click="onDraw">
-            <Icons icons="template" />
-          </Button>
-        </div>
-        <div class="box icon">
-          <Button @click="onSectionDraw">
-            <Icons icons="template" />
-          </Button>
-        </div>
       </div>
       <div class="btn-wrap">
         <div class="ocr-btn-wrap">
-          <Button
-            class="outline"
-            :disabled="!inspectionStore.isInspection"
-            @click="inspectionStore.onOCR"
-          >
-            OCR 시작
-          </Button>
-          <Button
-            class="outline"
-            :disabled="!inspectionStore.isInspection"
-            @click="inspectionStore.onGOCR"
-          >
-            G-OCR
-          </Button>
-          <Button
-            class="outline"
-            @click="
-              () => {
-                currentEditor?.setIsText(true);
-                currentEditor?.setIsIdx(true);
-                currentEditor?.draw();
-              }
-            "
-          >
-            SHOW
-          </Button>
-          <Button
-            class="outline"
-            @click="
-              () => {
-                currentEditor?.setIsText(false);
-                // currentEditor?.setIsIdx(false);
-                currentEditor?.draw();
-              }
-            "
-          >
-            HIDE
-          </Button>
-
-          <Button
-            class="outline"
-            @click="
-              () => {
-                currentEditor?.setSectionControl(true);
-              }
-            "
-          >
-            S Edit ON
-          </Button>
-          <Button
-            class="outline"
-            @click="
-              () => {
-                currentEditor?.setSectionControl(false);
-              }
-            "
-          >
-            S Edit OFF
-          </Button>
+          <Button class="outline semi-bold">유의어</Button>
+          <Button class="outline semi-bold">용어사전</Button>
         </div>
         <div class="save-btn-wrap">
-          <Button
-            class="outline"
-            :disabled="!inspectionStore.isInspection"
-            @click="inspectionStore.onSave"
-          >
-            저장
-          </Button>
-          <Button
-            class="primary extra-bold"
-            :disabled="!inspectionStore.isInspection"
-            @click="inspectionStore.onCompleted"
-          >
-            검수 완료
-          </Button>
+          <Button class="primary semi-bold"> OCR 재인식 </Button>
+          <Button class="primary semi-bold"> G-OCR </Button>
+          <Button class="outline semi-bold"> 키벨류(K) </Button>
         </div>
       </div>
     </div>
@@ -245,37 +133,30 @@ onMounted(() => {});
   display: flex;
   align-items: center;
   flex-direction: column;
+
   .info {
     display: flex;
     align-items: center;
     width: 100%;
-
-    .logo {
-      min-width: 183px;
-      height: 63px;
-      margin-top: 3px;
-      border-top: 1px solid $d4;
-      border-bottom: 1px solid $d4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-repeat: no-repeat;
-      background-position: 15px center;
-      background-size: 150px;
-    }
+    border-bottom: 1px solid $d4;
+    margin: 0;
+    padding: 0;
 
     .grid {
       width: 100%;
       height: 60px;
+      padding-right: 1px;
+      background-color: $d4;
 
       .header,
       .rows {
         width: 100%;
         display: grid;
         grid-template-columns:
-          minmax(180px, 1.6fr) minmax(200px, 0.7fr) minmax(280px, 3fr)
-          minmax(80px, 0.5fr) minmax(80px, 0.5fr) minmax(120px, 0.7fr)
-          minmax(80px, 0.5fr) minmax(80px, 0.5fr) minmax(180px, 1fr);
+          minmax(200px, 1.6fr) minmax(180px, 0.7fr) minmax(180px, 0.7fr)
+          minmax(280px, 3fr) minmax(120px, 0.5fr) minmax(120px, 0.5fr)
+          minmax(120px, 0.7fr) minmax(120px, 0.5fr) minmax(180px, 1fr);
+        gap: 1px;
 
         .column {
           height: 30px;
@@ -285,10 +166,9 @@ onMounted(() => {});
           color: $d5;
           font-size: 14px;
           font-weight: 600;
-          border-right: 1px solid $d4;
-          background-color: $d2;
+          background-color: $d1;
 
-          &.category {
+          &.model {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -312,17 +192,10 @@ onMounted(() => {});
       }
 
       .header {
-        border-left: 1px solid $d4;
-        border-top: 1px solid $d4;
-        border-bottom: 1px solid $d4;
         .column {
           background-color: $d3;
+          border-bottom: 1px solid $d4;
         }
-      }
-
-      .rows {
-        border-left: 1px solid $d4;
-        border-bottom: 1px solid $d4;
       }
     }
 
@@ -330,23 +203,32 @@ onMounted(() => {});
       width: 130px;
       height: 46px;
       margin: 8px 20px;
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        div {
+          padding: 2px 5px 0 0;
+        }
+      }
     }
   }
 
   .control-wrap {
     width: 100%;
-    height: 60px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    border-bottom: 1px solid $d4;
 
     .control-box {
+      max-width: 800px;
       height: 100%;
-      display: grid;
-      grid-template-columns: 0.9fr 1.2fr 0.9fr 1fr 1fr;
-      padding: 0 1px 1px 0;
-      margin: 0 0 0 1px;
-      gap: 1px;
+      display: flex;
+      justify-content: flex-start;
       background-color: $d4;
 
       .box {
@@ -358,18 +240,27 @@ onMounted(() => {});
         font-weight: 600;
         color: $d5;
         background-color: $d3;
+        border-right: 1px solid $d4;
+
+        &.title,
+        &.content {
+          font-size: 16px;
+          font-weight: 600;
+          width: 500px;
+          background-color: $d2;
+        }
+
+        &.content {
+          width: 300px;
+          background-color: $d1;
+        }
 
         &.icon {
-          background-color: $d2;
+          width: 300px;
 
           button {
-            background-color: $d2;
+            background-color: $d3;
             color: $point-blue;
-          }
-          button:last-child {
-            svg {
-              width: 32px;
-            }
           }
         }
       }
@@ -377,16 +268,24 @@ onMounted(() => {});
 
     .btn-wrap {
       width: 100%;
+      height: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px;
       background-color: $d2;
 
       button {
-        width: 130px;
-        height: 46px;
+        width: 100px;
+        height: 30px;
         margin: 0 10px;
+      }
+
+      .save-btn-wrap {
+        display: flex;
+        align-items: center;
+        width: 460px;
+        height: 40px;
+        border-left: 1px solid $d4;
       }
     }
   }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import SynonymCard from "@/components/inspection/SynonymCard.vue";
 import { useInspectionStore } from "@/store";
@@ -17,6 +16,7 @@ const onPage = (n: number) => {
 <template>
   <div class="synonym-form">
     <div class="pagination-wrap">
+      <div class="label">인식결과</div>
       <Pagination
         :inspection="true"
         :total="inspectionStore.total"
@@ -24,9 +24,7 @@ const onPage = (n: number) => {
         @change="onPage"
       />
     </div>
-    <div class="label">인식결과</div>
     <div class="card-list">
-      <!-- <SynonymCard :idx="1" key-text="test" :text="``" :confirm="false" /> -->
       <SynonymCard
         v-for="(item, idx) in inspectionStore.synonymList"
         :idx="idx + 1"
@@ -45,21 +43,26 @@ const onPage = (n: number) => {
   width: 100%;
   height: 100%;
   border: 1px solid $d4;
+  border-top: 0;
 
   .pagination-wrap {
-    height: 53px;
-  }
-  .label {
-    display: flex;
-    align-items: center;
     width: 100%;
-    height: 33px;
-    font-size: 14px;
-    font-weight: 800;
-    color: $d5;
-    padding: 0 15px;
-    border-top: 1px solid $d4;
+    height: 53px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     border-bottom: 1px solid $d4;
+
+    .label {
+      display: flex;
+      align-items: center;
+      width: 60px;
+      height: 33px;
+      font-size: 14px;
+      font-weight: 800;
+      margin-left: 10px;
+      color: $d5;
+    }
   }
 
   .card-list {

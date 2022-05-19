@@ -211,7 +211,7 @@ export const d: Routes.DefaultConstants = {
     },
   },
   classification: {
-    isMenu: true,
+    isMenu: false,
     routeRecordRaw: {
       path: path.classification.path,
       name: path.classification.name,

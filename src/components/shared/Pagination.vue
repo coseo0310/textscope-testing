@@ -153,13 +153,12 @@ const onPage = (n: number) => {
 
     .prev,
     .next {
-      /* display: none; */
+      display: none;
       padding: 0 10px;
       width: 27px;
       height: 33px;
       background-color: $d4;
       border-radius: 5px;
-      display: flex;
       justify-content: center;
       align-items: center;
       font-size: 14px;

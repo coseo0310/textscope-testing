@@ -204,12 +204,139 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     return cw && ch && ew && eh;
   }
 
+  protected drawIndex(
+    ctx: CanvasRenderingContext2D,
+    f: Field,
+    margin: number = 0
+  ) {
+    let cnt = 1;
+    const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
+    const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+
+    const color =
+      f.type === "confirm"
+        ? this.color.confirm
+        : f.type === "miss"
+        ? this.color.miss
+        : this.color.error;
+
+    const arcOption: ArcOption = {
+      dx: dx - 40,
+      dy: dy + 30,
+      startArc: 0,
+      endArc: 2 * Math.PI,
+      color,
+      radius: 30,
+    };
+    const rectOption: RectOption = {
+      dx: dx - 40,
+      dy: dy,
+      dWidth: 40,
+      dHeight: 60,
+      color,
+      lineWidth: 5,
+    };
+    const len = String(cnt).length;
+    const sx = len === 1 ? 40 : 40 + 5 * len;
+    const sy = -42;
+
+    const indexOption: TextOption = {
+      text: `${cnt++}`,
+      dx: Math.floor(dx - sx),
+      dy: dy - sy,
+      font: `32px Pretendard serif`,
+      color: "white",
+    };
+    this.fillArc(ctx, arcOption);
+    this.fillRect(ctx, rectOption);
+    this.fillText(ctx, indexOption);
+    ctx.restore();
+  }
+
+  protected drawText(
+    ctx: CanvasRenderingContext2D,
+    f: Field,
+    margin: number = 0
+  ) {
+    const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
+    const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+
+    const color =
+      f.type === "confirm"
+        ? this.color.confirm
+        : f.type === "miss"
+        ? this.color.miss
+        : this.color.error;
+
+    ctx.save();
+
+    const bColor = f.type === "error" ? this.color.error : this.color.bubble;
+    const angle = new Path2D();
+
+    const x = dx + Math.floor(f.dWidth) / 2 - 20;
+    const y = dy - 40;
+    angle.moveTo(x, y);
+    angle.lineTo(x + 20, y + 40);
+    angle.lineTo(x + 40, y);
+    angle.closePath();
+
+    ctx.fillStyle = bColor;
+    ctx.fill(angle);
+    ctx.restore();
+
+    const text = f.type === "error" ? "인식실패" : f.text;
+
+    ctx.save();
+    ctx.font = `38px Pretendard serif`;
+    const w = ctx.measureText(text).width;
+    ctx.restore();
+
+    const textOption: TextOption = {
+      text,
+      dx: dx - (w - f.dWidth) / 2,
+      dy: dy - 55,
+      font: `38px Pretendard serif`,
+      color: "white",
+    };
+
+    const rectOption: RectOption = {
+      dx: dx - (w - f.dWidth) / 2,
+      dy: dy - 98,
+      dWidth: Math.floor(w),
+      dHeight: 60,
+      color: bColor,
+      lineWidth: 5,
+    };
+
+    const arcOption1: ArcOption = {
+      dx: dx - (w - f.dWidth) / 2,
+      dy: dy - 68,
+      startArc: 0,
+      endArc: 2 * Math.PI,
+      color: bColor,
+      radius: 30,
+    };
+
+    const arcOption2: ArcOption = {
+      dx: dx - (w - f.dWidth) / 2 + w,
+      dy: dy - 68,
+      startArc: 0,
+      endArc: 2 * Math.PI,
+      color: bColor,
+      radius: 30,
+    };
+
+    this.fillArc(ctx, arcOption1);
+    this.fillArc(ctx, arcOption2);
+    this.fillRect(ctx, rectOption);
+    this.fillText(ctx, textOption);
+  }
+
   protected drawFields(
     ctx: CanvasRenderingContext2D,
     fields: Field[],
     margin: number = 0
   ) {
-    let cnt = 1;
     for (const f of fields) {
       if (
         this.sectionField &&
@@ -241,47 +368,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       ctx.restore();
 
       if (this.isText) {
-        const textOption: TextOption = {
-          text: f.text,
-          dx: dx,
-          dy: dy - 10,
-          font: `38px Pretendard serif`,
-          color: "blue",
-        };
-        this.fillText(ctx, textOption);
+        this.drawText(ctx, f, margin);
       }
 
       if (this.isIdx) {
-        const arcOption: ArcOption = {
-          dx: dx - 40,
-          dy: dy + 30,
-          startArc: 0,
-          endArc: 2 * Math.PI,
-          color,
-          radius: 30,
-        };
-        const rectOption: RectOption = {
-          dx: dx - 40,
-          dy: dy,
-          dWidth: 40,
-          dHeight: 60,
-          color,
-          lineWidth: 5,
-        };
-        const len = String(cnt).length;
-        const sx = len === 1 ? 40 : 40 + 5 * len;
-        const sy = -42;
-
-        const indexOption: TextOption = {
-          text: `${cnt++}`,
-          dx: Math.floor(dx - sx),
-          dy: dy - sy,
-          font: `32px Pretendard serif`,
-          color: "white",
-        };
-        this.fillArc(ctx, arcOption);
-        this.fillRect(ctx, rectOption);
-        this.fillText(ctx, indexOption);
+        this.drawIndex(ctx, f, margin);
       }
     }
   }

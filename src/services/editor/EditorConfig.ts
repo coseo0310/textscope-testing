@@ -88,7 +88,7 @@ export default class EditorConfig implements IEditorConfig {
       lineWidth: 3,
     };
 
-    this.isText = false;
+    this.isText = true;
     this.isIdx = true;
     this.isSection = false;
     this.isSectionControl = false;
@@ -104,7 +104,7 @@ export default class EditorConfig implements IEditorConfig {
       miss: "rgba(255,164, 37, 1)",
       error: "rgba(255, 119, 119, 1)",
       crosshair: "rgba(0, 148, 247, 1)",
-      bubble: "",
+      bubble: "#47ADB5",
       section: "#FFD59E",
       pointer: "blue",
     };

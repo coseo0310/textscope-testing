@@ -103,7 +103,7 @@ onUnmounted(() => {
     height: 100%;
     border: 1px solid $d5;
     border-radius: 5px;
-    background-color: $d1;
+    // background-color: $d1;
     height: 48px;
     font-size: 18px;
     font-weight: 400;

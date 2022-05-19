@@ -8,7 +8,7 @@ import TopMenu from "@/components/inspection/TopMenu.vue";
 import EditorForm from "@/components/inspection/EditorForm.vue";
 import SynonymForm from "@/components/inspection/SynonymForm.vue";
 
-const isPreview = ref<boolean>(true);
+const isPreview = ref<boolean>(false);
 
 const onPreview = () => (isPreview.value = !isPreview.value);
 </script>
@@ -48,7 +48,6 @@ const onPreview = () => (isPreview.value = !isPreview.value);
 
   .top-menu-wrap {
     width: 100%;
-    height: 124px;
   }
 
   .content {
