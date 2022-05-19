@@ -207,9 +207,9 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawIndex(
     ctx: CanvasRenderingContext2D,
     f: Field,
-    margin: number = 0
+    margin: number = 0,
+    cnt: number
   ) {
-    let cnt = 1;
     const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
     const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
 
@@ -241,7 +241,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     const sy = -42;
 
     const indexOption: TextOption = {
-      text: `${cnt++}`,
+      text: `${cnt}`,
       dx: Math.floor(dx - sx),
       dy: dy - sy,
       font: `32px Pretendard serif`,
@@ -260,13 +260,6 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   ) {
     const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
     const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
-
-    const color =
-      f.type === "confirm"
-        ? this.color.confirm
-        : f.type === "miss"
-        ? this.color.miss
-        : this.color.error;
 
     ctx.save();
 
@@ -337,6 +330,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     fields: Field[],
     margin: number = 0
   ) {
+    let cnt = 1;
     for (const f of fields) {
       if (
         this.sectionField &&
@@ -372,7 +366,7 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       }
 
       if (this.isIdx) {
-        this.drawIndex(ctx, f, margin);
+        this.drawIndex(ctx, f, margin, cnt++);
       }
     }
   }
