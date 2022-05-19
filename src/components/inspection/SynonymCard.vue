@@ -23,23 +23,52 @@ const inspectionStore = useInspectionStore();
 const { setEditScroll } = useEditScroll();
 const { currentEditor, synonymList } = storeToRefs(inspectionStore);
 
-const text = ref<string>(props.text);
+const getInput = (id: string) => {
+  const input = document.querySelector(`.input-${id}`) as HTMLInputElement;
+  return input;
+};
 
-const onKeyup = (e: KeyboardEvent) => {
-  const el = e.target as HTMLInputElement;
-  if (!el) {
+const getConfirm = (id: string) => {
+  const confirm = document.querySelector(`.confirm-${id}`) as HTMLDivElement;
+  return confirm;
+};
+
+const onConfirm = (id: string) => {
+  const confirm = getConfirm(id);
+  if (!confirm) {
     return;
   }
+  confirm.classList.remove("on");
 
-  text.value = el.value;
-  onConfirm();
-};
-const onConfirm = () => {
-  synonymList.value[props.idx - 1].text = text.value;
+  const input = getInput(id);
+  if (!input) {
+    return;
+  }
+  synonymList.value[props.idx - 1].text = input.value;
   currentEditor.value?.modifyField(synonymList.value[props.idx - 1]);
   currentEditor.value?.draw();
 };
-const onCancel = () => {};
+const onCancel = (id: string) => {
+  const confirm = getConfirm(id);
+  if (!confirm) {
+    return;
+  }
+  confirm.classList.remove("on");
+
+  const input = getInput(id);
+  if (!input) {
+    return;
+  }
+  input.value = props.text;
+};
+
+const onFocus = (id: string) => {
+  const confirm = getConfirm(id);
+  if (!confirm) {
+    return;
+  }
+  confirm.classList.add("on");
+};
 
 const onSelect = (e: MouseEvent) => {
   e.preventDefault();
@@ -82,16 +111,23 @@ const onSelect = (e: MouseEvent) => {
         <Input
           :id="`value-${props.idx}`"
           type="text"
-          :value="props.text"
-          :class="{ ['background-color-red']: !confirm }"
-          @keyup="onKeyup"
+          :defaultValue="props.text"
+          :class="{
+            ['background-color-red']: !props.text,
+            [`input-${props.id}`]: true,
+          }"
+          @focus="onFocus(props.id)"
         />
         <label :for="`value-${props.idx}`">t</label>
-        <div class="confirm" @click="onConfirm">
+        <div
+          class="confirm"
+          :class="{ [`confirm-${props.id}`]: true }"
+          @click="onConfirm(props.id)"
+        >
           <div class="ok">
-            <Icons icons="confirm" @click="onConfirm" />
+            <Icons icons="confirm" @click="onConfirm(props.id)" />
           </div>
-          <div class="cancel" @click="onCancel">
+          <div class="cancel" @click="onCancel(props.id)">
             <Icons icons="cancel" />
           </div>
         </div>
@@ -180,12 +216,16 @@ const onSelect = (e: MouseEvent) => {
       }
 
       .confirm {
-        display: flex;
+        display: none;
         position: absolute;
         right: 0px;
         top: -2px;
         border-radius: 5px;
         padding: 5px 5px 0 5px;
+
+        &.on {
+          display: flex;
+        }
 
         .ok,
         .cancel {

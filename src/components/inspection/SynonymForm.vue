@@ -31,7 +31,6 @@ const onPage = (n: number) => {
         :id="item.id"
         :key-text="item.id"
         :text="item.text"
-        :confirm="!!item.text"
         :key="idx"
       />
     </div>

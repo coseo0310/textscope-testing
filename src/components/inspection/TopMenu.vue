@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Dropdown from "@/components/shared/Dropdown.vue";
-import Logo from "@/assets/logo/textscope-logo.png";
 import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 
