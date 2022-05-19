@@ -80,7 +80,7 @@ onMounted(() => {});
       <div class="btn-wrap">
         <Button class="primary extra-bold" @click="onInspection">
           <Icons v-if="inspectionStore.isInspection" icons="save" />
-          <div>
+          <div :class="{ save: inspectionStore.isInspection }">
             {{ inspectionStore.isInspection ? "저장" : "검수 시작" }}
           </div>
         </Button>
@@ -209,7 +209,7 @@ onMounted(() => {});
         justify-content: center;
         align-items: center;
 
-        div {
+        .save {
           padding: 2px 5px 0 0;
         }
       }
