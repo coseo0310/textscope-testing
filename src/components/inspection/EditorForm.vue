@@ -67,7 +67,14 @@ const setEditor = () => {
       const el = node as HTMLCanvasElement;
       observer.value?.observe(el);
     });
-  }, 1000);
+    const margin = currentEditor.value?.getMargin() || 0;
+    const scale = currentEditor.value?.getScale() || 0;
+    editorWrap.value?.scrollBy({
+      top: margin * scale,
+      left: margin * scale,
+      behavior: "smooth",
+    });
+  }, 100);
 };
 
 watch(inspectionItems, () => {
