@@ -3,9 +3,10 @@ import { ref, onMounted } from "vue";
 import Button from "@/components/shared/Button.vue";
 import Icons from "@/components/shared/Icons.vue";
 import Dropdown from "@/components/shared/Dropdown.vue";
-import { useInspectionStore } from "@/store";
+import { useInspectionStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
 
+const commonStore = useCommonStore();
 const inspectionStore = useInspectionStore();
 const { currentEditor, isInspection, currentEditorIdx } =
   storeToRefs(inspectionStore);
@@ -18,13 +19,37 @@ const onInspection = () => {
 };
 
 const onRotate = (type: "left" | "right") => {
-  if (type == "left") {
-    deg.value -= 90;
-  } else if (type == "right") {
-    deg.value += 90;
-  }
+  commonStore.setConfirm(
+    [
+      "문서를 회전하면 기존 키밸류 영역과 인식된",
+      "키밸류 내용 모두 초기화 됩니다.",
+      "문서회전을 진행하시겠습니까?",
+    ],
+    "info",
+    () => {
+      if (type == "left") {
+        deg.value -= 90;
+      } else if (type == "right") {
+        deg.value += 90;
+      }
 
-  currentEditor.value?.setRotate(deg.value);
+      currentEditor.value?.setRotate(deg.value);
+    },
+    () => {}
+  );
+};
+
+const onSelect = () => {
+  commonStore.setConfirm(
+    [
+      "카테고리가 변경되면 기존 키밸류 영역과 인식",
+      "된 키밸류 내용 모두 초기화 됩니다.",
+      "카테고리를 변경하시겠습니까?",
+    ],
+    "info",
+    () => {},
+    () => {}
+  );
 };
 
 const onInit = () => {
@@ -63,6 +88,7 @@ onMounted(() => {});
                 { id: '3', text: 'Bill of Landing', value: '3' },
                 { id: '4', text: 'Packing List', value: '4' },
               ]"
+              @select="onSelect"
             />
           </Button>
           <div class="column">템플릿 OCR</div>
