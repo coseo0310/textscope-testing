@@ -227,15 +227,13 @@ export default class EditorContorller
     }
 
     const cWidth = this.imgEl.naturalWidth;
-    // const cHeight = this.imgEl.naturalHeight;
+    const cHeight = this.imgEl.naturalHeight;
     const pWidth = this.canvasEl.parentElement.clientWidth;
-    // const margin = this.getMarginSize(cWidth, cHeight);
+    const r = this.getRotate();
 
-    const width = cWidth;
+    const width = r === 1 || r === -1 ? cHeight : cWidth;
 
     const p = Math.abs(Math.floor((pWidth / width) * 100));
-
-    // const m = Math.abs(Math.floor((margin / width) * 100));
 
     this.depth = p;
     this.setImageCache();
@@ -253,6 +251,20 @@ export default class EditorContorller
     }
     const scale = this.getScale();
     const margin = this.dMargin * scale;
+    const mWidth = this.imgEl.naturalWidth * scale;
+    const mHeight = this.imgEl.naturalHeight * scale;
+
+    const r = this.getRotate();
+
+    const mTop =
+      r === 1 || r === -1
+        ? (mWidth - this.canvasEl.clientHeight) / 2
+        : (mHeight - this.canvasEl.clientHeight) / 2;
+
+    const mLeft =
+      r === 1 || r === -1
+        ? (mHeight - this.canvasEl.clientWidth) / 2
+        : (mWidth - this.canvasEl.clientWidth) / 2;
 
     await this.canvasEl.scrollIntoView({
       behavior: "auto",
@@ -261,8 +273,8 @@ export default class EditorContorller
     });
 
     await this.canvasEl.parentElement.scrollBy({
-      top: margin,
-      left: margin,
+      top: Math.abs(Math.floor(mTop)),
+      left: Math.abs(Math.floor(mLeft)),
       behavior: "auto",
     });
   }
