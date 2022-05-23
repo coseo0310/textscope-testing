@@ -110,6 +110,19 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawRotate(ctx: CanvasRenderingContext2D, option: RotateOption) {
     const tx = option.dx + option.dWidth / 2;
     const ty = option.dy + option.dHeight / 2;
+
+    // const r = this.getRotate();
+
+    // if (r === 1) {
+    //   // ctx.translate(0, -option.dHeight);
+    //   ctx.rotate((option.deg * Math.PI) / 180);
+    //   ctx.translate(-option.dHeight, 0);
+    // } else {
+    //   // ctx.translate(0, ty);
+    //   // ctx.rotate((option.deg * Math.PI) / 180);
+    //   // ctx.translate(0, -ty);
+    // }
+
     ctx.translate(tx, ty);
     ctx.rotate((option.deg * Math.PI) / 180);
     ctx.translate(-tx, -ty);
@@ -464,14 +477,18 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     }
 
     const scale = this.getScale();
+
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
 
     const cWidth = this.imgEl.naturalWidth * scale;
     const cHeight = this.imgEl.naturalHeight * scale;
     const margin = this.getMarginSize(cWidth, cHeight);
 
-    this.canvasEl.width = cWidth + margin * scale;
-    this.canvasEl.height = cHeight + margin * scale;
+    const w = cWidth + margin * scale;
+    const h = cHeight + margin * scale;
+
+    this.canvasEl.width = w;
+    this.canvasEl.height = h;
 
     this.drawImage(this.ctx, {
       img: this.imageCache,

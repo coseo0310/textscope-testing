@@ -67,14 +67,12 @@ const setEditor = () => {
       const el = node as HTMLCanvasElement;
       observer.value?.observe(el);
     });
-    const margin = currentEditor.value?.getMargin() || 0;
-    const scale = currentEditor.value?.getScale() || 0;
-    editorWrap.value?.scrollBy({
-      top: margin * scale,
-      left: margin * scale,
-      behavior: "smooth",
-    });
-  }, 100);
+
+    if (!currentEditor.value) {
+      return;
+    }
+    currentEditor.value.setCalculatedScale();
+  }, 500);
 };
 
 watch(inspectionItems, () => {
@@ -110,7 +108,6 @@ onMounted(async () => {
   editorForm.value = editorWrap.value;
   await inspectionStore.getInspectionItems(0);
   inspectionStore.setInspectionItem(1);
-
   window.addEventListener("keydown", onShoutcuts);
 
   // TODO: temp

@@ -59,7 +59,6 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.mouseY = 0;
     this.fields = [];
     this.dMargin = 0;
-    this.setCalculatedDepth();
   }
 
   async setDrawEndCallback(c: EditorTypes.DrawCallback) {

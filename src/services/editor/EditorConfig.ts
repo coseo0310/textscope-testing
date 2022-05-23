@@ -1,3 +1,4 @@
+import { sign } from "crypto";
 import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
@@ -48,6 +49,7 @@ export default class EditorConfig implements IEditorConfig {
   protected isSection: boolean;
   protected isSectionControl: boolean;
   protected isReadonly: boolean;
+  protected isMargin: boolean;
 
   // Editor Event Handler Field values;
   protected drawType: DrawType;
@@ -71,9 +73,9 @@ export default class EditorConfig implements IEditorConfig {
 
     this.imgEl = new Image();
 
-    this.maxDepth = 7;
-    this.minDepth = -7;
-    this.depth = 0;
+    this.maxDepth = 150;
+    this.minDepth = -50;
+    this.depth = 50;
     this.deg = 0;
     this.dMargin = 0;
     this.fields = [];
@@ -93,6 +95,7 @@ export default class EditorConfig implements IEditorConfig {
     this.isSection = false;
     this.isSectionControl = false;
     this.isReadonly = false;
+    this.isMargin = true;
 
     this.drawField = null;
     this.drawType = "new";
@@ -111,29 +114,7 @@ export default class EditorConfig implements IEditorConfig {
   }
 
   protected getMarginSize(w: number, h: number) {
-    return w > h ? w : h;
-  }
-
-  protected async setScroll() {
-    if (!this.canvasEl || !this.ctx) {
-      return;
-    }
-    const scale = this.getScale();
-    const margin = this.getMarginSize(
-      this.canvasEl.width,
-      this.canvasEl.height
-    );
-
-    if (!this.canvasEl.parentElement?.scrollTo) {
-      return;
-    }
-
-    await this.canvasEl.parentElement.scrollTo(0, 0);
-    await this.canvasEl.parentElement.scrollBy({
-      top: (margin / 3) * scale,
-      left: (margin / 3) * scale,
-      behavior: "auto",
-    });
+    return this.isMargin ? (w > h ? w : h) : 0;
   }
 
   protected async getOffset() {
@@ -155,22 +136,11 @@ export default class EditorConfig implements IEditorConfig {
   }
 
   getScale() {
-    return Number((this.depth * 0.1 + 1).toFixed(1));
+    const s = Number(Math.abs(this.depth * 0.01).toFixed(2));
+    return s === 0 ? 1 : s;
   }
 
-  protected setCalculatedDepth() {
-    if (!this.canvasEl || !this.ctx) {
-      return;
-    }
-    if (!this.imgEl) {
-      return;
-    }
-    if (!this.canvasEl.parentElement) {
-      return;
-    }
-    const ratio = Math.ceil(
-      this.imgEl.naturalWidth / this.canvasEl.parentElement.clientWidth
-    );
-    this.depth = ratio * 2 * -1;
+  protected getRotate() {
+    return (this.deg / 90) % 2;
   }
 }

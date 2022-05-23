@@ -1,7 +1,6 @@
 import EventHandler, { IEventHandler } from "./EventHandler";
 import { EditorTypes } from "./types";
 
-type ZoomCommand = EditorTypes.ZoomCommand;
 type Field = EditorTypes.Field;
 type DrawType = EditorTypes.DrawType;
 
@@ -12,7 +11,7 @@ interface Options {
 
 export interface IEditorContorller extends IEventHandler {
   setImgUrl: (url: string) => Promise<void>;
-  setZoomInOut: (command: ZoomCommand) => Promise<void>;
+  setZoomInOut: (depth: number) => Promise<void>;
   setRotate: (deg: number) => Promise<void>;
   setDraw: (drawType: DrawType, field?: Field) => Promise<void>;
   getCanvas: () => HTMLCanvasElement | null;
@@ -26,6 +25,7 @@ export interface IEditorContorller extends IEventHandler {
   setSectionField: (n: number) => Promise<void>;
   setSectionDraw: (b: boolean) => Promise<void>;
   setSectionControl: (b: boolean) => Promise<void>;
+  setCalculatedScale: () => void;
   setEditField: (id: string) => Promise<void>;
   getFields: () => Field[];
   getSections: () => Field[];
@@ -69,7 +69,6 @@ export default class EditorContorller
     this.imgEl = image;
 
     this.imgEl.onload = async () => {
-      await this.setCalculatedDepth();
       await this.setImageCache();
       await this.draw();
     };
@@ -191,21 +190,16 @@ export default class EditorContorller
     return this.fields;
   }
 
-  async setZoomInOut(command: ZoomCommand) {
+  async setZoomInOut(depth: number) {
     if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
       return;
     }
 
-    if (command === "out" && this.depth >= this.maxDepth * -1) {
-      // OUT
-      this.depth -= 1;
-    } else if (command === "in" && this.depth <= this.maxDepth) {
-      // IN
-      this.depth += 1;
-    } else if (command === "init") {
-      // this.depth = 0;
-      this.setCalculatedDepth();
+    if (depth > this.maxDepth || depth < this.maxDepth) {
+      return;
     }
+
+    this.depth = depth;
 
     if (!this.canvasEl?.parentElement) {
       return;
@@ -219,6 +213,58 @@ export default class EditorContorller
     this.deg = deg;
     await this.setImageCache();
     await this.draw();
+  }
+
+  setCalculatedScale() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+    if (!this.imgEl) {
+      return;
+    }
+    if (!this.canvasEl.parentElement) {
+      return;
+    }
+
+    const cWidth = this.imgEl.naturalWidth;
+    // const cHeight = this.imgEl.naturalHeight;
+    const pWidth = this.canvasEl.parentElement.clientWidth;
+    // const margin = this.getMarginSize(cWidth, cHeight);
+
+    const width = cWidth;
+
+    const p = Math.abs(Math.floor((pWidth / width) * 100));
+
+    // const m = Math.abs(Math.floor((margin / width) * 100));
+
+    this.depth = p;
+    this.setImageCache();
+    this.draw();
+    this.setScroll();
+  }
+
+  protected async setScroll() {
+    if (!this.canvasEl || !this.ctx) {
+      return;
+    }
+
+    if (!this.canvasEl.parentElement?.scrollTo) {
+      return;
+    }
+    const scale = this.getScale();
+    const margin = this.dMargin * scale;
+
+    await this.canvasEl.scrollIntoView({
+      behavior: "auto",
+      block: "start",
+      inline: "start",
+    });
+
+    await this.canvasEl.parentElement.scrollBy({
+      top: margin,
+      left: margin,
+      behavior: "auto",
+    });
   }
 
   private setImageCache() {
@@ -273,7 +319,6 @@ export default class EditorContorller
     if (!this.canvasEl || !this.ctx) {
       return;
     }
-    console.log("set", drawType);
     this.drawField = field
       ? field
       : {

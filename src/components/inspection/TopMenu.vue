@@ -53,9 +53,15 @@ const onSelect = () => {
 };
 
 const onInit = () => {
-  deg.value = 0;
+  // deg.value = 0;
   //TODO: Data reset
+
+  if (!currentEditor.value) {
+    return;
+  }
+  currentEditor.value.setCalculatedScale();
 };
+
 onMounted(() => {});
 </script>
 
