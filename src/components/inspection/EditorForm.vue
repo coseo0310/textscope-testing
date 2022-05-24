@@ -29,7 +29,9 @@ const setEditor = () => {
     if (!el) {
       return;
     }
+    const wrap = document.createElement("div");
     el.classList.add(`idx-${idx}`);
+    wrap.appendChild(el);
     editorWrap.value?.appendChild(el);
   });
 

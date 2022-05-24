@@ -3,6 +3,10 @@ import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
 type DrawType = EditorTypes.DrawType;
+type Event = EditorTypes.Event;
+type DrawCallback = EditorTypes.DrawCallback;
+type FitType = EditorTypes.FitType;
+type ScrollType = EditorTypes.ScrollType;
 
 interface Options {
   canvas?: HTMLCanvasElement;
@@ -16,16 +20,19 @@ export interface IEditorContorller extends IEventHandler {
   setDraw: (drawType: DrawType, field?: Field) => Promise<void>;
   getCanvas: () => HTMLCanvasElement | null;
   getMargin: () => number;
+  setIsReadonly: (isText: boolean) => Promise<void>;
   setIsText: (isText: boolean) => Promise<void>;
   setIsIdx: (isIdx: boolean) => Promise<void>;
   setField: (field: Field) => Promise<void>;
+  setMaxScale: (s: number) => Promise<void>;
+  setMinScale: (s: number) => Promise<void>;
   modifyField: (field: Field) => Promise<void>;
   setSection: (field: Field) => Promise<void>;
   setSections: (fields: Field[]) => Promise<void>;
   setSectionField: (n: number) => Promise<void>;
   setSectionDraw: (b: boolean) => Promise<void>;
   setSectionControl: (b: boolean) => Promise<void>;
-  setCalculatedScale: () => void;
+  setCalculatedScale: (fit: FitType) => void;
   setEditField: (id: string) => Promise<void>;
   getFields: () => Field[];
   getSections: () => Field[];
@@ -39,6 +46,8 @@ export interface IEditorContorller extends IEventHandler {
   removeFields: () => void;
   removeSection: (id: string) => void;
   removeSections: () => void;
+  downloadImage: () => void;
+  addEventListener: (e: Event, c: DrawCallback) => void;
 }
 
 export default class EditorContorller
@@ -72,6 +81,18 @@ export default class EditorContorller
       await this.setImageCache();
       await this.draw();
     };
+  }
+
+  async setMaxScale(s: number) {
+    this.maxDepth = s;
+  }
+
+  async setMinScale(s: number) {
+    this.minDepth = s;
+  }
+
+  async setIsReadonly(isReadonly: boolean) {
+    this.isReadonly = isReadonly;
   }
 
   async setIsText(isText: boolean) {
@@ -191,11 +212,7 @@ export default class EditorContorller
   }
 
   async setZoomInOut(depth: number) {
-    if (this.depth <= this.minDepth && this.depth >= this.maxDepth) {
-      return;
-    }
-
-    if (depth > this.maxDepth || depth < this.maxDepth) {
+    if (depth > this.maxDepth && depth < this.maxDepth) {
       return;
     }
 
@@ -215,7 +232,7 @@ export default class EditorContorller
     await this.draw();
   }
 
-  setCalculatedScale() {
+  setCalculatedScale(fit: FitType = "width") {
     if (!this.canvasEl || !this.ctx) {
       return;
     }
@@ -229,19 +246,24 @@ export default class EditorContorller
     const cWidth = this.imgEl.naturalWidth;
     const cHeight = this.imgEl.naturalHeight;
     const pWidth = this.canvasEl.parentElement.clientWidth;
+    const pHeight = this.canvasEl.parentElement.clientHeight;
     const r = this.getRotate();
 
     const width = r === 1 || r === -1 ? cHeight : cWidth;
+    const height = r === 1 || r === -1 ? cWidth : cHeight;
 
-    const p = Math.abs(Math.floor((pWidth / width) * 100));
+    const p =
+      fit === "width" ? (pWidth / width) * 100 : (pHeight / height) * 100;
 
-    this.depth = p;
+    const depth = Math.abs(Math.floor(p));
+    const scroll = fit === "width" ? "leftTop" : "top";
+    this.depth = depth;
     this.setImageCache();
     this.draw();
-    this.setScroll();
+    this.setScroll(scroll);
   }
 
-  protected async setScroll() {
+  private async setScroll(type: ScrollType = "leftTop") {
     if (!this.canvasEl || !this.ctx) {
       return;
     }
@@ -250,7 +272,6 @@ export default class EditorContorller
       return;
     }
     const scale = this.getScale();
-    const margin = this.dMargin * scale;
     const mWidth = this.imgEl.naturalWidth * scale;
     const mHeight = this.imgEl.naturalHeight * scale;
 
@@ -274,7 +295,7 @@ export default class EditorContorller
 
     await this.canvasEl.parentElement.scrollBy({
       top: Math.abs(Math.floor(mTop)),
-      left: Math.abs(Math.floor(mLeft)),
+      left: type === "leftTop" ? Math.abs(Math.floor(mLeft)) : 0,
       behavior: "auto",
     });
   }
@@ -346,5 +367,66 @@ export default class EditorContorller
         };
     this.canvasEl.style.cursor = "crosshair";
     this.drawType = drawType;
+  }
+
+  downloadImage() {
+    if (!this.canvasEl) {
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      return;
+    }
+
+    const cWidth = this.imgEl.naturalWidth;
+    const cHeight = this.imgEl.naturalHeight;
+
+    const w = cWidth;
+    const h = cHeight;
+
+    canvas.width = w;
+    canvas.height = h;
+
+    this.drawImage(ctx, {
+      img: this.imgEl,
+      sx: 0,
+      sy: 0,
+      sWidth: Math.floor(cWidth),
+      sHeight: Math.floor(cHeight),
+      dx: 0,
+      dy: 0,
+      dWidth: Math.floor(cWidth),
+      dHeight: Math.floor(cHeight),
+    });
+
+    this.drawFields(ctx, this.fields);
+
+    const link = document.createElement("a");
+    const image = canvas.toDataURL("image/png");
+    link.href = image;
+    link.download = `${Date.now()}`;
+    link.click();
+  }
+  addEventListener(e: Event, c: DrawCallback) {
+    switch (e) {
+      case "imgLoaded":
+        this.imgLoadedCallback = c;
+      case "draw":
+        this.drawEndCallback = c;
+        break;
+      case "draw":
+        this.drawEndCallback = c;
+        break;
+      case "resize":
+        this.resizeEndCallback = c;
+        break;
+      case "selected":
+        this.boxSelectedCallback = c;
+        break;
+      default:
+        break;
+    }
   }
 }

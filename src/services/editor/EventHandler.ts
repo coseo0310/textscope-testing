@@ -1,18 +1,11 @@
 import DrawEvent, { IDrawEvent } from "./DrawEvent";
-import { EditorTypes } from "./types";
 
 export interface IEventHandler extends IDrawEvent {
   init: () => void;
-  setDrawEndCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
-  setResizeCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
-  setBoxSelectedCallback: (c: EditorTypes.DrawCallback) => Promise<void>;
 }
 
 export default class EventHandler extends DrawEvent implements IEventHandler {
   // Events callback
-  private drawEndCallback: EditorTypes.DrawCallback | null;
-  private resizeEndCallback: EditorTypes.DrawCallback | null;
-  private boxSelectedCallback: EditorTypes.DrawCallback | null;
   private isDraw: boolean;
   private isEdit: boolean;
   private isMove: boolean;
@@ -37,9 +30,6 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.startY = 0;
     this.mouseX = 0;
     this.mouseY = 0;
-    this.drawEndCallback = null;
-    this.resizeEndCallback = null;
-    this.boxSelectedCallback = null;
     this.setEditEvent();
     this.setDrawEvent();
   }
@@ -59,18 +49,6 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.mouseY = 0;
     this.fields = [];
     this.dMargin = 0;
-  }
-
-  async setDrawEndCallback(c: EditorTypes.DrawCallback) {
-    this.drawEndCallback = c;
-  }
-
-  async setResizeCallback(c: EditorTypes.DrawCallback) {
-    this.resizeEndCallback = c;
-  }
-
-  async setBoxSelectedCallback(c: EditorTypes.DrawCallback) {
-    this.boxSelectedCallback = c;
   }
 
   protected setEditEvent() {

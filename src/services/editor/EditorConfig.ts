@@ -1,4 +1,3 @@
-import { sign } from "crypto";
 import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
@@ -58,6 +57,12 @@ export default class EditorConfig implements IEditorConfig {
   protected sectionField: Field | null;
   protected color: Colors;
 
+  // Callback
+  protected imgLoadedCallback: EditorTypes.DrawCallback | null;
+  protected drawEndCallback: EditorTypes.DrawCallback | null;
+  protected resizeEndCallback: EditorTypes.DrawCallback | null;
+  protected boxSelectedCallback: EditorTypes.DrawCallback | null;
+
   constructor() {
     if (document) {
       this.canvasEl = document.createElement("canvas");
@@ -75,7 +80,7 @@ export default class EditorConfig implements IEditorConfig {
 
     this.maxDepth = 150;
     this.minDepth = -50;
-    this.depth = 50;
+    this.depth = 100;
     this.deg = 0;
     this.dMargin = 0;
     this.fields = [];
@@ -111,6 +116,11 @@ export default class EditorConfig implements IEditorConfig {
       section: "#FFD59E",
       pointer: "blue",
     };
+
+    this.drawEndCallback = null;
+    this.resizeEndCallback = null;
+    this.boxSelectedCallback = null;
+    this.imgLoadedCallback = null;
   }
 
   protected getMarginSize(w: number, h: number) {

@@ -59,7 +59,8 @@ const onInit = () => {
   if (!currentEditor.value) {
     return;
   }
-  currentEditor.value.setCalculatedScale();
+  // currentEditor.value.setZoomInOut(110);
+  currentEditor.value.setCalculatedScale("height");
 };
 
 onMounted(() => {});

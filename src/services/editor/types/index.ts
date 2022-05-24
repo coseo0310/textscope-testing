@@ -69,4 +69,10 @@ export declare module EditorTypes {
   type DrawType = "new" | "section";
 
   type DrawCallback = (field?: Field) => void;
+
+  type Event = "imgLoaded" | "draw" | "resize" | "selected";
+
+  type FitType = "width" | "height";
+
+  type ScrollType = "top" | "leftTop";
 }

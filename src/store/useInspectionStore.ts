@@ -201,12 +201,12 @@ export const useInspectionStore = defineStore("inspectionStore", {
           // }
 
           editor.setImgUrl(data.img);
-          editor.setDrawEndCallback(() => {
+          editor.addEventListener("draw", () => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
           });
-          editor.setBoxSelectedCallback((field) => {
+          editor.addEventListener("selected", (field) => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
             if (field) {
@@ -217,7 +217,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
               this.setPagination(idx + 1);
             }
           });
-          editor.setResizeCallback(() => {
+          editor.addEventListener("resize", () => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();
             this.setPagination(this.currentPage);
