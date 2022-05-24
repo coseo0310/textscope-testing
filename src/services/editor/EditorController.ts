@@ -80,6 +80,10 @@ export default class EditorContorller
     this.imgEl.onload = async () => {
       await this.setImageCache();
       await this.draw();
+      if (!this.imgLoadedCallback) {
+        return;
+      }
+      this.imgLoadedCallback();
     };
   }
 
