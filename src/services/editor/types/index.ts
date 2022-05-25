@@ -1,5 +1,5 @@
 export declare module EditorTypes {
-  type Field = {
+  interface Field {
     id: string;
     text: string;
     dx: number;
@@ -11,18 +11,18 @@ export declare module EditorTypes {
     draw?: boolean;
     circle?: Path2D[];
     box?: Path2D;
-  };
+  }
 
-  type RectOption = {
+  interface RectOption {
     dx: number;
     dy: number;
     dWidth: number;
     dHeight: number;
     color: string;
     lineWidth?: number;
-  };
+  }
 
-  type ArcOption = {
+  interface ArcOption {
     dx: number;
     dy: number;
     startArc: number;
@@ -30,18 +30,18 @@ export declare module EditorTypes {
     color: string;
     radius: number;
     lineWidth?: number;
-  };
+  }
 
-  type TextOption = {
+  interface TextOption {
     text: string;
     dx: number;
     dy: number;
     font: string;
     color: string;
     lineWidth?: number;
-  };
+  }
 
-  type ImgOption = {
+  interface ImgOption {
     img: HTMLImageElement | HTMLCanvasElement;
     sx: number;
     sy: number;
@@ -51,20 +51,25 @@ export declare module EditorTypes {
     dy: number;
     dWidth: number;
     dHeight: number;
-  };
+  }
 
-  type RotateOption = {
+  interface RotateOption {
     dx: number;
     dy: number;
     dWidth: number;
     dHeight: number;
     deg: number;
-  };
+  }
 
-  type ScaleOption = {
+  interface ScaleOption {
     x: number;
     y: number;
-  };
+  }
+
+  interface Remain {
+    x: number;
+    y: number;
+  }
 
   type DrawType = "new" | "section";
 

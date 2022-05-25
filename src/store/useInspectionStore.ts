@@ -201,6 +201,9 @@ export const useInspectionStore = defineStore("inspectionStore", {
           // }
 
           editor.setImgUrl(data.img);
+          editor.addEventListener("imgLoaded", () => {
+            editor.setCalculatedScale("width", false);
+          });
           editor.addEventListener("draw", () => {
             this.total = editor.getSectionLength();
             this.synonymList = editor.getFields();

@@ -73,7 +73,7 @@ const setEditor = () => {
     if (!currentEditor.value) {
       return;
     }
-    currentEditor.value.setCalculatedScale();
+    currentEditor.value.setScroll("leftTop");
   }, 500);
 };
 

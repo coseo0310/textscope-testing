@@ -32,7 +32,8 @@ export interface IEditorContorller extends IEventHandler {
   setSectionField: (n: number) => Promise<void>;
   setSectionDraw: (b: boolean) => Promise<void>;
   setSectionControl: (b: boolean) => Promise<void>;
-  setCalculatedScale: (fit: FitType) => void;
+  setCalculatedScale: (fit: FitType, isScroll?: boolean) => Promise<void>;
+  setScroll: (type: ScrollType) => void;
   setEditField: (id: string) => Promise<void>;
   getFields: () => Field[];
   getSections: () => Field[];
@@ -236,7 +237,7 @@ export default class EditorContorller
     await this.draw();
   }
 
-  setCalculatedScale(fit: FitType = "width") {
+  async setCalculatedScale(fit: FitType = "width", isScroll: boolean = true) {
     if (!this.canvasEl || !this.ctx) {
       return;
     }
@@ -264,10 +265,12 @@ export default class EditorContorller
     this.depth = depth;
     this.setImageCache();
     this.draw();
-    this.setScroll(scroll);
+    if (isScroll) {
+      this.setScroll(scroll);
+    }
   }
 
-  private async setScroll(type: ScrollType = "leftTop") {
+  async setScroll(type: ScrollType = "leftTop") {
     if (!this.canvasEl || !this.ctx) {
       return;
     }
@@ -301,54 +304,6 @@ export default class EditorContorller
       top: Math.abs(Math.floor(mTop)),
       left: type === "leftTop" ? Math.abs(Math.floor(mLeft)) : 0,
       behavior: "auto",
-    });
-  }
-
-  private setImageCache() {
-    if (!this.imageCache || !this.imageCacheCtx) {
-      return;
-    }
-    if (!this.imgEl) {
-      return;
-    }
-
-    const scale = this.getScale();
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-
-    const margin = this.getMarginSize(cWidth, cHeight);
-    this.imageCache.width = cWidth + margin * scale;
-    this.imageCache.height = cHeight + margin * scale;
-
-    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
-      return;
-    }
-
-    this.dMargin = margin / 2;
-
-    const dWidth = this.imgEl.naturalWidth;
-    const dHeight = this.imgEl.naturalHeight;
-
-    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
-
-    this.drawRotate(this.imageCacheCtx, {
-      dx: this.dMargin,
-      dy: this.dMargin,
-      dWidth,
-      dHeight,
-      deg: this.deg,
-    });
-
-    this.drawImage(this.imageCacheCtx, {
-      img: this.imgEl,
-      sx: 0,
-      sy: 0,
-      sWidth: Math.floor(dWidth),
-      sHeight: Math.floor(dHeight),
-      dx: Math.floor(this.dMargin),
-      dy: Math.floor(this.dMargin),
-      dWidth: Math.floor(dWidth),
-      dHeight: Math.floor(dHeight),
     });
   }
 
@@ -405,7 +360,7 @@ export default class EditorContorller
       dHeight: Math.floor(cHeight),
     });
 
-    this.drawFields(ctx, this.fields);
+    this.drawFields(ctx, this.fields, 0, { x: 0, y: 0 });
 
     const link = document.createElement("a");
     const image = canvas.toDataURL("image/png");

@@ -48,7 +48,6 @@ export default class EventHandler extends DrawEvent implements IEventHandler {
     this.mouseX = 0;
     this.mouseY = 0;
     this.fields = [];
-    this.dMargin = 0;
   }
 
   protected setEditEvent() {

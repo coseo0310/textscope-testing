@@ -2,6 +2,7 @@ import { EditorTypes } from "./types";
 
 type Field = EditorTypes.Field;
 type DrawType = EditorTypes.DrawType;
+type Remain = EditorTypes.Remain;
 
 export interface IEditorConfig {
   getScale: () => number;
@@ -40,6 +41,7 @@ export default class EditorConfig implements IEditorConfig {
   protected fields: EditorTypes.Field[];
   protected sections: EditorTypes.Field[];
   protected dMargin: number;
+  protected remain: Remain;
   protected crosshair: Crosshair;
 
   // Is
@@ -83,6 +85,10 @@ export default class EditorConfig implements IEditorConfig {
     this.depth = 100;
     this.deg = 0;
     this.dMargin = 0;
+    this.remain = {
+      x: 0,
+      y: 0,
+    };
     this.fields = [];
 
     this.sections = [];

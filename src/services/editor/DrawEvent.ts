@@ -10,6 +10,7 @@ type ScaleOption = EditorTypes.ScaleOption;
 type ImgOption = EditorTypes.ImgOption;
 type RotateOption = EditorTypes.RotateOption;
 type Field = EditorTypes.Field;
+type Remain = EditorTypes.Remain;
 
 export interface IDrawEvent extends IEditorConfig {
   draw: () => Promise<void>;
@@ -131,10 +132,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawEditCircles(
     ctx: CanvasRenderingContext2D,
     field: Field,
-    margin: number = 0
+    margin: number = 0,
+    remian: Remain
   ) {
-    const dx = Math.floor(field.dx + margin);
-    const dy = Math.floor(field.dy + margin);
+    const dx = Math.floor(field.dx + margin + remian.x);
+    const dy = Math.floor(field.dy + margin + remian.y);
     const circle1 = new Path2D();
     const circle2 = new Path2D();
     const circle3 = new Path2D();
@@ -220,11 +222,12 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawIndex(
     ctx: CanvasRenderingContext2D,
     f: Field,
+    cnt: number,
     margin: number = 0,
-    cnt: number
+    remain: Remain
   ) {
-    const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
-    const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+    const dx = Math.floor(f.draw ? f.dx : f.dx + margin + remain.x);
+    const dy = Math.floor(f.draw ? f.dy : f.dy + margin + remain.y);
 
     const color =
       f.type === "confirm"
@@ -269,10 +272,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawText(
     ctx: CanvasRenderingContext2D,
     f: Field,
-    margin: number = 0
+    margin: number = 0,
+    remain: Remain
   ) {
-    const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
-    const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+    const dx = Math.floor(f.draw ? f.dx : f.dx + margin + remain.x);
+    const dy = Math.floor(f.draw ? f.dy : f.dy + margin + remain.y);
 
     ctx.save();
 
@@ -341,7 +345,8 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawFields(
     ctx: CanvasRenderingContext2D,
     fields: Field[],
-    margin: number = 0
+    margin: number = 0,
+    remain: Remain
   ) {
     let cnt = 1;
     for (const f of fields) {
@@ -352,8 +357,8 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
         continue;
       }
 
-      const dx = Math.floor(f.draw ? f.dx : f.dx + margin);
-      const dy = Math.floor(f.draw ? f.dy : f.dy + margin);
+      const dx = Math.floor(f.draw ? f.dx : f.dx + margin + remain.x);
+      const dy = Math.floor(f.draw ? f.dy : f.dy + margin + remain.y);
       const color =
         f.type === "confirm"
           ? this.color.confirm
@@ -375,11 +380,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       ctx.restore();
 
       if (this.isText) {
-        this.drawText(ctx, f, margin);
+        this.drawText(ctx, f, margin, remain);
       }
 
       if (this.isIdx) {
-        this.drawIndex(ctx, f, margin, cnt++);
+        this.drawIndex(ctx, f, cnt++, margin, remain);
       }
     }
   }
@@ -419,10 +424,11 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
   protected drawSelectPointer(
     ctx: CanvasRenderingContext2D,
     field: Field,
-    margin: number
+    margin: number,
+    remain: Remain
   ) {
-    const dx = Math.floor(field.draw ? field.dx : field.dx + margin);
-    const dy = Math.floor(field.draw ? field.dy : field.dy + margin);
+    const dx = Math.floor(field.draw ? field.dx : field.dx + margin + remain.x);
+    const dy = Math.floor(field.draw ? field.dy : field.dy + margin + remain.y);
     const rectOption: RectOption = {
       dx,
       dy,
@@ -433,7 +439,12 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
     };
     this.strokeRect(ctx, rectOption);
     if (!this.isReadonly) {
-      field.circle = this.drawEditCircles(ctx, field, this.dMargin);
+      field.circle = this.drawEditCircles(
+        ctx,
+        field,
+        this.dMargin,
+        this.remain
+      );
     }
   }
 
@@ -480,15 +491,8 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
 
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
 
-    const cWidth = this.imgEl.naturalWidth * scale;
-    const cHeight = this.imgEl.naturalHeight * scale;
-    const margin = this.getMarginSize(cWidth, cHeight);
-
-    const w = cWidth + margin * scale;
-    const h = cHeight + margin * scale;
-
-    this.canvasEl.width = w;
-    this.canvasEl.height = h;
+    this.canvasEl.width = this.imageCache.width;
+    this.canvasEl.height = this.imageCache.height;
 
     this.drawImage(this.ctx, {
       img: this.imageCache,
@@ -513,13 +517,80 @@ export default class DrawEvent extends EditorConfig implements IDrawEvent {
       );
     }
 
-    this.drawFields(this.ctx, this.fields, this.dMargin);
+    this.drawFields(this.ctx, this.fields, this.dMargin, this.remain);
 
     if (this.editField) {
-      this.drawSelectPointer(this.ctx, this.editField, this.dMargin);
+      this.drawSelectPointer(
+        this.ctx,
+        this.editField,
+        this.dMargin,
+        this.remain
+      );
     }
     if (this.drawField) {
       this.drawNewRect(this.ctx, this.drawField);
     }
+  }
+
+  protected setImageCache() {
+    if (!this.imageCache || !this.imageCacheCtx) {
+      return;
+    }
+    if (!this.imgEl) {
+      return;
+    }
+
+    const pWidth = this.canvasEl?.parentElement?.clientWidth || 0;
+    const pHeight = this.canvasEl?.parentElement?.clientHeight || 0;
+
+    const scale = this.getScale();
+    const cWidth = this.imgEl.naturalWidth * scale;
+    const cHeight = this.imgEl.naturalHeight * scale;
+
+    const margin = this.getMarginSize(cWidth, cHeight);
+
+    const width = cWidth + margin * scale;
+    const height = cHeight + margin * scale;
+
+    const wRemain = width < pWidth ? Math.floor(pWidth - width) : 0;
+    const hRemain = height < pHeight ? Math.floor(pHeight - height) : 0;
+
+    this.imageCache.width = cWidth + margin * scale + wRemain;
+    this.imageCache.height = cHeight + margin * scale;
+
+    this.dMargin = margin / 2;
+    this.remain = {
+      x: wRemain / 2 / scale,
+      y: hRemain / 2 / scale,
+    };
+
+    if (this.imageCache.width === 0 || this.imageCache.height === 0) {
+      return;
+    }
+
+    const dWidth = this.imgEl.naturalWidth;
+    const dHeight = this.imgEl.naturalHeight;
+
+    this.setScale(this.imageCacheCtx, { x: scale, y: scale });
+
+    this.drawRotate(this.imageCacheCtx, {
+      dx: this.dMargin + this.remain.x,
+      dy: this.dMargin + this.remain.y,
+      dWidth,
+      dHeight,
+      deg: this.deg,
+    });
+
+    this.drawImage(this.imageCacheCtx, {
+      img: this.imgEl,
+      sx: 0,
+      sy: 0,
+      sWidth: Math.floor(dWidth),
+      sHeight: Math.floor(dHeight),
+      dx: Math.floor(this.dMargin + this.remain.x),
+      dy: Math.floor(this.dMargin + this.remain.y),
+      dWidth: Math.floor(dWidth),
+      dHeight: Math.floor(dHeight),
+    });
   }
 }
