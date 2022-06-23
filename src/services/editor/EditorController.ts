@@ -375,9 +375,6 @@ export default class EditorContorller
       case "draw":
         this.drawEndCallback = c;
         break;
-      case "draw":
-        this.drawEndCallback = c;
-        break;
       case "resize":
         this.resizeEndCallback = c;
         break;
