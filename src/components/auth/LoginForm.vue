@@ -1,201 +1,102 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import Input from "@/components/shared/Input.vue";
-import Button from "@/components/shared/Button.vue";
-import ErrorForm from "@/components/shared/ErrorForm.vue";
-import Icons, { IconType } from "@/components/shared/Icons.vue";
-import { useAuthStore } from "@/store";
-import { useForm } from "@/hooks";
-import { path } from "@/router";
-
-const icon = ref<IconType>("hide");
-const loader = ref<boolean>(false);
-const authStore = useAuthStore();
-const router = useRouter();
-const passwordValidate = ref<boolean>(false);
-
-const { handleSubmit, register, getValues, errors, formState } = useForm();
-
-const onShow = () => {
-  icon.value = icon.value === "hide" ? "show" : "hide";
+const onSubmit = () => {
+  alert("prevent");
 };
-
-const onLogin = async () => {
-  const { email, password } = getValues();
-  loader.value = true;
-  const login = await authStore.onLogin(email, password);
-  if (!login) {
-    passwordValidate.value = true;
-    loader.value = false;
-    return;
-  }
-
-  router.push(path.dashboard.path);
-};
-
-const onSingleSignOne = async () => {
-  loader.value = true;
-  const sso = await authStore.onSingleSignOne();
-  if (!sso) {
-    return;
-  }
-
-  router.push(path.dashboard.path);
-};
-
-const onEnter = () => {
-  handleSubmit(onLogin);
-};
-
-const isAdmin = import.meta.env.DEV;
-
-const n = navigator;
 </script>
 
 <template>
-  <div class="login-form">
-    <div class="logo">
-      <img src="@/assets/logo/textscope-logo.png" alt="logo" />
-      <p>AI 기반 문서 인식 솔루션</p>
-    </div>
-    <div class="input email">
-      <label>ID</label>
-      <Input
-        type="text"
-        name="email"
-        class="color-d4 focus-color-d5"
-        :class="{
-          ['border-color-red']: errors.email?.type,
-        }"
-        :ref="
-          register({
-            required: true,
-            pattern:
-              /^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$/,
-          })
-        "
-        maxlength="20"
-        @keyup.enter="onEnter"
-      />
-      <ErrorForm>
-        <span v-if="errors.email?.type">
-          아이디는 이메일 형식으로 입력해주세요
-        </span>
-        <span v-else></span>
-      </ErrorForm>
-    </div>
-    <div class="input pasword" :class="{ validate: errors.password?.type }">
-      <label>Passwrod</label>
-      <Input
-        :type="icon === 'hide' ? 'password' : 'text'"
-        name="password"
-        class="color-d4 focus-color-d5"
-        :class="{
-          ['border-color-red']: errors.password?.type,
-        }"
-        :ref="
-          register({
-            required: true,
-          })
-        "
-        maxlength="20"
-        @keyup.enter="onEnter"
-      />
-      <Icons :icons="icon" :class="{ on: icon === 'show' }" @click="onShow" />
-      <ErrorForm>
-        <!-- <span v-if="errors.password?.type"
-          >입력된 비밀번호가 올바르지 않습니다.</span
-        > -->
-        <span v-if="errors.password?.type">패스워드를 입력해주세요</span>
-        <span v-else></span>
-      </ErrorForm>
-    </div>
-    <div class="btn">
-      <Button
-        class="primary"
-        :disabled="!formState.isValid"
-        :loader="loader"
-        @click="handleSubmit(onLogin)"
-      >
-        로그인
-      </Button>
-    </div>
-    <div v-if="!isAdmin" class="sso" @click="onSingleSignOne">
-      SSO (Single Sign One) 로그인
-    </div>
-  </div>
+  <article :class="form.layout">
+    <form :class="form.login_form" @submit.prevent="onSubmit">
+      <section :class="form.input_box" aria-label="이메일 입력 박스">
+        <label>아이디</label>
+        <input type="text" name="email" placeholder="이메일 주소 입력" />
+      </section>
+      <section :class="form.input_box" aria-label="비밀번호 입력 박스">
+        <label>비밀번호</label>
+        <input type="password" name="email" placeholder="비밀번호 입력" />
+      </section>
+      <section :class="form.btn_wrap" aria-label="로그인 버튼">
+        <button type="submit">로그인</button>
+      </section>
+      <section :class="form.error_message" aria-label="에러 메시지">
+        Error 403
+      </section>
+    </form>
+  </article>
 </template>
 
-<style lang="scss" scoped>
-.login-form {
-  width: 310px;
-  height: 338px;
-  z-index: 3;
+<style lang="scss" module="form">
+.layout {
+  width: 100%;
+  height: 100%;
+}
 
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.login_form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 
-    p {
-      color: #000;
-      font-size: 18px;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-  }
+.error_message {
+  color: $r-300;
+  font-size: 14px;
+  font-weight: 600;
+}
 
-  .input {
-    color: $d5;
-    font-size: 14px;
-    font-weight: 400;
+.btn_wrap {
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 40px;
 
-    label {
-      display: block;
-      margin: 10px 0 5px 0;
-    }
-  }
-
-  .pasword {
-    position: relative;
-
-    svg {
-      position: absolute;
-      top: 27px;
-      right: 10px;
-      fill: $d4;
-      cursor: pointer;
-
-      &.on {
-        fill: none;
-        stroke: $d5;
-      }
-    }
-  }
-  .btn {
+  button {
     width: 100%;
-    height: 46px;
-    margin-top: 20px;
-
-    button {
-      font-size: 18px;
-      font-weight: 800;
-    }
-  }
-
-  .sso {
-    color: $point-blue;
-    font-size: 18px;
+    height: 56px;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    background-color: $m-900;
+    color: #ffffff;
+    font-size: 20px;
     font-weight: 700;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    text-decoration: underline;
     cursor: pointer;
+  }
+}
+
+.input_box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  padding-bottom: 30px;
+
+  label {
+    font-weight: 500;
+    font-size: 12px;
+    color: $n-200;
+    padding-bottom: 5px;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid $n-40;
+    border-radius: 3px;
+    padding: 0 10px;
+    outline: none;
+
+    &::placeholder {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+
+    &:focus {
+      border-color: $m-900;
+    }
   }
 }
 </style>
