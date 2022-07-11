@@ -1,14 +1,7 @@
-<script setup lang="ts">
-import LoginForm from "@/components/auth/LoginForm.vue";
-import WaveForm from "@/components/layout/WaveForm.vue";
-import CopyRight from "@/components/layout/CopyRight.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <WaveForm>
-    <LoginForm />
-  </WaveForm>
-  <CopyRight />
+  <h1 class="text-3xl font-bold underline">Hello world!</h1>
 </template>
 
 <style lang="scss" scoped></style>
