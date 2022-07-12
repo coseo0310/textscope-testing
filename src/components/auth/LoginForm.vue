@@ -1,11 +1,19 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+import { path } from "@/router";
+import { useForm } from "@/hooks";
+
+const router = useRouter();
+const { register, handleSubmit, getValues, errors, formState, setValidate } =
+  useForm();
+
 const onSubmit = () => {
-  alert("prevent");
+  router.push({ name: path.work.name });
 };
 </script>
 
 <template>
-  <article :class="form.layout">
+  <article :class="layout.article">
     <form :class="form.login_form" @submit.prevent="onSubmit">
       <section :class="form.input_box" aria-label="이메일 입력 박스">
         <label>아이디</label>
@@ -15,7 +23,7 @@ const onSubmit = () => {
         <label>비밀번호</label>
         <input type="password" name="email" placeholder="비밀번호 입력" />
       </section>
-      <section :class="form.btn_wrap" aria-label="로그인 버튼">
+      <section :class="form.btn_box" aria-label="로그인 버튼">
         <button type="submit">로그인</button>
       </section>
       <section :class="form.error_message" aria-label="에러 메시지">
@@ -25,12 +33,14 @@ const onSubmit = () => {
   </article>
 </template>
 
-<style lang="scss" module="form">
-.layout {
+<style lang="scss" module="layout">
+.article {
   width: 100%;
   height: 100%;
 }
+</style>
 
+<style lang="scss" module="form">
 .login_form {
   width: 100%;
   height: 100%;
@@ -46,10 +56,10 @@ const onSubmit = () => {
   font-weight: 600;
 }
 
-.btn_wrap {
+.btn_box {
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 40px;
+  padding-top: 20px;
+  padding-bottom: 60px;
 
   button {
     width: 100%;
@@ -71,7 +81,7 @@ const onSubmit = () => {
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 
   label {
     font-weight: 500;

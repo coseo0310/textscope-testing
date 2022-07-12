@@ -7,20 +7,20 @@ import PoweredBy from "@/assets/logo/powered_by.png";
 </script>
 
 <template>
-  <main :class="login.layout">
-    <section :class="login.logo_section" aria-label="로고 영역">
-      <article :class="login.logo_wrap">
+  <main :class="layout.main">
+    <section :class="left.section" aria-label="로고 영역">
+      <article :class="left.wrap">
         <img :src="TextscopeLogo" alt="textscope logo" />
         <p>AI 문서 이해 플랫폼</p>
       </article>
     </section>
-    <section :class="login.login_section" aria-label="로그인 영역">
-      <article :class="login.client_logo">
+    <section :class="right.section" aria-label="로그인 영역">
+      <article :class="right.client_logo">
         <img :src="ClientLogo" alt="client logo" />
-        <p :class="login.login_title">로그인</p>
+        <p :class="right.title">로그인</p>
       </article>
       <LoginForm />
-      <article :class="login.lomin_logo">
+      <article :class="right.lomin_logo">
         <img :src="PoweredBy" alt="powered by" />
         <img :src="LominLogo" alt="lomin logo" />
       </article>
@@ -28,15 +28,17 @@ import PoweredBy from "@/assets/logo/powered_by.png";
   </main>
 </template>
 
-<style lang="scss" module="login">
-.layout {
+<style lang="scss" module="layout">
+.main {
   width: 100vw;
   height: 100vh;
   display: grid;
   grid-template-columns: 1.45fr 0.55fr;
 }
+</style>
 
-.logo_section {
+<style lang="scss" module="left">
+.section {
   height: 100vh;
   background-color: $m-900;
   display: flex;
@@ -45,7 +47,9 @@ import PoweredBy from "@/assets/logo/powered_by.png";
   flex-direction: column;
 }
 
-.logo_wrap {
+.wrap {
+  position: relative;
+  top: -20px;
   width: 306px;
   height: 96px;
   margin-bottom: 20px;
@@ -61,8 +65,10 @@ import PoweredBy from "@/assets/logo/powered_by.png";
     color: $m-300;
   }
 }
+</style>
 
-.login_section {
+<style lang="scss" module="right">
+.section {
   height: 100vh;
   background-color: #ffffff;
   padding: 2vh 4vw;
@@ -76,7 +82,7 @@ import PoweredBy from "@/assets/logo/powered_by.png";
   width: 100%;
 }
 
-.login_title {
+.title {
   width: 100%;
   padding-top: 30px;
   font-weight: 600;
