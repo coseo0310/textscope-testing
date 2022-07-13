@@ -60,39 +60,3 @@ export const useAuthStore = defineStore("authStore", {
     },
   },
 });
-
-// function getAlarmColumns(): Grid.Columns {
-//   return [
-//     {
-//       text: "내용",
-//       align: "start",
-//       sortable: false,
-//       value: "content",
-//     },
-//     {
-//       width: 210,
-//       text: "날짜",
-//       align: "center",
-//       sortable: false,
-//       value: "date",
-//     },
-//   ];
-// }
-
-// function getGridList(c: number = 1): Grid.GridList {
-//   let tmp = [];
-
-//   //TODO: Get Grid list
-//   for (let i = 0; i < 10; i++) {
-//     const id = `${Date.now() + i}`;
-
-//     const obj = {
-//       id,
-//       content: `alarm-${c}-${i + 1}`,
-//       date: `2022-03-${String(i + 2).padStart(2, "0")}`,
-//       new: i < 3 ? true : false,
-//     };
-//     tmp.push(obj);
-//   }
-//   return tmp;
-// }

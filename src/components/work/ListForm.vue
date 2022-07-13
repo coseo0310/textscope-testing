@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Grid from "@/components/shared/Grid.vue";
+import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import { useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const workStore = useWorkStore();
-const { isFilter, searchTerm, align } = storeToRefs(workStore);
+const { isFilter, searchTerm, align, columns, list, selection } =
+  storeToRefs(workStore);
 
 const registerColor = computed(() =>
   align.value === "register" ? "#dfe1e6" : "transparent"
@@ -93,7 +94,71 @@ const onFilter = () => {
         </div>
       </div>
     </section>
-    <section :class="grid.section" aria-label="그리드 영역"></section>
+    <section :class="grid.section" aria-label="그리드 영역">
+      <Grid :grid-list="list" :columns="columns" :selected="selection">
+        <template v-slot:document="{ item }">
+          <div :class="document.style">
+            {{ item.document }}
+            <p v-if="item.document !== '-'">+외{{ item.documentTotal }}건</p>
+          </div>
+        </template>
+        <template v-slot:name="{ item }">
+          <div
+            :class="{
+              [name.on]: item.status !== 'analysis',
+              [name.off]: item.status === 'analysis',
+            }"
+          >
+            {{ item.name }} {{ item.status }}
+          </div>
+        </template>
+        <template v-slot:register="{ item }">
+          <div :class="team.style">
+            {{ item.register }} {{ item.rTeam }}
+            <p>{{ item.rDate }}</p>
+          </div>
+        </template>
+        <template v-slot:inspector="{ item }">
+          <div :class="team.style">
+            {{ item.inspector }} {{ item.inspector === "-" ? "" : item.iTeam }}
+            <p v-if="item.inspector !== '-'">{{ item.iDate }}</p>
+          </div>
+        </template>
+        <template v-slot:status="{ item }">
+          <div v-if="item.status === 'analysis'" :class="status.analysis">
+            분석대기
+          </div>
+          <div v-if="item.status === 'wait'" :class="status.wait">검수대기</div>
+          <div v-if="item.status === 'progress'" :class="status.progress">
+            검수중
+          </div>
+          <div v-if="item.status === 'complete'" :class="status.complete">
+            검수완료
+          </div>
+        </template>
+        <template v-slot:accuracy="{ item }">
+          <div v-if="item.accuracy !== '-'" :class="accuracy.progress">
+            <div
+              :class="{
+                [accuracy.progress_percent]: true,
+                [accuracy.progress_perfect]: item.accuracy >= 100,
+                [accuracy.progress_below]: item.accuracy < 100,
+              }"
+              :style="{ width: `${item.accuracy}%` }"
+            ></div>
+          </div>
+          <div
+            v-if="item.accuracy !== '-'"
+            :class="{
+              [accuracy.percent_below]: item.accuracy < 100,
+              [accuracy.percent_perfect]: item.accuracy >= 100,
+            }"
+          >
+            {{ item.accuracy }}%
+          </div>
+        </template>
+      </Grid>
+    </section>
     <section :class="func.section" aria-label="기능 영역">
       <div :class="func.box">
         <button :class="func.btn_on" type="button">
@@ -283,7 +348,7 @@ const onFilter = () => {
 .layout {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   width: 100%;
   min-height: 742px;
   border-radius: 3px;
@@ -398,7 +463,7 @@ const onFilter = () => {
 <style lang="scss" module="grid">
 .section {
   width: 100%;
-  height: 100%;
+  padding: 20px 0;
 }
 </style>
 
@@ -458,6 +523,160 @@ const onFilter = () => {
 <style lang="scss" module="paging">
 .section {
   width: 100%;
-  //   background-color: lightcoral;
+  padding: 40px 0;
+}
+</style>
+
+<style lang="scss" module="document">
+.style {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: $m-800;
+
+  p {
+    font-size: 11px;
+    line-height: 14px;
+    color: #6b778c;
+  }
+}
+</style>
+
+<style lang="scss" module="name">
+.on {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: $m-800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.off {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: $m-800;
+  opacity: 0.5;
+  text-decoration: underline;
+}
+</style>
+
+<style lang="scss" module="team">
+.style {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: $m-800;
+
+  p {
+    font-size: 11px;
+    line-height: 14px;
+    color: #6b778c;
+  }
+}
+</style>
+
+<style lang="scss" module="status">
+.analysis {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  border-radius: 3px;
+  color: $m-500;
+  background-color: $n-40;
+}
+
+.wait {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  border-radius: 3px;
+  color: $b-500;
+  background-color: $b-50;
+}
+
+.progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  border-radius: 3px;
+  color: $p-500;
+  background-color: $p-50;
+}
+
+.complete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  border-radius: 3px;
+  color: $g-500;
+  background-color: $g-50;
+}
+</style>
+
+<style lang="scss" module="accuracy">
+.progress {
+  position: relative;
+  width: 78px;
+  height: 6px;
+  background-color: $n-30;
+  border-radius: 20px;
+}
+
+.progress_percent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 6px;
+  max-width: 78px;
+  border-radius: 20px;
+}
+
+.progress_perfect {
+  background-color: $g-200;
+}
+
+.progress_below {
+  background-color: $b-300;
+}
+
+.percent_perfect {
+  color: $g-500;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  padding-left: 10px;
+}
+.percent_below {
+  color: $b-400;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  padding-left: 10px;
 }
 </style>

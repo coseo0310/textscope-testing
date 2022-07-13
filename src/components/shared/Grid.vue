@@ -73,7 +73,7 @@ watch(props, () => {
 <template>
   <div class="grid">
     <div class="grid__headers">
-      <div v-if="props.selected" class="header center">
+      <div v-if="props.selected" class="header center checked">
         <CheckBox :default="allSelected" @change="onAllSelected" />
       </div>
       <div
@@ -104,7 +104,7 @@ watch(props, () => {
             }
           "
         >
-          <div v-if="props.selected" class="col center">
+          <div v-if="props.selected" class="col center checked">
             <CheckBox
               :default="!!g.checked"
               @change="onSelected(g.id as string)"
@@ -141,26 +141,32 @@ watch(props, () => {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    background-color: $d3;
-    padding: 10px 0;
-    border-top: 2px solid $d4;
-    border-bottom: 2px solid $d4;
+    background-color: #ffffff;
+    padding: 5px 0;
+    border-bottom: 1px solid #dfe1e6;
+
     .header {
       display: flex;
       align-items: center;
       width: 100%;
-      font-size: 18px;
+      line-height: 16px;
+      font-size: 12px;
       font-weight: 600;
-      color: $d5;
-      padding: 0 20px;
+      color: #5e5e5e;
+      // padding: 0 5px;
       &.center {
         justify-content: center;
       }
     }
+
+    .checked {
+      width: 40px;
+    }
   }
   .grid__columns {
     width: 100%;
-    border-bottom: 2px solid $d4;
+    border-bottom: 1px solid #dfe1e6;
+
     &.none {
       border-bottom: 0;
     }
@@ -170,33 +176,29 @@ watch(props, () => {
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      background-color: $d2;
-      &.divider {
-        border-bottom: 2px solid $d4;
-        &:last-child {
-          border-bottom: 0;
-        }
-      }
+      background-color: #ffffff;
+
       &.accordion-section {
         padding: 20px 30px;
       }
       &.accordion {
         cursor: pointer;
       }
-      &.selected {
-        background-color: $d3;
-      }
-      &:hover {
-        background-color: $d3;
-        cursor: pointer;
-      }
+      // &.selected {
+      //   background-color: #eee;
+      // }
+      // &:hover {
+      //   background-color: #eee;
+      //   cursor: pointer;
+      // }
       .col {
         display: flex;
         align-items: center;
-        color: $d5;
-        font-size: 18px;
-        font-weight: 400;
-        min-height: 45px;
+        color: #7c7c7c;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        min-height: 40px;
         background-color: transparent;
         &.center {
           justify-content: center;
@@ -207,22 +209,11 @@ watch(props, () => {
         &.end {
           justify-content: flex-end;
         }
+
+        &.checked {
+          width: 40px;
+        }
       }
-    }
-  }
-  &.underline {
-    .grid__columns {
-      .row {
-        border-bottom: 2px solid $d4;
-      }
-      :last-child {
-        border-bottom: 0;
-      }
-    }
-  }
-  &.no-underline {
-    .grid__columns {
-      border-width: 0;
     }
   }
 }
