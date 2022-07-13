@@ -91,5 +91,10 @@ const onClick = () => {
     font-size: 18px;
     font-weight: 400;
   }
+
+  &.color-blue {
+    border-radius: 4px;
+    border: 1px solid #0052cc;
+  }
 }
 </style>

@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("authStore", {
     return {
       // all these properties will have their type inferred automatically
       user: null,
-      isLogin: true,
+      isLogin: false,
       isSubMenu: false,
     };
   },

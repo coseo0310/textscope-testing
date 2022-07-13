@@ -1,23 +1,36 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
+import Filter from "@/components/work/Filter.vue";
+import Confirm from "@/components/shared/Confirm.vue";
+import Toast from "@/components/shared/Toast.vue";
+import Alert from "@/components/shared/Alert.vue";
 import { useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const workStore = useWorkStore();
-const { isFilter, searchTerm, align, columns, list, selection } =
-  storeToRefs(workStore);
+const { searchTerm, filter, columns, list, selection } = storeToRefs(workStore);
+
+const isFilter = ref<boolean>(true);
+const isDelete = ref<boolean>(false);
+const isRPA = ref<boolean>(false);
+const isToast = ref<boolean>(false);
+const isResult = ref<boolean>(false);
+const isWork = ref<boolean>(false);
+const isProgress = ref<boolean>(false);
+const toastMsg = ref<string>("");
+const types = ref<"warn" | "info" | "confirm">("info");
 
 const registerColor = computed(() =>
-  align.value === "register" ? "#dfe1e6" : "transparent"
+  filter.value.align === "register" ? "#dfe1e6" : "transparent"
 );
 const inspectionColor = computed(() =>
-  align.value === "inspection" ? "#dfe1e6" : "transparent"
+  filter.value.align === "inspector" ? "#dfe1e6" : "transparent"
 );
 
-const onAlign = (type: "register" | "inspection") => {
-  align.value = type;
+const onAlign = (type: "register" | "inspector") => {
+  filter.value.align = type;
 };
 
 const onKeyup = (e: KeyboardEvent) => {
@@ -28,6 +41,17 @@ const onKeyup = (e: KeyboardEvent) => {
   searchTerm.value = el.value;
 };
 
+const onSelected = (item: GridList) => {
+  const s: string[] = [];
+  selection.value = item.reduce((prev, cur) => {
+    if (cur.checked) {
+      const id = cur.id as string;
+      prev.push(id);
+    }
+    return prev;
+  }, s);
+};
+
 const onEnter = () => {
   alert("search");
 };
@@ -35,20 +59,91 @@ const onEnter = () => {
 const onFilter = () => {
   isFilter.value = true;
 };
+
+const onRPA = () => {
+  isRPA.value = true;
+};
+
+const onRPASubmit = () => {
+  alert("준비중...");
+};
+
+const onDelete = () => {
+  types.value = "warn";
+  isDelete.value = true;
+};
+
+const onDeleteConfirm = () => {
+  list.value = list.value.filter((item) => {
+    const id = item.id as string;
+    return !selection.value.includes(id);
+  });
+  types.value = "confirm";
+  toastMsg.value = `${selection.value.length}개 항목을 삭제했습니다`;
+  isToast.value = true;
+  selection.value = [];
+  isDelete.value = false;
+  setTimeout(() => {
+    toastClose();
+  }, 2000);
+};
+
+const downloadCancel = () => {
+  types.value = "warn";
+  toastMsg.value = "다운로드할 문서를 선택해 주세요";
+  isToast.value = true;
+  setTimeout(() => {
+    toastClose();
+  }, 2000);
+};
+const onResultDownload = () => {
+  if (selection.value.length === 0) {
+    downloadCancel();
+    return;
+  }
+  isResult.value = true;
+  isProgress.value = true;
+  setTimeout(() => {
+    isProgress.value = false;
+  }, 2000);
+};
+const onWorkDownload = () => {
+  if (selection.value.length === 0) {
+    downloadCancel();
+    return;
+  }
+  isWork.value = true;
+  isProgress.value = true;
+  setTimeout(() => {
+    isProgress.value = false;
+  }, 2000);
+};
+
+const onCancel = () => {
+  isDelete.value = false;
+  isRPA.value = false;
+  isWork.value = false;
+  isResult.value = false;
+};
+
+const toastClose = () => {
+  isToast.value = false;
+  toastMsg.value = "";
+};
 </script>
 
 <template>
   <article :class="article.layout">
-    <section :class="filter.section" aria-label="검색 필터 영역">
-      <div :class="filter.box">
-        <p :class="filter.text">정렬방식</p>
-        <div :class="filter.align">
+    <section :class="search.section" aria-label="검색 필터 영역">
+      <div :class="search.box">
+        <p :class="search.text">정렬방식</p>
+        <div :class="search.align">
           <p @click="onAlign('register')">등록일순</p>
-          <p @click="onAlign('inspection')">검색일순</p>
+          <p @click="onAlign('inspector')">검수일순</p>
         </div>
       </div>
-      <div :class="filter.box">
-        <button :class="filter.filter_btn" @click="onFilter">
+      <div :class="search.box">
+        <button :class="search.filter_btn" @click="onFilter">
           <i>
             <svg
               width="16"
@@ -67,15 +162,15 @@ const onFilter = () => {
           </i>
           <p>검색필터</p>
         </button>
-        <div :class="filter.box">
+        <div :class="search.box">
           <input
-            :class="filter.search"
+            :class="search.search"
             type="text"
             name="searchTrem"
             placeholder="문서명으로 검색"
             @keyup="onKeyup"
           />
-          <i :class="filter.search_icon" @click="onEnter">
+          <i :class="search.search_icon" @click="onEnter">
             <svg
               width="24"
               height="24"
@@ -95,7 +190,12 @@ const onFilter = () => {
       </div>
     </section>
     <section :class="grid.section" aria-label="그리드 영역">
-      <Grid :grid-list="list" :columns="columns" :selected="selection">
+      <Grid
+        :grid-list="list"
+        :columns="columns"
+        :selected="[]"
+        @selected="onSelected"
+      >
         <template v-slot:document="{ item }">
           <div :class="document.style">
             {{ item.document }}
@@ -109,7 +209,7 @@ const onFilter = () => {
               [name.off]: item.status === 'analysis',
             }"
           >
-            {{ item.name }} {{ item.status }}
+            {{ item.name }}
           </div>
         </template>
         <template v-slot:register="{ item }">
@@ -198,6 +298,7 @@ const onFilter = () => {
             [func.btn_off]: !workStore.isRPA,
           }"
           type="button"
+          @click="onRPA"
         >
           <i>
             <svg
@@ -235,6 +336,7 @@ const onFilter = () => {
             [func.btn_off]: !workStore.isSelection,
           }"
           type="button"
+          @click="onDelete"
         >
           <i>
             <svg
@@ -274,7 +376,7 @@ const onFilter = () => {
         </button>
       </div>
       <div :class="func.box">
-        <button :class="func.btn_on" type="button">
+        <button :class="func.btn_on" type="button" @click="onResultDownload">
           <i>
             <svg
               width="16"
@@ -305,7 +407,7 @@ const onFilter = () => {
           </i>
           <p>인식결과 내보내기</p>
         </button>
-        <button :class="func.btn_on" type="button">
+        <button :class="func.btn_on" type="button" @click="onWorkDownload">
           <i>
             <svg
               width="16"
@@ -342,6 +444,47 @@ const onFilter = () => {
       <Pagination />
     </section>
   </article>
+  <Filter v-if="isFilter" />
+  <Confirm
+    v-if="isDelete"
+    :types="types"
+    title="선택한 항목을 삭제할까요?"
+    :text="['한번 삭제한 항목은 복구가 불가능 합니다.']"
+    :confirm-label="`${selection.length}개 항목 삭제`"
+    cancel-label="취소"
+    :confirm="onDeleteConfirm"
+    :cancel="onCancel"
+  />
+  <Confirm
+    v-if="isRPA"
+    :types="types"
+    title="RPA 이메일을 전송할까요?"
+    :text="['선택한 3개 항목의 RPA 이메일을 재전송합니다.']"
+    :confirm-label="`이메일 재전송`"
+    cancel-label="취소"
+    :confirm="onRPASubmit"
+    :cancel="onCancel"
+  />
+  <Alert
+    v-if="isResult"
+    :progress="isProgress"
+    title="인식결과 내보내기 완료"
+    :text="[`${selection.values}개의 파일 다운로드가 완료되었습니다.`]"
+    :confirm="onCancel"
+  />
+  <Alert
+    v-if="isWork"
+    :progress="isProgress"
+    title="업무목록 내보내기 완료"
+    :text="[`${selection.values}개의 파일 다운로드가 완료되었습니다.`]"
+    :confirm="onCancel"
+  />
+  <Toast
+    v-if="isToast"
+    :types="types"
+    :text="toastMsg"
+    :callback="toastClose"
+  />
 </template>
 
 <style lang="scss" module="article">
@@ -360,7 +503,7 @@ const onFilter = () => {
 }
 </style>
 
-<style lang="scss" module="filter">
+<style lang="scss" module="search">
 .section {
   width: 100%;
   height: 32px;

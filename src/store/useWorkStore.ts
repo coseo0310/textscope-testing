@@ -1,16 +1,24 @@
 import { defineStore } from "pinia";
 import { Grid } from "@/types";
 
+interface Filter {
+  align: "register" | "inspector";
+  startDate: string;
+  endDate: string;
+  status: string;
+  documents: string[];
+  teams: string[];
+}
+
 type States = {
   imperfectTotal: number;
   completeTotal: number;
   workTotal: number;
   searchTerm: string;
-  selection: Grid.Selected[];
+  selection: string[];
   columns: Grid.Columns;
   list: Grid.GridList;
-  align: "register" | "inspection";
-  isFilter: boolean;
+  filter: Filter;
 };
 
 // useStore could be anything like useUser, useCart
@@ -27,13 +35,19 @@ export const useWorkStore = defineStore("workStore", {
       selection: [],
       columns: getWorkColumns(),
       list: getGridList(),
-      align: "register",
-      isFilter: false,
+      filter: {
+        align: "register",
+        startDate: "",
+        endDate: "",
+        status: "",
+        documents: [],
+        teams: [],
+      },
     };
   },
   getters: {
     isSelection: (state) => state.selection.length > 0,
-    isRPA: (state) => false,
+    isRPA: (state) => state.selection.length > 0,
   },
   actions: {},
 });

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --mode development",
-    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build": "vue-tsc --noEmit && vite build",
     "build:editor": "tsc src/services/editor/index.ts --outDir src/services/editor/dist  --module esnext --moduleResolution node --declaration",
     "deploy": "sh deploy.sh",
     "preview": "vite preview"

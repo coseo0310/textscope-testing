@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { useWorkStore } from "@/store";
+import { useWorkStore, useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
 
+const authStore = useAuthStore();
 const workStore = useWorkStore();
 const { imperfectTotal, completeTotal, workTotal } = storeToRefs(workStore);
+
+authStore.isLogin = true;
 </script>
 
 <template>

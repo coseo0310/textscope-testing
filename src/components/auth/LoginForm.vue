@@ -1,46 +1,60 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/store";
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
-import { useForm } from "@/hooks";
+// import { useForm } from "@/hooks";
 
+const authStore = useAuthStore();
+const { isLogin } = storeToRefs(authStore);
 const router = useRouter();
-const { register, handleSubmit, getValues, errors, formState, setValidate } =
-  useForm();
+// const { register, handleSubmit, getValues, errors, formState, setValidate } =
+//   useForm();
 
-const onSubmit = () => {
+const el = ref<HTMLButtonElement | null>(null);
+
+isLogin.value = false;
+
+const onLogin = () => {
+  isLogin.value = true;
   router.push({ name: path.work.name });
 };
+
+onMounted(() => {
+  if (!el.value) {
+    return;
+  }
+  el.value.addEventListener("click", onLogin);
+});
 </script>
 
 <template>
-  <article :class="layout.article">
-    <form :class="form.login_form" @submit.prevent="onSubmit">
-      <section :class="form.input_box" aria-label="이메일 입력 박스">
+  <article :class="login.layout">
+    <form :class="login.login_form">
+      <section :class="login.input_box" aria-label="이메일 입력 박스">
         <label>아이디</label>
         <input type="text" name="email" placeholder="이메일 주소 입력" />
       </section>
-      <section :class="form.input_box" aria-label="비밀번호 입력 박스">
+      <section :class="login.input_box" aria-label="비밀번호 입력 박스">
         <label>비밀번호</label>
         <input type="password" name="email" placeholder="비밀번호 입력" />
       </section>
-      <section :class="form.btn_box" aria-label="로그인 버튼">
-        <button type="submit">로그인</button>
+      <section :class="login.btn_box" aria-label="로그인 버튼">
+        <button ref="el" type="button">로그인</button>
       </section>
-      <section :class="form.error_message" aria-label="에러 메시지">
+      <section :class="login.error_message" aria-label="에러 메시지">
         Error 403
       </section>
     </form>
   </article>
 </template>
 
-<style lang="scss" module="layout">
-.article {
+<style lang="scss" module="login">
+.layout {
   width: 100%;
   height: 100%;
 }
-</style>
-
-<style lang="scss" module="form">
 .login_form {
   width: 100%;
   height: 100%;
