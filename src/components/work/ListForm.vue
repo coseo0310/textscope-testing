@@ -12,7 +12,7 @@ import { storeToRefs } from "pinia";
 const workStore = useWorkStore();
 const { searchTerm, filter, columns, list, selection } = storeToRefs(workStore);
 
-const isFilter = ref<boolean>(true);
+const isFilter = ref<boolean>(false);
 const isDelete = ref<boolean>(false);
 const isRPA = ref<boolean>(false);
 const isToast = ref<boolean>(false);
@@ -444,7 +444,7 @@ const toastClose = () => {
       <Pagination />
     </section>
   </article>
-  <Filter v-if="isFilter" />
+  <Filter v-if="isFilter" :close-callback="() => (isFilter = false)" />
   <Confirm
     v-if="isDelete"
     :types="types"
@@ -547,7 +547,6 @@ const toastClose = () => {
   background-color: transparent;
   border: 1px solid $n-50;
   outline: none;
-  width: 98px;
   height: 32px;
   border-radius: 4px;
   margin-right: 8px;

@@ -5,9 +5,10 @@ interface Filter {
   align: "register" | "inspector";
   startDate: string;
   endDate: string;
-  status: string;
+  status: string[];
   documents: string[];
   teams: string[];
+  register: string[];
 }
 
 type States = {
@@ -39,9 +40,10 @@ export const useWorkStore = defineStore("workStore", {
         align: "register",
         startDate: "",
         endDate: "",
-        status: "",
+        status: [],
         documents: [],
         teams: [],
+        register: [],
       },
     };
   },

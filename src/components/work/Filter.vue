@@ -3,8 +3,22 @@ import CheckBox from "@/components/shared/CheckBox.vue";
 import { useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
 
+interface Props {
+  closeCallback: Function;
+}
+
+const props = defineProps<Props>();
+
 const workStore = useWorkStore();
 const { filter } = storeToRefs(workStore);
+
+const onClose = () => {
+  props.closeCallback();
+};
+
+const onFilter = () => {
+  props.closeCallback();
+};
 </script>
 
 <template>
@@ -35,31 +49,84 @@ const { filter } = storeToRefs(workStore);
         전체 설정 초기화
       </button>
     </section>
-    <section :class="box.layout" aria-label="조회 기간">
-      <h1 :class="box.title">조회 기간</h1>
-      <div :class="box.all_check">
-        <div :class="box.check"><CheckBox class="color-blue" /></div>
-        <p>모든 상태</p>
+    <section :class="content.layout" aria-label="필터 내용">
+      <div :class="box.layout" aria-label="조회 기간">
+        <h1 :class="box.title">조회 기간</h1>
       </div>
-      <div :class="box.divider"></div>
-      <div :class="box.group_check">
-        <div :class="box.box_check">
+      <div :class="box.layout" aria-label="검수 상태">
+        <h1 :class="box.title">검수 상태</h1>
+        <div :class="box.all_check">
           <div :class="box.check"><CheckBox class="color-blue" /></div>
-          <p :class="status.analysis">분석대기</p>
+          <p>모든 상태</p>
         </div>
-        <div :class="box.box_check">
-          <div :class="box.check"><CheckBox class="color-blue" /></div>
-          <p :class="status.wait">검수대기</p>
-        </div>
-        <div :class="box.box_check">
-          <div :class="box.check"><CheckBox class="color-blue" /></div>
-          <p :class="status.progress">검수중</p>
-        </div>
-        <div :class="box.box_check">
-          <div :class="box.check"><CheckBox class="color-blue" /></div>
-          <p :class="status.complete">검수완료</p>
+        <div :class="box.divider"></div>
+        <div :class="box.group_check">
+          <div :class="box.box_check">
+            <div :class="box.check"><CheckBox class="color-blue" /></div>
+            <p :class="status.analysis">분석대기</p>
+          </div>
+          <div :class="box.box_check">
+            <div :class="box.check"><CheckBox class="color-blue" /></div>
+            <p :class="status.wait">검수대기</p>
+          </div>
+          <div :class="box.space"></div>
+          <div :class="box.space"></div>
+          <div :class="box.box_check">
+            <div :class="box.check"><CheckBox class="color-blue" /></div>
+            <p :class="status.progress">검수중</p>
+          </div>
+          <div :class="box.box_check">
+            <div :class="box.check"><CheckBox class="color-blue" /></div>
+            <p :class="status.complete">검수완료</p>
+          </div>
         </div>
       </div>
+      <div :class="box.layout" aria-label="문서 종류">
+        <h1 :class="box.title">문서 종류</h1>
+      </div>
+      <div :class="box.layout" aria-label="부서">
+        <h1 :class="box.title">부서</h1>
+      </div>
+      <div :class="box.layout" aria-label="등록 담당자">
+        <h1 :class="box.title">등록 담당자</h1>
+      </div>
+    </section>
+    <section :class="footer.layout" aria-label="버튼">
+      <button :class="footer.close" type="button" @click="onClose">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M7.17499 5.99999L10.7583 2.42499C10.9152 2.26807 11.0034 2.05524 11.0034 1.83333C11.0034 1.61141 10.9152 1.39858 10.7583 1.24166C10.6014 1.08474 10.3886 0.996582 10.1667 0.996582C9.94474 0.996582 9.73191 1.08474 9.57499 1.24166L5.99999 4.82499L2.42499 1.24166C2.26807 1.08474 2.05524 0.996582 1.83333 0.996582C1.61141 0.996582 1.39858 1.08474 1.24166 1.24166C1.08474 1.39858 0.996582 1.61141 0.996582 1.83333C0.996582 2.05524 1.08474 2.26807 1.24166 2.42499L4.82499 5.99999L1.24166 9.57499C1.08474 9.73191 0.996582 9.94474 0.996582 10.1667C0.996582 10.3886 1.08474 10.6014 1.24166 10.7583C1.39858 10.9152 1.61141 11.0034 1.83333 11.0034C2.05524 11.0034 2.26807 10.9152 2.42499 10.7583L5.99999 7.17499L9.57499 10.7583C9.73191 10.9152 9.94474 11.0034 10.1667 11.0034C10.3886 11.0034 10.6014 10.9152 10.7583 10.7583C10.9152 10.6014 11.0034 10.3886 11.0034 10.1667C11.0034 9.94474 10.9152 9.73191 10.7583 9.57499L7.17499 5.99999Z"
+            fill="#242424"
+          />
+        </svg>
+        <p>닫기</p>
+      </button>
+      <button :class="footer.on" type="button" @click="onFilter">
+        <svg
+          width="14"
+          height="10"
+          viewBox="0 0 14 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M13.1448 0.244078C13.4703 0.569515 13.4703 1.09715 13.1448 1.42259L5.50596 9.06148C5.34968 9.21776 5.13771 9.30556 4.9167 9.30556C4.69569 9.30556 4.48373 9.21776 4.32745 9.06148L0.855223 5.58926C0.529786 5.26382 0.529786 4.73618 0.855223 4.41075C1.18066 4.08531 1.7083 4.08531 2.03373 4.41075L4.9167 7.29371L11.9663 0.244078C12.2918 -0.0813592 12.8194 -0.0813592 13.1448 0.244078Z"
+            fill="white"
+          />
+        </svg>
+
+        <p>필터 적용하기</p>
+      </button>
     </section>
   </article>
 </template>
@@ -72,8 +139,9 @@ const { filter } = storeToRefs(workStore);
   width: 480px;
   height: 100vh;
   background-color: $n-0;
-  overflow-y: scroll;
-  padding: 0 32px;
+  padding: 0 32px 116px 32px;
+  box-shadow: 0px 10px 18px rgba(9, 30, 66, 0.15),
+    0px 0px 1px rgba(9, 30, 66, 0.31);
 }
 </style>
 
@@ -84,6 +152,7 @@ const { filter } = storeToRefs(workStore);
   background-color: $n-10;
   border-radius: 4px;
   border: 1px solid $n-30;
+  margin-top: 12px;
 }
 
 .title {
@@ -118,7 +187,10 @@ const { filter } = storeToRefs(workStore);
 .box_check {
   display: flex;
   align-items: center;
-  padding-bottom: 10px;
+}
+
+.space {
+  padding: 5px;
 }
 
 .group_check {
@@ -140,7 +212,7 @@ const { filter } = storeToRefs(workStore);
   justify-content: space-between;
   align-items: center;
   padding-top: 40px;
-  padding-bottom: 29px;
+  padding-bottom: 17px;
 
   h1 {
     color: $m-900;
@@ -166,6 +238,61 @@ const { filter } = storeToRefs(workStore);
     svg {
       margin-right: 5px;
     }
+  }
+}
+</style>
+
+<style lang="scss" module="content">
+.layout {
+  overflow-y: scroll;
+}
+</style>
+
+<style lang="scss" module="footer">
+.layout {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 84px;
+  padding: 0 32px;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  outline: none;
+  background-color: transparent;
+  border: 1px solid $n-50;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+
+  p {
+    padding-left: 5px;
+  }
+}
+
+.on {
+  display: flex;
+  align-items: center;
+  outline: none;
+  background-color: $m-700;
+  color: $n-0;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+
+  p {
+    padding-left: 5px;
   }
 }
 </style>
