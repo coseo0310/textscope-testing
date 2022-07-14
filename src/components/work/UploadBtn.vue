@@ -1,12 +1,21 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import Upload from "@/components/work/Upload.vue";
+
+const isUpload = ref<boolean>(false);
+
 const onUpload = () => {
-  alert("upload...");
+  isUpload.value = true;
+};
+
+const onClose = () => {
+  isUpload.value = false;
 };
 </script>
 
 <template>
-  <article :class="article.layout">
-    <button type="button" @click="onUpload">
+  <article :class="btn.layout">
+    <button :class="btn.button" type="button" @click="onUpload">
       <i>
         <svg
           width="21"
@@ -43,37 +52,37 @@ const onUpload = () => {
       </i>
       <p>문서 업로드</p>
     </button>
+    <Upload v-if="isUpload" :close-callback="onClose" />
   </article>
 </template>
 
-<style lang="scss" module="article">
+<style lang="scss" module="btn">
 .layout {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+}
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 40px;
+  border: 0;
+  background-color: $m-900;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
 
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 140px;
-    height: 40px;
-    border: 0;
-    background-color: $m-900;
-    border-radius: 4px;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 20px;
-    cursor: pointer;
+  i {
+    padding-top: 3px;
+  }
 
-    i {
-      padding-top: 3px;
-    }
-
-    p {
-      padding: 0 5px;
-    }
+  p {
+    padding: 0 5px;
   }
 }
 </style>
