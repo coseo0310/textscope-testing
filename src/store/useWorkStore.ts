@@ -51,7 +51,19 @@ export const useWorkStore = defineStore("workStore", {
     isSelection: (state) => state.selection.length > 0,
     isRPA: (state) => state.selection.length > 0,
   },
-  actions: {},
+  actions: {
+    clearFilter() {
+      this.filter = {
+        align: "register",
+        startDate: "",
+        endDate: "",
+        status: [],
+        documents: [],
+        teams: [],
+        register: [],
+      };
+    },
+  },
 });
 
 function getWorkColumns(): Grid.Columns {

@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
+import DatePicker from "@/components/shared/DatePicker.vue";
 import { useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -12,12 +14,58 @@ const props = defineProps<Props>();
 const workStore = useWorkStore();
 const { filter } = storeToRefs(workStore);
 
+const PREV = JSON.parse(JSON.stringify(filter.value));
+
+const registerColor = computed(() =>
+  filter.value.align === "register" ? "#dfe1e6" : "#ffffff"
+);
+const inspectionColor = computed(() =>
+  filter.value.align === "inspector" ? "#dfe1e6" : "#ffffff"
+);
+
+const onMark = computed(() => {
+  return filter.value.status.length > 0 && filter.value.status.length < 4;
+});
+
 const onClose = () => {
+  filter.value = PREV;
   props.closeCallback();
 };
 
 const onFilter = () => {
   props.closeCallback();
+};
+
+const onAlign = (type: "register" | "inspector") => {
+  filter.value.align = type;
+};
+
+const onDateSelected = (date: string) => {
+  const sp = date.split("~");
+  filter.value.startDate = sp[0];
+  filter.value.endDate = sp[1];
+};
+
+const onSelected = (
+  type: "all" | "analysis" | "wait" | "progress" | "complete",
+  b: boolean
+) => {
+  switch (type) {
+    case "all":
+      if (filter.value.status.length === 4) {
+        filter.value.status = [];
+      } else {
+        filter.value.status = ["analysis", "wait", "progress", "complete"];
+      }
+      break;
+    default:
+      if (b) {
+        filter.value.status = [...filter.value.status, type];
+      } else {
+        filter.value.status = filter.value.status.filter((f) => f !== type);
+      }
+      break;
+  }
 };
 </script>
 
@@ -52,31 +100,94 @@ const onFilter = () => {
     <section :class="content.layout" aria-label="필터 내용">
       <div :class="box.layout" aria-label="조회 기간">
         <h1 :class="box.title">조회 기간</h1>
+        <div :class="search.box">
+          <div :class="search.text">조회 기준</div>
+          <div :class="search.standard">
+            <p @click="onAlign('register')">등록일 기준</p>
+            <p @click="onAlign('inspector')">검수일 기준</p>
+          </div>
+          <div :class="search.text">기간 선택</div>
+          <div :class="search.date">
+            <DatePicker
+              :range="true"
+              :default-start="filter.startDate"
+              :default-end="filter.endDate"
+              class="filter"
+              @selected="onDateSelected"
+            />
+          </div>
+        </div>
       </div>
       <div :class="box.layout" aria-label="검수 상태">
         <h1 :class="box.title">검수 상태</h1>
-        <div :class="box.all_check">
-          <div :class="box.check"><CheckBox class="color-blue" /></div>
+        <div :class="check.all_check">
+          <div :class="check.check">
+            <CheckBox
+              :default="filter.status.length === 4"
+              :middle="onMark"
+              @change="
+                (b) => {
+                  onSelected('all', b);
+                }
+              "
+            />
+          </div>
           <p>모든 상태</p>
         </div>
         <div :class="box.divider"></div>
-        <div :class="box.group_check">
-          <div :class="box.box_check">
-            <div :class="box.check"><CheckBox class="color-blue" /></div>
+        <div :class="check.group_check">
+          <div :class="check.box_check">
+            <div :class="check.check">
+              <CheckBox
+                :default="filter.status.includes('analysis')"
+                @change="
+                  (b) => {
+                    onSelected('analysis', b);
+                  }
+                "
+              />
+            </div>
             <p :class="status.analysis">분석대기</p>
           </div>
-          <div :class="box.box_check">
-            <div :class="box.check"><CheckBox class="color-blue" /></div>
+          <div :class="check.box_check">
+            <div :class="check.check">
+              <CheckBox
+                :default="filter.status.includes('wait')"
+                @change="
+                  (b) => {
+                    onSelected('wait', b);
+                  }
+                "
+              />
+            </div>
             <p :class="status.wait">검수대기</p>
           </div>
           <div :class="box.space"></div>
           <div :class="box.space"></div>
-          <div :class="box.box_check">
-            <div :class="box.check"><CheckBox class="color-blue" /></div>
+          <div :class="check.box_check">
+            <div :class="check.check">
+              <CheckBox
+                :default="filter.status.includes('progress')"
+                @change="
+                  (b) => {
+                    onSelected('progress', b);
+                  }
+                "
+              />
+            </div>
             <p :class="status.progress">검수중</p>
           </div>
-          <div :class="box.box_check">
-            <div :class="box.check"><CheckBox class="color-blue" /></div>
+          <div :class="check.box_check">
+            <div :class="check.check">
+              <CheckBox
+                :default="filter.status.includes('complete')"
+                @change="
+                  (b) => {
+                    onSelected('complete', b);
+                  }
+                "
+              />
+            </div>
             <p :class="status.complete">검수완료</p>
           </div>
         </div>
@@ -124,7 +235,6 @@ const onFilter = () => {
             fill="white"
           />
         </svg>
-
         <p>필터 적용하기</p>
       </button>
     </section>
@@ -162,6 +272,19 @@ const onFilter = () => {
   line-height: 16px;
 }
 
+.space {
+  padding: 5px;
+}
+
+.divider {
+  width: 352px;
+  height: 1px;
+  background-color: $n-30;
+  margin: 12px 0;
+}
+</style>
+
+<style lang="scss" module="check">
 .check {
   display: flex;
   justify-content: center;
@@ -183,26 +306,65 @@ const onFilter = () => {
     color: $m-700;
   }
 }
-
-.box_check {
-  display: flex;
-  align-items: center;
-}
-
-.space {
-  padding: 5px;
-}
-
 .group_check {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.divider {
-  width: 352px;
-  height: 1px;
-  background-color: $n-30;
-  margin: 12px 0;
+.box_check {
+  display: flex;
+  align-items: center;
+}
+</style>
+
+<style lang="scss" module="search">
+.text {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  font-weight: 600;
+  font-size: 12px;
+  color: $n-200;
+}
+
+.box {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  margin-top: 20px;
+  gap: 7.5px;
+}
+
+.standard {
+  display: flex;
+
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 6px 14px;
+    color: $m-700;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  :first-child {
+    border-radius: 4px 0 0 4px;
+    border-top: 1px solid $n-50;
+    border-left: 1px solid $n-50;
+    border-bottom: 1px solid $n-50;
+    background-color: v-bind(registerColor);
+  }
+  :last-child {
+    border-radius: 0 4px 4px 0;
+    border-top: 1px solid $n-50;
+    border-left: 1px solid $n-50;
+    border-bottom: 1px solid $n-50;
+    border-right: 1px solid $n-50;
+    background-color: v-bind(inspectionColor);
+  }
 }
 </style>
 
@@ -245,6 +407,7 @@ const onFilter = () => {
 <style lang="scss" module="content">
 .layout {
   overflow-y: scroll;
+  overflow-x: visible;
 }
 </style>
 
@@ -350,3 +513,5 @@ const onFilter = () => {
   background-color: $g-50;
 }
 </style>
+
+<style lang="scss" module="selector"></style>
