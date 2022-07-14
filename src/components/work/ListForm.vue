@@ -12,7 +12,7 @@ import { storeToRefs } from "pinia";
 const workStore = useWorkStore();
 const { searchTerm, filter, columns, list, selection } = storeToRefs(workStore);
 
-const isFilter = ref<boolean>(true);
+const isFilter = ref<boolean>(false);
 const isDelete = ref<boolean>(false);
 const isRPA = ref<boolean>(false);
 const isToast = ref<boolean>(false);

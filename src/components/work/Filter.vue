@@ -2,7 +2,8 @@
 import { computed } from "vue";
 import CheckBox from "@/components/shared/CheckBox.vue";
 import DatePicker from "@/components/shared/DatePicker.vue";
-import { useWorkStore } from "@/store";
+import SearchSelector, { Item } from "@/components/shared/SearchSelector.vue";
+import { useWorkStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const commonStore = useCommonStore();
 const workStore = useWorkStore();
 const { filter } = storeToRefs(workStore);
 
@@ -64,6 +66,25 @@ const onSelected = (
       } else {
         filter.value.status = filter.value.status.filter((f) => f !== type);
       }
+      break;
+  }
+};
+
+const onSelector = (
+  type: "documents" | "registers" | "teams",
+  items: Item[]
+) => {
+  switch (type) {
+    case "documents":
+      filter.value.documents = items;
+      break;
+    case "teams":
+      filter.value.teams = items;
+      break;
+    case "registers":
+      filter.value.register = items;
+      break;
+    default:
       break;
   }
 };
@@ -194,12 +215,36 @@ const onSelected = (
       </div>
       <div :class="box.layout" aria-label="문서 종류">
         <h1 :class="box.title">문서 종류</h1>
+        <SearchSelector
+          :class="selector.margin"
+          uid="documents"
+          :items="commonStore.getDocuments"
+          :default="filter.documents"
+          placeholder="문서명을 검색하거나 목록에서 선택"
+          @selected="(items) => onSelector('documents', items)"
+        />
       </div>
       <div :class="box.layout" aria-label="부서">
         <h1 :class="box.title">부서</h1>
+        <SearchSelector
+          :class="selector.margin"
+          uid="teams"
+          :items="commonStore.getTeams"
+          :default="filter.teams"
+          placeholder="부서명을 검색하거나 목록에서 선택"
+          @selected="(items) => onSelector('teams', items)"
+        />
       </div>
       <div :class="box.layout" aria-label="등록 담당자">
         <h1 :class="box.title">등록 담당자</h1>
+        <SearchSelector
+          :class="selector.margin"
+          uid="register"
+          :items="commonStore.getRegisters"
+          :default="filter.register"
+          placeholder="담당자를 검색하거나 목록에서 선택"
+          @selected="(items) => onSelector('registers', items)"
+        />
       </div>
     </section>
     <section :class="footer.layout" aria-label="버튼">
@@ -249,7 +294,7 @@ const onSelected = (
   width: 480px;
   height: 100vh;
   background-color: $n-0;
-  padding: 0 32px 116px 32px;
+  padding-bottom: 116px;
   box-shadow: 0px 10px 18px rgba(9, 30, 66, 0.15),
     0px 0px 1px rgba(9, 30, 66, 0.31);
 }
@@ -375,6 +420,8 @@ const onSelected = (
   align-items: center;
   padding-top: 40px;
   padding-bottom: 17px;
+  padding-right: 32px;
+  padding-left: 32px;
 
   h1 {
     color: $m-900;
@@ -406,8 +453,19 @@ const onSelected = (
 
 <style lang="scss" module="content">
 .layout {
+  height: calc(100% - 64px);
   overflow-y: scroll;
-  overflow-x: visible;
+  padding: 0 32px;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #5e5e5e;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #1b1b1b;
+  }
 }
 </style>
 
@@ -422,6 +480,7 @@ const onSelected = (
   width: 100%;
   height: 84px;
   padding: 0 32px;
+  background-color: #ffffff;
 }
 
 .close {
@@ -514,4 +573,8 @@ const onSelected = (
 }
 </style>
 
-<style lang="scss" module="selector"></style>
+<style lang="scss" module="selector">
+.margin {
+  margin-top: 20px;
+}
+</style>

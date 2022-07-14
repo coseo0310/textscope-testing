@@ -1,14 +1,18 @@
 import { defineStore } from "pinia";
 import { Grid } from "@/types";
 
+interface Selector {
+  id: string;
+  text: string;
+}
 interface Filter {
   align: "register" | "inspector";
   startDate: string;
   endDate: string;
   status: string[];
-  documents: string[];
-  teams: string[];
-  register: string[];
+  documents: Selector[];
+  teams: Selector[];
+  register: Selector[];
 }
 
 type States = {
