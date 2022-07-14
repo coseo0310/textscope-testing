@@ -20,6 +20,7 @@ const isResult = ref<boolean>(false);
 const isWork = ref<boolean>(false);
 const isProgress = ref<boolean>(false);
 const toastMsg = ref<string>("");
+const currentPage = ref<number>(1);
 const types = ref<"warn" | "info" | "confirm">("info");
 
 const registerColor = computed(() =>
@@ -130,6 +131,15 @@ const onCancel = () => {
 const toastClose = () => {
   isToast.value = false;
   toastMsg.value = "";
+};
+
+const onPage = (v: number) => {
+  currentPage.value = v;
+  workStore.getGridList(v);
+};
+
+const onReload = () => {
+  workStore.getGridList(currentPage.value);
 };
 </script>
 
@@ -262,7 +272,7 @@ const toastClose = () => {
     </section>
     <section :class="func.section" aria-label="기능 영역">
       <div :class="func.box">
-        <button :class="func.btn_on" type="button">
+        <button :class="func.btn_on" type="button" @click="onReload">
           <i>
             <svg
               width="16"
@@ -442,7 +452,7 @@ const toastClose = () => {
       </div>
     </section>
     <section :class="paging.section" aria-label="페이징 영역">
-      <Pagination />
+      <Pagination :current="currentPage" @change="onPage" />
     </section>
   </article>
   <Filter v-if="isFilter" :close-callback="() => (isFilter = false)" />

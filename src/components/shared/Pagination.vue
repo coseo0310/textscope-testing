@@ -4,7 +4,6 @@ interface Props {
   limit?: number;
   total?: number;
   current?: number;
-  inspection?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
   limit: 10,
@@ -57,17 +56,13 @@ const onLast = () => {
   emits("change", current.value);
 };
 const onPage = (n: number) => {
-  if (props.inspection) {
-    emits("change", n);
-  } else {
-    current.value = n;
-    emits("change", current.value);
-  }
+  current.value = n;
+  emits("change", current.value);
 };
 </script>
 
 <template>
-  <div class="pagination" :class="{ inspection: props.inspection }">
+  <div class="pagination">
     <div class="first" :class="{ off: current === 1 }" @click="onFirst">
       <svg
         width="21"

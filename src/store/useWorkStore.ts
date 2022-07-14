@@ -67,6 +67,9 @@ export const useWorkStore = defineStore("workStore", {
         register: [],
       };
     },
+    getGridList(n: number = 1) {
+      this.list = getGridList(n);
+    },
   },
 });
 
@@ -140,12 +143,16 @@ function getGridList(c: number = 1): Grid.GridList {
     "Invoice",
   ];
   const status = ["analysis", "wait", "progress", "complete"];
+  const teams = ["검수 1팀", "검수 2팀", "검수 3팀", "검수 4팀"];
+  const names = ["우영우", "정명석", "동그라미", "최수현"];
   //TODO: Get Grid list
   for (let i = 0; i < 10; i++) {
-    const id = `${Date.now() + i}`;
+    const id = `${Date.now() + i + c}`;
     const min = 0;
     const max = 4;
     const r = Math.floor(Math.random() * (max - min) + min);
+
+    const a = Math.floor(Math.random() * (100 - 80) + 80);
 
     const obj = {
       id,
@@ -153,14 +160,14 @@ function getGridList(c: number = 1): Grid.GridList {
       documentTotal: `9`,
       name: `document-${id}-${i}.pdf`,
       pageTotal: r === 0 ? `-` : `${Math.floor(99 / (i + 1))}`,
-      register: `김철수`,
+      register: names[r],
       rDate: `2022-07-12 10:00:00`,
-      rTeam: `검수1팀`,
-      inspector: r === 0 ? `-` : `김영희`,
+      rTeam: teams[r],
+      inspector: r === 0 ? `-` : names[r],
       iDate: `2022-07-12 10:00:00`,
-      iTeam: `검수2팀`,
+      iTeam: teams[r],
       status: status[r],
-      accuracy: r === 0 ? "-" : `${100 - i}`,
+      accuracy: r === 0 ? "-" : `${a}`,
     };
     tmp.push(obj);
   }
