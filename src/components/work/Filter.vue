@@ -94,7 +94,7 @@ const onSelector = (
   <article :class="modal.layout">
     <section :class="header.layout" aria-label="상단 타이틀 헤더">
       <h1>필터</h1>
-      <button type="button">
+      <button type="button" @click="workStore.clearFilter">
         <svg
           width="16"
           height="16"

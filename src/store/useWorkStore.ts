@@ -61,8 +61,8 @@ export const useWorkStore = defineStore("workStore", {
     clearFilter() {
       this.filter = {
         align: "register",
-        startDate: "",
-        endDate: "",
+        startDate: ``,
+        endDate: ``,
         status: [],
         documents: [],
         teams: [],

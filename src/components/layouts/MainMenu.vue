@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { path } from "@/router";
 import { useCommonStore, useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
 import Logo from "@/assets//logo/logo_white.png";
@@ -11,9 +13,43 @@ const workStore = useWorkStore();
 const { isMenuExtend } = storeToRefs(commonStore);
 const { imperfectTotal } = storeToRefs(workStore);
 
+const isPop = ref<boolean>(false);
+
 const onPage = (name: string) => {
   router.push({ name });
 };
+
+const onPop = () => {
+  isPop.value = true;
+};
+
+const onProfile = () => {
+  isPop.value = false;
+};
+const onLogout = () => {
+  isPop.value = false;
+  router.push({ name: path.login.name });
+};
+
+const closest = (e: MouseEvent) => {
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+  const pop = el.closest(".pop");
+
+  if (pop) {
+    return;
+  }
+  isPop.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener("click", closest);
+});
+onUnmounted(() => {
+  window.removeEventListener("click", closest);
+});
 </script>
 
 <template>
@@ -188,12 +224,12 @@ const onPage = (name: string) => {
         </p>
       </div>
     </nav>
-    <div :class="myinfo.layout">
+    <div class="pop" :class="myinfo.layout">
       <div>
-        <p :class="myinfo.name"></p>
-        <p :class="myinfo.team"></p>
+        <p :class="myinfo.name">우영우</p>
+        <p :class="myinfo.team">한국수출입은행 검수1팀</p>
       </div>
-      <i :class="myinfo.icon">
+      <i :class="myinfo.icon" @click="onPop">
         <svg
           width="32"
           height="32"
@@ -226,6 +262,64 @@ const onPage = (name: string) => {
           />
         </svg>
       </i>
+      <div v-if="isPop" :class="myinfo.modal_extend">
+        <button :class="myinfo.modal_btn" @click="onProfile">
+          <i>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M4.66875 12.3076C5.34597 11.6304 6.26447 11.25 7.2222 11.25H12.7778C13.7355 11.25 14.654 11.6304 15.3312 12.3076C16.0084 12.9848 16.3889 13.9033 16.3889 14.8611V16.25C16.3889 16.7102 16.0158 17.0833 15.5555 17.0833C15.0953 17.0833 14.7222 16.7102 14.7222 16.25V14.8611C14.7222 14.3454 14.5173 13.8508 14.1527 13.4861C13.788 13.1215 13.2934 12.9166 12.7778 12.9166H7.2222C6.7065 12.9166 6.21192 13.1215 5.84727 13.4861C5.48261 13.8508 5.27775 14.3454 5.27775 14.8611V16.25C5.27775 16.7102 4.90465 17.0833 4.44442 17.0833C3.98418 17.0833 3.61108 16.7102 3.61108 16.25V14.8611C3.61108 13.9033 3.99154 12.9848 4.66875 12.3076Z"
+                fill="#1B1B1B"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M9.99998 4.58329C8.92609 4.58329 8.05554 5.45385 8.05554 6.52774C8.05554 7.60162 8.92609 8.47218 9.99998 8.47218C11.0739 8.47218 11.9444 7.60162 11.9444 6.52774C11.9444 5.45385 11.0739 4.58329 9.99998 4.58329ZM6.38887 6.52774C6.38887 4.53338 8.00562 2.91663 9.99998 2.91663C11.9943 2.91663 13.6111 4.53338 13.6111 6.52774C13.6111 8.5221 11.9943 10.1388 9.99998 10.1388C8.00562 10.1388 6.38887 8.5221 6.38887 6.52774Z"
+                fill="#1B1B1B"
+              />
+            </svg>
+          </i>
+          <p>프로필 설정</p>
+        </button>
+        <button :class="myinfo.modal_btn" @click="onLogout">
+          <i>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12.1885 5.93854C12.514 5.6131 13.0416 5.6131 13.367 5.93854L16.8393 9.41076C17.1647 9.73619 17.1647 10.2638 16.8393 10.5893L13.367 14.0615C13.0416 14.3869 12.514 14.3869 12.1885 14.0615C11.8631 13.7361 11.8631 13.2084 12.1885 12.883L15.0715 10L12.1885 7.11705C11.8631 6.79161 11.8631 6.26397 12.1885 5.93854Z"
+                fill="#1B1B1B"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M7.08325 9.99996C7.08325 9.53972 7.45635 9.16663 7.91659 9.16663H16.2499C16.7102 9.16663 17.0833 9.53972 17.0833 9.99996C17.0833 10.4602 16.7102 10.8333 16.2499 10.8333H7.91659C7.45635 10.8333 7.08325 10.4602 7.08325 9.99996Z"
+                fill="#1B1B1B"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.13885 4.58329C4.99151 4.58329 4.8502 4.64182 4.74601 4.74601C4.64182 4.8502 4.58329 4.99151 4.58329 5.13885V14.8611C4.58329 15.0084 4.64182 15.1497 4.74601 15.2539C4.8502 15.3581 4.99151 15.4166 5.13885 15.4166H7.91663C8.37686 15.4166 8.74996 15.7897 8.74996 16.25C8.74996 16.7102 8.37686 17.0833 7.91663 17.0833H5.13885C4.54948 17.0833 3.98425 16.8492 3.5675 16.4324C3.15075 16.0157 2.91663 15.4504 2.91663 14.8611V5.13885C2.91663 4.54948 3.15075 3.98425 3.5675 3.5675C3.98425 3.15075 4.54948 2.91663 5.13885 2.91663H7.91663C8.37686 2.91663 8.74996 3.28972 8.74996 3.74996C8.74996 4.2102 8.37686 4.58329 7.91663 4.58329H5.13885Z"
+                fill="#1B1B1B"
+              />
+            </svg>
+          </i>
+          <p>로그아웃</p>
+        </button>
+      </div>
     </div>
   </article>
 </template>
@@ -301,6 +395,82 @@ const onPage = (name: string) => {
 
 <style lang="scss" module="myinfo">
 .layout {
+  position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
+
+  div {
+    width: 100%;
+  }
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: $n-20;
+}
+
+.team {
+  font-size: 11px;
+  font-weight: 400;
+  color: $m-300;
+  padding: 5px 0;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.modal_extend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 156px;
+  height: 80px;
+  position: absolute;
+  left: 190px;
+  top: -20px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  z-index: 1;
+  box-shadow: 0px 3px 5px rgba(9, 30, 66, 0.2),
+    0px 0px 1px rgba(9, 30, 66, 0.31);
+}
+
+.modal {
+  position: absolute;
+  right: -250px;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  box-shadow: 0px 3px 5px rgba(9, 30, 66, 0.2),
+    0px 0px 1px rgba(9, 30, 66, 0.31);
+}
+
+.modal_btn {
+  outline: none;
+  width: 100%;
+  height: 32px;
+  color: $m-800;
+  font-weight: 400;
+  font-size: 14px;
+  border: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0 10px;
+
+  &:hover {
+    background-color: $n-20;
+  }
+
+  i {
+    padding: 0 10px;
+  }
 }
 </style>

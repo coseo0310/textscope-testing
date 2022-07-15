@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Calendar from "@/components/shared/Calendar.vue";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -28,11 +28,26 @@ const startDt = ref<string>(
     ? props.defaultStart
     : `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
 );
+
 const endDt = ref<string>(
   props.defaultEnd
     ? props.defaultEnd
     : `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
 );
+
+watch(props, () => {
+  const date = new Date();
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1);
+  const day = String(date.getDate());
+  if (!props.defaultStart) {
+    startDt.value = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  }
+  if (!props.defaultEnd) {
+    endDt.value = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  }
+});
+
 const getStartDt = computed(() => {
   const date = new Date(startDt.value);
   return `${startDt.value.split("-").join(".")}. ${DAYS[date.getDay()]}`;
