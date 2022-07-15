@@ -17,3 +17,19 @@ export declare module Grid {
     id: string;
   }
 }
+
+export declare module HTTP {
+  interface ResponseMetadata {
+    request_datatime: string;
+    response_datatime: string;
+    time_elapsed: string;
+  }
+
+  interface RespnseLoginData {
+    request: {
+      email: string;
+      password: string;
+    };
+    response_metadata: ResponseMetadata;
+  }
+}

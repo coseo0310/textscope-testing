@@ -1,21 +1,45 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Upload from "@/components/work/Upload.vue";
+import { useWorkStore } from "@/store";
+import { storeToRefs } from "pinia";
 
+const workStore = useWorkStore();
+const { files } = storeToRefs(workStore);
 const isUpload = ref<boolean>(false);
+const fileEl = ref<HTMLInputElement | null>(null);
 
-const onUpload = () => {
+const onModal = () => {
   isUpload.value = true;
 };
 
 const onClose = () => {
   isUpload.value = false;
+  files.value = [];
+};
+
+const onUpload = () => {
+  if (!fileEl.value) {
+    return;
+  }
+  fileEl.value.click();
+};
+
+const onFiles = (e: Event) => {
+  const list = fileEl.value?.files;
+  if (!list) {
+    return;
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    files.value.push(list[i]);
+  }
 };
 </script>
 
 <template>
   <article :class="btn.layout">
-    <button :class="btn.button" type="button" @click="onUpload">
+    <button :class="btn.button" type="button" @click="onModal">
       <i>
         <svg
           width="21"
@@ -52,7 +76,15 @@ const onClose = () => {
       </i>
       <p>문서 업로드</p>
     </button>
-    <Upload v-if="isUpload" :close-callback="onClose" />
+    <Upload v-if="isUpload" :close-callback="onClose" :upload="onUpload" />
+    <input
+      ref="fileEl"
+      type="file"
+      accept="image/jpg, image/jpeg, image/png, image/tiff, image/tif, image/pdf"
+      style="display: none"
+      multiple
+      @change="onFiles"
+    />
   </article>
 </template>
 

@@ -7,16 +7,22 @@ import { path } from "@/router";
 // import { useForm } from "@/hooks";
 
 const authStore = useAuthStore();
-const { isLogin } = storeToRefs(authStore);
+const { isLogin, errorMsg } = storeToRefs(authStore);
 const router = useRouter();
 // const { register, handleSubmit, getValues, errors, formState, setValidate } =
 //   useForm();
 
 const el = ref<HTMLButtonElement | null>(null);
+const email = ref<string>("admin@lomin.ai");
+const password = ref<string>("123456");
 
 isLogin.value = false;
 
-const onLogin = () => {
+const onLogin = async () => {
+  const t = await authStore.onLogin(email.value, password.value);
+  if (!t) {
+    return;
+  }
   isLogin.value = true;
   router.push({ name: path.work.name });
 };
@@ -34,17 +40,27 @@ onMounted(() => {
     <form :class="login.login_form">
       <section :class="login.input_box" aria-label="이메일 입력 박스">
         <label>아이디</label>
-        <input type="text" name="email" placeholder="이메일 주소 입력" />
+        <input
+          type="text"
+          name="email"
+          v-model="email"
+          placeholder="이메일 주소 입력"
+        />
       </section>
       <section :class="login.input_box" aria-label="비밀번호 입력 박스">
         <label>비밀번호</label>
-        <input type="password" name="email" placeholder="비밀번호 입력" />
+        <input
+          type="password"
+          name="password"
+          v-model="password"
+          placeholder="비밀번호 입력"
+        />
       </section>
       <section :class="login.btn_box" aria-label="로그인 버튼">
         <button ref="el" type="button">로그인</button>
       </section>
       <section :class="login.error_message" aria-label="에러 메시지">
-        Error 403
+        {{ errorMsg }}
       </section>
     </form>
   </article>

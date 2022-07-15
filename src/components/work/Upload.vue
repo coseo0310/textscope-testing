@@ -1,16 +1,32 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import DocumentImg1 from "@/assets/img/type01.png";
+import DocumentImg2 from "@/assets/img/type02.png";
+import DocumentImg3 from "@/assets/img/type03.png";
+import UploadCloud from "@/assets/img/upload_cloud.png";
+import { useWorkStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 interface Props {
   closeCallback: Function;
+  upload: Function;
 }
 
-const DEFAULT_TEXT = "선택한 문서 종류";
+const DOCUMENTS = [
+  "선택한 문서 종류",
+  "해외투자신고 서류",
+  "무역금융 서류",
+  "일반 서류",
+];
 
 const props = defineProps<Props>();
 
-const currentStep = ref<number>(1);
-const documentType = ref<string>(DEFAULT_TEXT);
+const workStore = useWorkStore();
+const { files } = storeToRefs(workStore);
+
+const currentStep = ref<number>(2);
+const documentType = ref<number>(0);
+const dropZone = ref<HTMLDivElement | null>(null);
 
 const step_1_color = computed(() => {
   return currentStep.value > 1 ? "#5EAE91" : "#ffffff";
@@ -29,6 +45,36 @@ const step_3_color = computed(() => {
     ? "#ffffff"
     : "rgba(255,255,255,0.5)";
 });
+const drop_zone_height = computed(() =>
+  files.value.length > 0 ? "40%" : "100%"
+);
+const document = computed(() => DOCUMENTS[documentType.value]);
+
+const onDocumentSelect = (n: number) => {
+  documentType.value = n;
+};
+
+const onUploadBtn = () => {
+  props.upload();
+};
+
+const mousemove = (e: MouseEvent) => {
+  if (!dropZone.value) {
+    return;
+  }
+  if (e.buttons !== 1) {
+    dropZone.value.classList.remove("on");
+    return;
+  }
+  dropZone.value.classList.add("on");
+};
+
+const mouseleave = (e: MouseEvent) => {
+  if (!dropZone.value) {
+    return;
+  }
+  dropZone.value.classList.remove("on");
+};
 
 const onClose = (e: MouseEvent) => {
   e.preventDefault();
@@ -79,7 +125,7 @@ const onPrev = () => {
           </div>
           <h1 :class="step.title" :style="{ color: step_1_color }">
             문서 유형 선택
-            <p :class="step.text">{{ documentType }}</p>
+            <p :class="step.text">{{ document }}</p>
           </h1>
           <div
             :class="step.pipe"
@@ -166,7 +212,63 @@ const onPrev = () => {
         <div v-if="currentStep === 1">
           <p :class="header.text">업로드할 문서 유형을 선택해주세요</p>
         </div>
-        <div :class="content.layout">?</div>
+        <div v-if="currentStep === 1" :class="step1.layout">
+          <div
+            :class="{
+              [step1.card]: true,
+              [step1.selected]: documentType === 1,
+            }"
+            @click="onDocumentSelect(1)"
+          >
+            <img :src="DocumentImg1" alt="해외투자신고 서류" />
+            <div :class="step1.box">
+              <p :class="step1.title">해외투자신고 서류</p>
+              <p :class="step1.text">해외투자신고서, 해외투자 사업계획서</p>
+            </div>
+          </div>
+          <div
+            :class="{
+              [step1.card]: true,
+              [step1.selected]: documentType === 2,
+            }"
+            @click="onDocumentSelect(2)"
+          >
+            <img :src="DocumentImg2" alt="무역금융 서류" />
+            <div :class="step1.box">
+              <p :class="step1.title">무역금융 서류</p>
+              <p :class="step1.text">
+                Purchase Order, Commercial Invoice, Packing List, Bill of
+                Landing
+              </p>
+            </div>
+          </div>
+          <div
+            :class="{
+              [step1.card]: true,
+              [step1.selected]: documentType === 3,
+            }"
+            @click="onDocumentSelect(3)"
+          >
+            <img :src="DocumentImg3" alt="일반 서류" />
+            <div :class="step1.box">
+              <p :class="step1.title">일반 서류</p>
+            </div>
+          </div>
+        </div>
+        <div v-if="currentStep === 2" :class="step2.layout">
+          <div
+            ref="dropZone"
+            :class="step2.zone"
+            @mousemove="mousemove"
+            @mouseleave="mouseleave"
+          >
+            <img :src="UploadCloud" alt="cloud" />
+            <p>여기에 업로드 할 파일을 끌어다 놓으세요</p>
+            <p>지원 파일: PDF, PNG, JPEG, JPG, TIFF, TIF</p>
+            <button type="button" @click="onUploadBtn">파일 직접 선택</button>
+          </div>
+          <div v-if="files.length > 0" :class="step2.list"></div>
+        </div>
         <div :class="footer.layout">
           <div v-if="currentStep === 1"></div>
           <button
@@ -191,7 +293,12 @@ const onPrev = () => {
             </svg>
             이전으로
           </button>
-          <button :class="footer.next" type="button" @click="onNext">
+          <button
+            v-if="currentStep === 1"
+            :class="footer.next"
+            type="button"
+            @click="onNext"
+          >
             다음으로
             <svg
               width="18"
@@ -213,6 +320,12 @@ const onPrev = () => {
     </div>
   </article>
 </template>
+
+<style lang="scss" scoped>
+.on {
+  border-color: $m-700;
+}
+</style>
 
 <style lang="scss" module="modal">
 .layout {
@@ -329,8 +442,9 @@ const onPrev = () => {
 <style lang="scss" module="footer">
 .layout {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  height: 70px;
 }
 .next {
   display: flex;
@@ -361,8 +475,101 @@ const onPrev = () => {
 .layout {
   width: 100%;
   height: 100%;
-  background-color: lightblue;
 }
 </style>
 
-<style lang="scss" module="upload"></style>
+<style lang="scss" module="step1">
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  border: 1px solid $n-40;
+  border-radius: 4px;
+  padding: 25px 32px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.box {
+  padding-left: 24px;
+}
+
+.title {
+  color: $m-900;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.text {
+  color: $n-90;
+  font-size: 12px;
+  font-weight: 500;
+  padding-top: 5px;
+}
+
+.selected {
+  background-color: $n-20;
+}
+</style>
+
+<style lang="scss" module="step2">
+.layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.zone {
+  width: 100%;
+  height: v-bind(drop_zone_height);
+  margin-top: 15px;
+  border: 1px dashed $n-40;
+  border-radius: 8px;
+  background-color: $n-10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  img {
+    margin-bottom: 5px;
+  }
+
+  p {
+    color: $n-200;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 0;
+  }
+
+  button {
+    font-size: 14px;
+    font-weight: 600;
+    color: $m-700;
+    border: 1px solid $n-50;
+    background-color: #ffffff;
+    outline: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+}
+
+.list {
+  width: 100%;
+  height: 60%;
+  background-color: lightcoral;
+}
+</style>

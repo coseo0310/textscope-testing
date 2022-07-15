@@ -24,6 +24,7 @@ type States = {
   columns: Grid.Columns;
   list: Grid.GridList;
   filter: Filter;
+  files: File[];
 };
 
 // useStore could be anything like useUser, useCart
@@ -40,6 +41,7 @@ export const useWorkStore = defineStore("workStore", {
       selection: [],
       columns: getWorkColumns(),
       list: getGridList(),
+      files: [],
       filter: {
         align: "register",
         startDate: "",

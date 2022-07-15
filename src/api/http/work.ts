@@ -1,10 +1,9 @@
 import { instance as http } from "./index";
 import { HTTP } from "@/types";
-// import { v4 as uuidv4 } from "uuid";
 
 const URL = "/auth/token";
 
-export const login = async (email: string, password: string) => {
+export const getList = async (email: string, password: string) => {
   const params = new URLSearchParams();
   params.append("email", email);
   params.append("password", password);

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-// import { getCookie, setCookie, eraseCookie } from "@/utils";
-// import { postAuthToken, deleteAuthToken } from "@/api/http/auth";
+import { login } from "@/api/http/auth";
 
 interface User {
   email: string;
@@ -14,6 +13,7 @@ type States = {
   user: User | null;
   isLogin: boolean;
   isSubMenu: boolean;
+  errorMsg: string;
 };
 
 // useStore could be anything like useUser, useCart
@@ -26,6 +26,7 @@ export const useAuthStore = defineStore("authStore", {
       user: null,
       isLogin: false,
       isSubMenu: false,
+      errorMsg: "",
     };
   },
   getters: {
@@ -36,9 +37,10 @@ export const useAuthStore = defineStore("authStore", {
   actions: {
     async onLogin(email: string, password: string) {
       try {
+        await login(email, password);
         return true;
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        this.errorMsg = error.message;
         return false;
       }
     },
