@@ -97,6 +97,26 @@ const onNext = () => {
 const onPrev = () => {
   currentStep.value = currentStep.value - 1;
 };
+
+const onDropFiles = (e: DragEvent) => {
+  e.preventDefault();
+  const dt = e.dataTransfer as DataTransfer;
+  if (!dt) {
+    return;
+  }
+  const REGEX = /(png|jpg|tiff|tif|pdf)/g;
+  for (let i = 0; i < dt.items.length; i++) {
+    const f = dt.items[i].getAsFile();
+    if (!f || !REGEX.test(f.type)) {
+      return;
+    }
+    files.value.push(f);
+  }
+};
+
+const onDragover = (e: DragEvent) => {
+  e.preventDefault();
+};
 </script>
 
 <template>
@@ -261,13 +281,17 @@ const onPrev = () => {
             :class="step2.zone"
             @mousemove="mousemove"
             @mouseleave="mouseleave"
+            @dragover="onDragover"
+            @drop="onDropFiles"
           >
             <img :src="UploadCloud" alt="cloud" />
             <p>여기에 업로드 할 파일을 끌어다 놓으세요</p>
             <p>지원 파일: PDF, PNG, JPEG, JPG, TIFF, TIF</p>
             <button type="button" @click="onUploadBtn">파일 직접 선택</button>
           </div>
-          <div v-if="files.length > 0" :class="step2.list"></div>
+          <div v-if="files.length > 0" :class="step2.list">
+            <p v-for="f in files">{{ f.name }}</p>
+          </div>
         </div>
         <div :class="footer.layout">
           <div v-if="currentStep === 1"></div>

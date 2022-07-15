@@ -80,7 +80,7 @@ const onFiles = (e: Event) => {
     <input
       ref="fileEl"
       type="file"
-      accept="image/jpg, image/jpeg, image/png, image/tiff, image/tif, image/pdf"
+      accept="image/jpg, image/jpeg, image/png, image/tiff, image/tif, application/pdf"
       style="display: none"
       multiple
       @change="onFiles"
