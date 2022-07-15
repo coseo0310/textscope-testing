@@ -1,9 +1,47 @@
 <script setup lang="ts">
-import LoginForm from "@/components/auth/LoginForm.vue";
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/store";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { path } from "@/router";
+import LoginForm from "@/components/login/LoginForm.vue";
 import TextscopeLogo from "@/assets/logo/textscope_logo.png";
 import ClientLogo from "@/assets/logo/client_logo.png";
 import LominLogo from "@/assets/logo/lomin_logo.png";
 import PoweredBy from "@/assets/logo/powered_by.png";
+// import { useForm } from "@/hooks";
+
+const authStore = useAuthStore();
+const { isLogin, errorMsg } = storeToRefs(authStore);
+const router = useRouter();
+// const { register, handleSubmit, getValues, errors, formState, setValidate } =
+//   useForm();
+
+const el = ref<HTMLButtonElement | null>(null);
+
+isLogin.value = false;
+
+const onLogin = async () => {
+  const email = document.querySelector("[name=email]") as HTMLInputElement;
+  const password = document.querySelector(
+    "[name=password]"
+  ) as HTMLInputElement;
+  const t = await authStore.onLogin(email.value, password.value);
+  if (!t) {
+    const e = document.querySelector(".msg")!;
+    e.innerHTML = `${errorMsg.value}`;
+    return;
+  }
+  isLogin.value = true;
+  router.push({ name: path.work.name });
+};
+
+onMounted(() => {
+  if (!el.value) {
+    return;
+  }
+  el.value.addEventListener("click", onLogin);
+});
 </script>
 
 <template>

@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
-// import { useForm } from "@/hooks";
 
 const authStore = useAuthStore();
 const { isLogin, errorMsg } = storeToRefs(authStore);
 const router = useRouter();
-// const { register, handleSubmit, getValues, errors, formState, setValidate } =
-//   useForm();
 
 const el = ref<HTMLButtonElement | null>(null);
 const email = ref<string>("admin@lomin.ai");
@@ -26,19 +23,12 @@ const onLogin = async () => {
   isLogin.value = true;
   router.push({ name: path.work.name });
 };
-
-onMounted(() => {
-  if (!el.value) {
-    return;
-  }
-  el.value.addEventListener("click", onLogin);
-});
 </script>
 
 <template>
-  <article :class="login.layout">
-    <form :class="login.login_form">
-      <section :class="login.input_box" aria-label="이메일 입력 박스">
+  <article :class="form.layout">
+    <form :class="form.login_form">
+      <section :class="form.input_box" aria-label="이메일 입력 박스">
         <label>아이디</label>
         <input
           type="text"
@@ -47,7 +37,7 @@ onMounted(() => {
           placeholder="이메일 주소 입력"
         />
       </section>
-      <section :class="login.input_box" aria-label="비밀번호 입력 박스">
+      <section :class="form.input_box" aria-label="비밀번호 입력 박스">
         <label>비밀번호</label>
         <input
           type="password"
@@ -56,17 +46,17 @@ onMounted(() => {
           placeholder="비밀번호 입력"
         />
       </section>
-      <section :class="login.btn_box" aria-label="로그인 버튼">
-        <button ref="el" type="button">로그인</button>
+      <section :class="form.btn_box" aria-label="로그인 버튼">
+        <button ref="el" type="button" @click="onLogin">로그인</button>
       </section>
-      <section :class="login.error_message" aria-label="에러 메시지">
+      <section :class="form.msg" aria-label="에러 메시지">
         {{ errorMsg }}
       </section>
     </form>
   </article>
 </template>
 
-<style lang="scss" module="login">
+<style lang="scss" module="form">
 .layout {
   width: 100%;
   height: 100%;
@@ -80,7 +70,7 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.error_message {
+.msg {
   color: $r-300;
   font-size: 14px;
   font-weight: 600;

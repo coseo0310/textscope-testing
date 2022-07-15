@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MainMenu from "@/components/auth/MainMenu.vue";
+import MainMenu from "@/components/layouts/MainMenu.vue";
 import { useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -29,17 +29,3 @@ const { isLogin, isSubMenu } = storeToRefs(authStore);
   transition: width 1s linear;
 }
 </style>
-
-<!-- <style lang="scss" module="main">
-.extend {
-  min-width: 200px;
-  height: 100vh;
-  transition: width 1s linear;
-}
-
-.contract {
-  min-width: 60px;
-  height: 100vh;
-  transition: width 1s linear;
-}
-</style> -->

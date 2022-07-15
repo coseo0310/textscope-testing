@@ -14,7 +14,6 @@ import ListForm from "@/components/work/ListForm.vue";
 
 <style lang="scss" module="main">
 .layout {
-  position: relative;
   width: calc(100vw - 200px);
   height: 100vh;
   overflow-x: scroll;

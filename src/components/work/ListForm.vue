@@ -705,7 +705,6 @@ const onReload = () => {
   font-weight: 400;
   line-height: 20px;
   color: $m-800;
-  text-decoration: underline;
   cursor: pointer;
 }
 .off {
@@ -716,7 +715,6 @@ const onReload = () => {
   line-height: 20px;
   color: $m-800;
   opacity: 0.5;
-  text-decoration: underline;
 }
 </style>
 

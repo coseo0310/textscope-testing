@@ -17,7 +17,6 @@ const onPage = (name: string) => {
 </script>
 
 <template>
-  <!-- <button @click="onClick">test</button> -->
   <article :class="menu.extend">
     <img :class="logo.white" :src="Logo" alt="logo white" />
     <nav :class="nav.main">
@@ -189,6 +188,45 @@ const onPage = (name: string) => {
         </p>
       </div>
     </nav>
+    <div :class="myinfo.layout">
+      <div>
+        <p :class="myinfo.name"></p>
+        <p :class="myinfo.team"></p>
+      </div>
+      <i :class="myinfo.icon">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z"
+            fill="white"
+            fill-opacity="0.01"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M14.1667 16.0001C14.1667 14.9876 14.9875 14.1667 16 14.1667C17.0125 14.1667 17.8334 14.9876 17.8334 16.0001C17.8334 17.0126 17.0125 17.8334 16 17.8334C14.9875 17.8334 14.1667 17.0126 14.1667 16.0001Z"
+            fill="white"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M8.33337 16.0001C8.33337 14.9876 9.15419 14.1667 10.1667 14.1667C11.1792 14.1667 12 14.9876 12 16.0001C12 17.0126 11.1792 17.8334 10.1667 17.8334C9.15419 17.8334 8.33337 17.0126 8.33337 16.0001Z"
+            fill="white"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M20 16.0001C20 14.9876 20.8208 14.1667 21.8334 14.1667C22.8459 14.1667 23.6667 14.9876 23.6667 16.0001C23.6667 17.0126 22.8459 17.8334 21.8334 17.8334C20.8208 17.8334 20 17.0126 20 16.0001Z"
+            fill="white"
+          />
+        </svg>
+      </i>
+    </div>
   </article>
 </template>
 
@@ -215,6 +253,7 @@ const onPage = (name: string) => {
 <style lang="scss" module="nav">
 .main {
   width: 100%;
+  height: 100%;
 }
 .items {
   display: flex;
@@ -257,5 +296,11 @@ const onPage = (name: string) => {
   justify-content: center;
   align-items: center;
   color: $m-900;
+}
+</style>
+
+<style lang="scss" module="myinfo">
+.layout {
+  width: 100%;
 }
 </style>

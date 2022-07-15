@@ -146,7 +146,7 @@ function getGridList(c: number = 1): Grid.GridList {
   ];
   const status = ["analysis", "wait", "progress", "complete"];
   const teams = ["검수 1팀", "검수 2팀", "검수 3팀", "검수 4팀"];
-  const names = ["우영우", "정명석", "동그라미", "최수현"];
+  const names = ["우영우", "정명석", "동그라미", "최수연"];
   //TODO: Get Grid list
   for (let i = 0; i < 10; i++) {
     const id = `${Date.now() + i + c}`;

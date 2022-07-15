@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
-import LoginPage from "@/pages/auth/LoginPage.vue";
+import LoginPage from "@/pages/login/LoginPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import SettingsPage from "@/pages/settings/Settings.vue";
 import DashboardPage from "@/pages/dashboard/Dashboard.vue";
