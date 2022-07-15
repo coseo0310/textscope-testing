@@ -347,7 +347,8 @@ const onDragover = (e: DragEvent) => {
 
 <style lang="scss" scoped>
 .on {
-  border-color: $m-700;
+  border-color: $g-200;
+  border-width: 2px;
 }
 </style>
 
