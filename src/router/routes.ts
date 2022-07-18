@@ -3,7 +3,7 @@ import LoginPage from "@/pages/login/LoginPage.vue";
 import WorkPage from "@/pages/work/WorkPage.vue";
 import SettingsPage from "@/pages/settings/Settings.vue";
 import DashboardPage from "@/pages/dashboard/Dashboard.vue";
-import InspectionPage from "@/pages/inspection/inspectionPage.vue";
+import InspectorPage from "@/pages/inspector/Inspector.vue";
 import Error from "@/pages/auth/404.vue";
 
 export const path = {
@@ -17,7 +17,7 @@ export const path = {
   inspection: {
     path: "/inspection",
     name: "inspection",
-    component: InspectionPage,
+    component: InspectorPage,
   },
   settings: { path: "/settings", name: "settings", component: SettingsPage },
   404: { path: "/404", name: "404", component: Error },

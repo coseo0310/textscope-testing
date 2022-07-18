@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <article>preview</article>
+  <article>editor</article>
 </template>
 
 <style lang="scss"></style>

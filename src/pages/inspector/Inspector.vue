@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Preview from "@/components/inspection/Preview.vue";
-import Editor from "@/components/inspection/Editor.vue";
-import Fields from "@/components/inspection/Fields.vue";
+import Preview from "@/components/inspector/Preview.vue";
+import Editor from "@/components/inspector/Editor.vue";
+import Fields from "@/components/inspector/Fields.vue";
 import { useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -26,6 +26,5 @@ isLogin.value = true;
   overflow-x: scroll;
   overflow-y: hidden;
   display: flex;
-  justify-content: center;
 }
 </style>

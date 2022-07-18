@@ -81,8 +81,8 @@ export const useWorkStore = defineStore("workStore", {
     },
 
     async getGridList(n: number = 1) {
-      const data = await getList(n);
-      console.log(data);
+      // const data = await getList(n);
+      // console.log(data);
       this.list = getGridList(n);
     },
   },
