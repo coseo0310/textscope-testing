@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 
 const workStore = useWorkStore();
 const { files } = storeToRefs(workStore);
-const isUpload = ref<boolean>(true);
+const isUpload = ref<boolean>(false);
 const fileEl = ref<HTMLInputElement | null>(null);
 
 const onModal = () => {
