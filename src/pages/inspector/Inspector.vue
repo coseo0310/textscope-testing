@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TopMenu from "@/components/inspector/TopMenu.vue";
 import Preview from "@/components/inspector/Preview.vue";
 import Editor from "@/components/inspector/Editor.vue";
 import Fields from "@/components/inspector/Fields.vue";
@@ -13,9 +14,12 @@ isLogin.value = true;
 
 <template>
   <main :class="main.layout">
-    <Preview />
-    <Editor />
-    <Fields />
+    <section :class="main.top"><TopMenu /></section>
+    <section :class="main.bottom">
+      <Preview />
+      <Editor />
+      <Fields />
+    </section>
   </main>
 </template>
 
@@ -26,5 +30,16 @@ isLogin.value = true;
   overflow-x: scroll;
   overflow-y: hidden;
   display: flex;
+  flex-direction: column;
+}
+
+.top {
+  width: 100%;
+  height: 64px;
+}
+
+.bottom {
+  display: flex;
+  height: 100%;
 }
 </style>
