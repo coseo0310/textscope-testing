@@ -53,7 +53,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <article :class="menu.extend">
+  <article
+    :class="{
+      [menu.extend]: isMenuExtend,
+      [menu.reduction]: !isMenuExtend,
+    }"
+  >
     <img :class="logo.white" :src="Logo" alt="logo white" />
     <nav :class="nav.main">
       <div
@@ -332,6 +337,16 @@ onUnmounted(() => {
   width: 200px;
   height: 100vh;
   background-color: $m-900;
+  padding: 40px 16px 20px 16px;
+}
+
+.reduction {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 200px;
+  height: 100vh;
+  background-color: $m-900;
   padding: 40px 16px;
 }
 </style>
@@ -431,7 +446,7 @@ onUnmounted(() => {
   height: 80px;
   position: absolute;
   left: 190px;
-  top: -20px;
+  top: -40px;
   border-radius: 3px;
   background-color: #ffffff;
   z-index: 1;

@@ -46,7 +46,7 @@ export default function useForm() {
   const onValidate = () => {
     let flag = true;
     for (const r of registers.value) {
-      const el = r.ref.$el;
+      const el = r.ref;
       const o = r.options;
 
       if (o?.required) {
@@ -87,7 +87,7 @@ export default function useForm() {
       }
       if (!!o?.match) {
         const check = registers.value.find(
-          (f) => f.ref.$el.name === o.match && f.ref.$el.value !== el.value
+          (f) => f.ref.name === o.match && f.ref.value !== el.value
         );
         errors.value[el.name] = {
           type: check ? "match" : null,
@@ -96,7 +96,7 @@ export default function useForm() {
 
       if (!!o?.notMatch) {
         const check = registers.value.find(
-          (f) => f.ref.$el.name === o.notMatch && f.ref.$el.value === el.value
+          (f) => f.ref.name === o.notMatch && f.ref.value === el.value
         );
         errors.value[el.name] = {
           type: check ? "notMatch" : null,
@@ -126,13 +126,15 @@ export default function useForm() {
 
   const register = (options?: RegisterOptions) => {
     return (ref: DefineComponent<{}, {}, any> | any) => {
-      if (!ref?.$el) {
+      if (!ref) {
         return;
       }
-      if (registers.value.find((r) => r.ref.$el.name === ref.$el.name)) {
+
+      if (registers.value.find((r) => r.ref.name === ref.name)) {
         return;
       }
-      addEventListener(ref.$el);
+
+      addEventListener(ref);
       registers.value.push({
         ref,
         options,
@@ -154,7 +156,7 @@ export default function useForm() {
 
   const getValues = () => {
     return registers.value.reduce((acc: Values, cur) => {
-      acc[cur.ref.$el.name] = cur.ref.$el.value;
+      acc[cur.ref.name] = cur.ref.value;
       return acc;
     }, {});
   };

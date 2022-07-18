@@ -1,4 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useAuthStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const authStore = useAuthStore();
+const { isLogin } = storeToRefs(authStore);
+
+isLogin.value = true;
+
+console.log("??");
+</script>
 
 <template>
   <main :class="main.layout">inspection</main>
