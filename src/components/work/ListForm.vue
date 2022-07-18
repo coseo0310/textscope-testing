@@ -141,6 +141,9 @@ const onPage = (v: number) => {
 const onReload = () => {
   workStore.getGridList(currentPage.value);
 };
+
+// ----
+workStore.getGridList(currentPage.value);
 </script>
 
 <template>

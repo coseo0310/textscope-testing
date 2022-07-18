@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { getList } from "@/api/http/work";
 import { Grid } from "@/types";
 
 interface Selector {
@@ -78,7 +79,10 @@ export const useWorkStore = defineStore("workStore", {
         register: [],
       };
     },
-    getGridList(n: number = 1) {
+
+    async getGridList(n: number = 1) {
+      const data = await getList(n);
+      console.log(data);
       this.list = getGridList(n);
     },
   },
