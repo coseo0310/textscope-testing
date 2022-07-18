@@ -59,7 +59,8 @@ onUnmounted(() => {
       [menu.reduction]: !isMenuExtend,
     }"
   >
-    <img :class="logo.white" :src="Logo" alt="logo white" />
+    <img v-if="isMenuExtend" :class="logo.white" :src="Logo" alt="logo white" />
+    <div v-else :class="logo.none" />
     <nav :class="nav.main">
       <div
         :class="{
@@ -109,6 +110,7 @@ onUnmounted(() => {
           </svg>
         </i>
         <p
+          v-if="isMenuExtend"
           :class="{
             [nav.text]: true,
             [nav.select_color]: routes.path.includes('dashboard'),
@@ -120,14 +122,17 @@ onUnmounted(() => {
       <div
         :class="{
           [nav.items]: true,
-          [nav.select_background]: routes.path.includes('work'),
+          [nav.select_background]:
+            routes.path.includes('work') || routes.path.includes('inspection'),
         }"
         @click="onPage('work')"
       >
         <i
           :class="{
             [nav.icon]: true,
-            [nav.select_color]: routes.path.includes('work'),
+            [nav.select_color]:
+              routes.path.includes('work') ||
+              routes.path.includes('inspection'),
           }"
         >
           <svg
@@ -177,9 +182,12 @@ onUnmounted(() => {
           </svg>
         </i>
         <p
+          v-if="isMenuExtend"
           :class="{
             [nav.text]: true,
-            [nav.select_color]: routes.path.includes('work'),
+            [nav.select_color]:
+              routes.path.includes('work') ||
+              routes.path.includes('inspection'),
           }"
         >
           업무 목록
@@ -220,6 +228,7 @@ onUnmounted(() => {
           </svg>
         </i>
         <p
+          v-if="isMenuExtend"
           :class="{
             [nav.text]: true,
             [nav.select_color]: routes.path.includes('settings'),
@@ -229,8 +238,14 @@ onUnmounted(() => {
         </p>
       </div>
     </nav>
-    <div class="pop" :class="myinfo.layout">
-      <div>
+    <div
+      class="pop"
+      :class="{
+        [myinfo.layout_extend]: isMenuExtend,
+        [myinfo.layout]: !isMenuExtend,
+      }"
+    >
+      <div v-if="isMenuExtend">
         <p :class="myinfo.name">우영우</p>
         <p :class="myinfo.team">한국수출입은행 검수1팀</p>
       </div>
@@ -267,7 +282,13 @@ onUnmounted(() => {
           />
         </svg>
       </i>
-      <div v-if="isPop" :class="myinfo.modal_extend">
+      <div
+        v-if="isPop"
+        :class="{
+          [myinfo.modal_extend]: isMenuExtend,
+          [myinfo.modal]: !isMenuExtend,
+        }"
+      >
         <button :class="myinfo.modal_btn" @click="onProfile">
           <i>
             <svg
@@ -344,10 +365,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 200px;
+  width: 60px;
   height: 100vh;
   background-color: $m-900;
-  padding: 40px 16px;
+  padding: 40px 8px;
 }
 </style>
 
@@ -355,6 +376,14 @@ onUnmounted(() => {
 .white {
   width: 157px;
   height: 36px;
+  margin-bottom: 88px;
+  border: none;
+  outline: none;
+}
+
+.none {
+  width: 60px;
+  height: 46px;
   margin-bottom: 88px;
 }
 </style>
@@ -380,6 +409,7 @@ onUnmounted(() => {
 
 .select_background {
   background-color: rgba(255, 255, 255, 0.1);
+  padding-top: 4px;
 }
 
 .icon {
@@ -409,7 +439,7 @@ onUnmounted(() => {
 </style>
 
 <style lang="scss" module="myinfo">
-.layout {
+.layout_extend {
   position: relative;
   width: 100%;
   display: flex;
@@ -418,6 +448,14 @@ onUnmounted(() => {
   div {
     width: 100%;
   }
+}
+
+.layout {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
 }
 
 .name {
@@ -455,12 +493,17 @@ onUnmounted(() => {
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   position: absolute;
-  right: -250px;
-  top: 0;
-  width: 50px;
-  height: 50px;
-  background-color: red;
+  right: -170px;
+  top: -20px;
+  width: 156px;
+  height: 80px;
+  border-radius: 3px;
+  background-color: #ffffff;
   box-shadow: 0px 3px 5px rgba(9, 30, 66, 0.2),
     0px 0px 1px rgba(9, 30, 66, 0.31);
 }

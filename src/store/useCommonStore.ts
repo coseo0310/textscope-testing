@@ -19,7 +19,7 @@ export const useCommonStore = defineStore("commonStore", {
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
-      isMenuExtend: true,
+      isMenuExtend: false,
       teams: [],
       registers: [],
       documnets: [],

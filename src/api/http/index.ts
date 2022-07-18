@@ -4,7 +4,7 @@ import { setInterceptors } from "./interceptor";
 function createInstance() {
   const instance = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}`,
-    withCredentials: true,
+    // withCredentials: true,
   });
   return setInterceptors(instance);
 }

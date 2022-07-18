@@ -8,7 +8,10 @@ import Toast from "@/components/shared/Toast.vue";
 import Alert from "@/components/shared/Alert.vue";
 import { useWorkStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { path } from "@/router";
 
+const router = useRouter();
 const workStore = useWorkStore();
 const { searchTerm, filter, columns, list, selection } = storeToRefs(workStore);
 
@@ -142,6 +145,10 @@ const onReload = () => {
   workStore.getGridList(currentPage.value);
 };
 
+const onInspection = (id: string) => {
+  router.push({ name: path.inspection.name, query: { id } });
+};
+
 // ----
 // workStore.getGridList(currentPage.value);
 </script>
@@ -222,6 +229,7 @@ const onReload = () => {
               [name.on]: item.status !== 'analysis',
               [name.off]: item.status === 'analysis',
             }"
+            @click="onInspection(item.id)"
           >
             {{ item.name }}
           </div>

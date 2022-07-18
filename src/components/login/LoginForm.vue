@@ -5,7 +5,6 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
 import { useForm } from "@/hooks";
-import { isFor } from "@babel/types";
 
 const REGEX =
   /^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$/;
