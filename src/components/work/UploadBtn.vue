@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 
 const workStore = useWorkStore();
 const { files } = storeToRefs(workStore);
-const isUpload = ref<boolean>(false);
+const isUpload = ref<boolean>(true);
 const fileEl = ref<HTMLInputElement | null>(null);
 
 const onModal = () => {
@@ -32,7 +32,13 @@ const onFiles = (e: Event) => {
   }
 
   for (let i = 0; i < list.length; i++) {
-    files.value.push(list[i]);
+    const item = {
+      id: `${list[i].lastModified}${Date.now}`,
+      complete: false,
+      type: list[i].type.split("/")[1],
+      file: list[i],
+    };
+    files.value.push(item);
   }
 };
 </script>

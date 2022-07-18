@@ -15,6 +15,15 @@ interface Filter {
   register: Selector[];
 }
 
+interface FileItem {
+  id: string;
+  complete: boolean;
+  type: string;
+  file: File;
+}
+
+type FileItems = FileItem[];
+
 type States = {
   imperfectTotal: number;
   completeTotal: number;
@@ -24,7 +33,7 @@ type States = {
   columns: Grid.Columns;
   list: Grid.GridList;
   filter: Filter;
-  files: File[];
+  files: FileItems;
 };
 
 // useStore could be anything like useUser, useCart
