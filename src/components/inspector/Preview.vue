@@ -30,7 +30,7 @@ const maxLength = (e: KeyboardEvent) => {
       </div>
     </div>
     <div :class="preview.layout">
-      <div>scroll</div>
+      <div v-for="c in 10" :class="preview.card"></div>
     </div>
   </article>
 </template>
@@ -90,15 +90,16 @@ const maxLength = (e: KeyboardEvent) => {
 .layout {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
 
   overflow-y: scroll;
   overflow-x: hidden;
 
   background-color: lightblue;
-
-  div {
-    height: 2000px;
-  }
 
   &::-webkit-scrollbar {
     width: 0px;
@@ -109,5 +110,13 @@ const maxLength = (e: KeyboardEvent) => {
   &::-webkit-scrollbar-thumb:hover {
     background: transparent;
   }
+}
+
+.card {
+  flex: 0 0 auto;
+  width: 106px;
+  height: 148px;
+  margin: 10px 0;
+  background-color: lightgreen;
 }
 </style>
