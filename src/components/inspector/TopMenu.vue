@@ -102,7 +102,7 @@ const onInspector = () => {
       <div class="divider"></div>
       <div :class="title.wrap">
         <div :class="title.info">
-          <p :class="title.text">타이틀 
+          <p :class="title.text">해외투자 신고서_고객사명_20220222.pdf 
            <!-- <div v-if="item.status === 'analysis'" :class="status.analysis">
             분석대기
           </div> -->
@@ -115,7 +115,7 @@ const onInspector = () => {
           </div> -->
           </p>
           <p :class="title.name">
-            task <span :class="title.divider">|</span> 이름 팀
+            012345678 <span :class="title.divider">|</span>우영우 검수1팀
           </p>
         </div>
         <button :class="title.btn" @click="onInspector">
