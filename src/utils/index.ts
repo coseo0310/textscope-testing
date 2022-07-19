@@ -1,3 +1,5 @@
+import { HTTP } from "@/types";
+
 export const setCookie = (key: string, value: string, days: number) => {
   let expires = "";
   if (days) {
@@ -7,6 +9,7 @@ export const setCookie = (key: string, value: string, days: number) => {
   }
   document.cookie = `${key}=${value}; expires=${expires}; path=/; samesite=lax`;
 };
+
 export const getCookie = (key: string) => {
   let nameEQ = key + "=";
   let ca = document.cookie.split(";");
@@ -17,6 +20,7 @@ export const getCookie = (key: string) => {
   }
   return null;
 };
+
 export const eraseCookie = (key: string) => {
   document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 };
@@ -32,4 +36,12 @@ export const notification = () => {
       }
     });
   }
+};
+
+export const errorHandler = <T extends HTTP.ResponseData>(e: any) => {
+  const data = {
+    error: e.response.data.error as HTTP.ErrorResponse,
+    status: e.response.status as number,
+  };
+  return data as T;
 };

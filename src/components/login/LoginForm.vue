@@ -5,6 +5,9 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
 import { useForm } from "@/hooks";
+import { setCookie } from "@/utils";
+import { TEXTSCOPE_AUTHORIZATION } from "@/context";
+import { HTTP } from "@/types";
 
 const REGEX =
   /^([\w\.\_\-])*[a-zA-Z0-9]+([\w\.\_\-])*([a-zA-Z0-9])+([\w\.\_\-])+@([a-zA-Z0-9]+\.)+[a-zA-Z0-9]{2,8}$/;
@@ -20,10 +23,12 @@ isLogin.value = false;
 
 const onLogin = async () => {
   const { email, password } = getValues();
-  // const t = await authStore.onLogin(email, password);
-  // if (!t) {
-  //   return;
-  // }
+  const res = await authStore.onLogin(email, password);
+  if (res.error !== "nil") {
+    errorMsg.value = res.error.error_message;
+    return;
+  }
+  setCookie(TEXTSCOPE_AUTHORIZATION, res.access_token, 1);
   isLogin.value = true;
   router.push({ name: path.work.name });
 };

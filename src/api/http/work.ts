@@ -1,10 +1,13 @@
 import { instance as http } from "./index";
+import { TEXTSCOPE_AUTHORIZATION, TEXTSCOPE_TYPE } from "@/context";
+import { getCookie } from "@/utils";
 import { HTTP } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 
 const URL = "/docx/info";
 
 export const getList = async (n: number) => {
+  const token = getCookie(TEXTSCOPE_AUTHORIZATION);
   const requestId = uuidv4();
   const params = {
     upload_date_start: "string",
@@ -22,11 +25,12 @@ export const getList = async (n: number) => {
     rows_limit: 10,
   };
 
-  const res = await http.post<HTTP.RespnseLoginData>(`${URL}/list`, params, {
+  const res = await http.post(`${URL}/list`, params, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
       accept: "application/json",
       "x-request-id": requestId,
+      [`${TEXTSCOPE_AUTHORIZATION}`]: `${TEXTSCOPE_TYPE} ${token}`,
     },
   });
 

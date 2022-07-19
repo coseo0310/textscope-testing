@@ -171,6 +171,7 @@ const onInspector = () => {
   height: 100%;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid $n-50;
 }
 </style>
 
@@ -180,12 +181,11 @@ const onInspector = () => {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 i {
   cursor: pointer;
-  padding: 0 3px;
 }
 </style>
 
@@ -204,7 +204,7 @@ i {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
+  padding: 0 20px;
 }
 
 .text {

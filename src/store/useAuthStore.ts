@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { login } from "@/api/http/auth";
+import { errorHandler } from "@/utils";
+import { HTTP } from "@/types";
 
 interface User {
   email: string;
@@ -37,11 +39,12 @@ export const useAuthStore = defineStore("authStore", {
   actions: {
     async onLogin(email: string, password: string) {
       try {
-        await login(email, password);
-        return true;
-      } catch (error: any) {
-        this.errorMsg = error.message;
-        return false;
+        const res = await login(email, password);
+        res.data.status = res.status;
+        res.data.error = "nil";
+        return res.data;
+      } catch (error) {
+        return errorHandler<HTTP.RespnseLoginData>(error);
       }
     },
     async getUser() {

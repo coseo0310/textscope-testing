@@ -19,17 +19,27 @@ export declare module Grid {
 }
 
 export declare module HTTP {
+  interface ErrorResponse {
+    error_code: string;
+    error_message: string;
+  }
   interface ResponseMetadata {
     request_datatime: string;
     response_datatime: string;
     time_elapsed: string;
   }
 
-  interface RespnseLoginData {
-    request: {
-      email: string;
-      password: string;
-    };
-    response_metadata: ResponseMetadata;
+  interface ResponseData {
+    error: ErrorResponse | "nil";
+    status: number;
   }
+
+  interface RespnseLoginData extends ResponseData {
+    access_token: string;
+    token_type: string;
+  }
+
+  // interface ResponseWorkListData extends ResponseData {
+  //   document_info:
+  // }
 }

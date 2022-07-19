@@ -1,11 +1,8 @@
 import { instance as http } from "./index";
 import { HTTP } from "@/types";
-import { setCookie } from "@/utils";
 // import { v4 as uuidv4 } from "uuid";
 
-const URL =
-  import.meta.env.MODE === "development" ? "/auth/v1/token" : "/auth/token";
-
+const URL = "/api/v1/auth";
 export const login = async (email: string, password: string) => {
   const params = new URLSearchParams();
   params.append("email", email);
@@ -16,9 +13,5 @@ export const login = async (email: string, password: string) => {
       accept: "application/json",
     },
   });
-  console.log(res);
-
-  // res.data.request.
-
-  return res.data;
+  return res;
 };
