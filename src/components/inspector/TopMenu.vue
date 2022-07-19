@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useWorkStore } from "@/store";
+import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
 
 const router = useRouter();
-const workStore = useWorkStore();
-const {isInspector} = storeToRefs(workStore);
+const inspectionStore = useInspectionStore();
+const {isInspector} = storeToRefs(inspectionStore);
 
 const onWork = () => {
   router.push({ name: path.work.name });

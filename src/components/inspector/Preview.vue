@@ -1,16 +1,27 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useInspectionStore } from "@/store";
+import { storeToRefs } from "pinia";
 
-const total = ref<number>(231);
-const current = ref<number>(1);
+const inspectionStore = useInspectionStore();
+const { previewList, currentPage } = storeToRefs(inspectionStore);
+
+const total = ref<number>(previewList.value.length);
 
 const maxLength = (e: KeyboardEvent) => {
   const el = e.target as HTMLInputElement;
   if (!el) {
     return;
   }
-  console.log(el.value.length);
+  if (e.code === "Enter") {
+    currentPage.value = Number(el.value);
+    return;
+  }
   el.value = el.value.length > 3 ? el.value.slice(0, 3) : el.value;
+};
+
+const onPage = (n: number) => {
+  currentPage.value = n;
 };
 </script>
 
@@ -22,7 +33,7 @@ const maxLength = (e: KeyboardEvent) => {
         <input
           :class="search.input"
           type="number"
-          :defaultValue="current"
+          :value="currentPage"
           @keyup="maxLength"
         />
         /
@@ -30,10 +41,41 @@ const maxLength = (e: KeyboardEvent) => {
       </div>
     </div>
     <div :class="preview.layout">
-      <div v-for="c in 10" :class="preview.card"></div>
+      <div
+        v-for="(p, idx) in previewList"
+        :class="preview.card"
+        @click="onPage(idx + 1)"
+      >
+        <div
+          :class="{
+            [preview.thumb]: true,
+          }"
+        >
+          <p>{{ idx + 1 }}</p>
+          <img
+            :class="{ select: currentPage === idx + 1 }"
+            :src="p.img"
+            src="thumb"
+          />
+          <p></p>
+        </div>
+        <p :class="preview.text">
+          {{ p.text }}
+        </p>
+        <p :class="preview.text">
+          {{ `(${p.num}/${p.total})` }}
+        </p>
+      </div>
     </div>
   </article>
 </template>
+
+<style lang="scss" scoped>
+.select {
+  border: 2px solid $b-300;
+  border-radius: 1px;
+}
+</style>
 
 <style lang="scss" module="container">
 .layout {
@@ -89,7 +131,7 @@ const maxLength = (e: KeyboardEvent) => {
 <style lang="scss" module="preview">
 .layout {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 139px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -98,8 +140,6 @@ const maxLength = (e: KeyboardEvent) => {
 
   overflow-y: scroll;
   overflow-x: hidden;
-
-  background-color: lightblue;
 
   &::-webkit-scrollbar {
     width: 0px;
@@ -117,6 +157,36 @@ const maxLength = (e: KeyboardEvent) => {
   width: 106px;
   height: 148px;
   margin: 10px 0;
-  background-color: lightgreen;
+  cursor: pointer;
+}
+
+.thumb {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  img {
+    width: 80px;
+    height: 100px;
+    border: 1px solid $n-40;
+    border-radius: 1px;
+  }
+
+  p {
+    width: 16px;
+    font-size: 9px;
+    font-weight: 400;
+    color: $m-400;
+  }
+}
+
+.text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 400;
+  color: $m-800;
+  padding-top: 5px;
 }
 </style>
