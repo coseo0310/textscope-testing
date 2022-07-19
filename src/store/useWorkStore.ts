@@ -35,6 +35,7 @@ type States = {
   list: Grid.GridList;
   filter: Filter;
   files: FileItems;
+  isInspector: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -61,6 +62,7 @@ export const useWorkStore = defineStore("workStore", {
         teams: [],
         register: [],
       },
+      isInspector: false,
     };
   },
   getters: {

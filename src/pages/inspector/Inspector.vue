@@ -14,8 +14,8 @@ isLogin.value = true;
 
 <template>
   <main :class="main.layout">
-    <section :class="main.top"><TopMenu /></section>
-    <section :class="main.bottom">
+    <section :class="main.top" aria-label="상단 영역"><TopMenu /></section>
+    <section :class="main.bottom" aria-label="하단 영역">
       <Preview />
       <Editor />
       <Fields />
@@ -40,6 +40,7 @@ isLogin.value = true;
 
 .bottom {
   display: flex;
+  width: 100%;
   height: 100%;
 }
 </style>

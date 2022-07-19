@@ -6,7 +6,7 @@
 
 <style lang="scss" module="container">
 .layout {
-  width: 100%;
+  width: calc(100% - 468px);
   height: 100%;
   background-color: lightcoral;
 }

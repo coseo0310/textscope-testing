@@ -20,10 +20,10 @@ isLogin.value = false;
 
 const onLogin = async () => {
   const { email, password } = getValues();
-  // const t = await authStore.onLogin(email, password);
-  // if (!t) {
-  //   return;
-  // }
+  const t = await authStore.onLogin(email, password);
+  if (!t) {
+    return;
+  }
   isLogin.value = true;
   router.push({ name: path.work.name });
 };
