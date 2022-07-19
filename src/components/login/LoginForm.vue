@@ -20,10 +20,10 @@ isLogin.value = false;
 
 const onLogin = async () => {
   const { email, password } = getValues();
-  const t = await authStore.onLogin(email, password);
-  if (!t) {
-    return;
-  }
+  // const t = await authStore.onLogin(email, password);
+  // if (!t) {
+  //   return;
+  // }
   isLogin.value = true;
   router.push({ name: path.work.name });
 };
@@ -65,7 +65,7 @@ const onValid = () => {
           "
           placeholder="이메일 주소 입력"
           maxlength="30"
-          defaultValue="admin@lomin.ai"
+          defaultValue="SHL@koreaexim.go.kr"
           @keyup.enter="onEnter"
         />
       </section>
