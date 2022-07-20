@@ -5,11 +5,6 @@ import Editor from "@/components/inspector/Editor.vue";
 import Fields from "@/components/inspector/Fields.vue";
 import { useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
-
-const authStore = useAuthStore();
-const { isLogin } = storeToRefs(authStore);
-
-isLogin.value = true;
 </script>
 
 <template>

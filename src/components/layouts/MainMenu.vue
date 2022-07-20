@@ -193,7 +193,7 @@ onUnmounted(() => {
         >
           업무 목록
         </p>
-        <p :class="nav.badge">
+        <p v-if="isMenuExtend" :class="nav.badge">
           {{ imperfectTotal }}
         </p>
       </div>

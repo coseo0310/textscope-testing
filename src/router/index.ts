@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import { path, routes } from "./routes";
-import { useCommonStore } from "@/store";
+import { useCommonStore, useAuthStore } from "@/store";
 
 export const router = createRouter({
   history: createWebHashHistory(),
@@ -9,6 +9,7 @@ export const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   isMenuExtend(to.path);
+  login(to.path);
   next();
 });
 
@@ -20,5 +21,14 @@ function isMenuExtend(path: string) {
     commonStore.isMenuExtend = false;
   } else {
     commonStore.isMenuExtend = true;
+  }
+}
+
+function login(path: string) {
+  const authStore = useAuthStore();
+  if (path.includes("login")) {
+    authStore.isLogin = false;
+  } else {
+    authStore.isLogin = true;
   }
 }
