@@ -4,11 +4,11 @@
   <article :class="container.layout">
     <div :class="profile.box">
       <div :class="profile.label">행번</div>
-      <input :class="profile.input" type="text" value="0001" />
+      <input :class="profile.input" type="text" value="0001" readonly />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">이름</div>
-      <input :class="profile.input" type="text" value="우영우" />
+      <input :class="profile.input" type="text" value="우영우" readonly />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">부서</div>
@@ -16,23 +16,24 @@
         :class="profile.input"
         type="text"
         value="본점 > 검수부 > 검수 1팀"
+        readonly
       />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">직위</div>
-      <input :class="profile.input" type="text" value="사원" />
+      <input :class="profile.input" type="text" value="사원" readonly />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">내선번호</div>
-      <input :class="profile.input" type="text" value="00-000-0000" />
+      <input :class="profile.input" type="text" value="00-000-0000" readonly />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">이메일</div>
-      <input :class="profile.input" type="text" value="wyw@test.kr" />
+      <input :class="profile.input" type="text" value="wyw@test.kr" readonly />
     </div>
     <div :class="profile.box">
       <div :class="profile.label">권한</div>
-      <input :class="profile.input" type="text" value="관리자" />
+      <input :class="profile.input" type="text" value="관리자" readonly />
     </div>
     <p :class="profile.text">권한 부여 기간: 2022.01.31 ~ 2022.12.31</p>
   </article>
