@@ -173,8 +173,8 @@ const onInputField = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid $n-20;
   background-color: $n-20;
-  border: none;
   padding: 6px 10px;
   border-radius: 4px;
   font-size: 12px;
