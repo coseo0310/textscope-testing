@@ -16,6 +16,7 @@ type States = {
   currentField: Field[] | null;
   isInspector: boolean;
   isComplex: boolean;
+  documentType: "default" | "normal" | "complex";
 };
 
 // useStore could be anything like useUser, useCart
@@ -30,6 +31,7 @@ export const useInspectionStore = defineStore("inspectionStore", {
       currentField: getFields(),
       isInspector: false,
       isComplex: false,
+      documentType: "default",
     };
   },
   getters: {},
