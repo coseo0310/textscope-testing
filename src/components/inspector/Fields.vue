@@ -98,13 +98,14 @@ const onInputField = () => {
 }
 
 .text {
+  width: 150px;
   font-size: 14px;
   font-weight: 400;
   color: $m-500;
 }
 
 .combo {
-  width: 214px;
+  width: 100%;
   height: 42px;
 }
 </style>
