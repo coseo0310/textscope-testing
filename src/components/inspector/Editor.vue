@@ -362,18 +362,15 @@ const onRotate = (t: "cw" | "ccw") => {
 }
 
 .box_start {
-  width: 40%;
   display: flex;
   align-items: center;
 }
 .box_center {
-  width: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .box_end {
-  width: 40%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
