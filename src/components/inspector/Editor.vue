@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ComboBox from "@/components/shared/ComboBox.vue";
+import { useInspectionStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const inspectionStore = useInspectionStore();
+const { isComplex } = storeToRefs(inspectionStore);
 
 const deg = ref<number>(0);
 const isIdx = ref<boolean>(false);
@@ -51,7 +56,12 @@ const onRotate = (t: "cw" | "ccw") => {
 </script>
 
 <template>
-  <article :class="container.layout">
+  <article
+    :class="{
+      [container.layout]: !isComplex,
+      [container.layout_complex]: isComplex,
+    }"
+  >
     <section :class="controll.layout" aria-label="Controller Section">
       <div :class="controll.box_start">
         <p :class="controll.text">배율</p>
@@ -188,6 +198,7 @@ const onRotate = (t: "cw" | "ccw") => {
           </div>
         </div>
         <button
+          v-if="!isComplex"
           :class="controll.func_btn"
           type="button"
           @click="onRotate('cw')"
@@ -215,6 +226,7 @@ const onRotate = (t: "cw" | "ccw") => {
           <p>90º</p>
         </button>
         <button
+          v-if="!isComplex"
           :class="controll.func_btn"
           type="button"
           @click="onRotate('ccw')"
@@ -327,6 +339,13 @@ const onRotate = (t: "cw" | "ccw") => {
   flex-direction: column;
   background-color: rgba(0, 0, 0, 0.24);
 }
+.layout_complex {
+  width: calc(100% - 800px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.24);
+}
 </style>
 
 <style lang="scss" module="controll">
@@ -343,18 +362,18 @@ const onRotate = (t: "cw" | "ccw") => {
 }
 
 .box_start {
-  width: 100%;
+  width: 40%;
   display: flex;
   align-items: center;
 }
 .box_center {
-  width: 100%;
+  width: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .box_end {
-  width: 100%;
+  width: 40%;
   display: flex;
   align-items: center;
   justify-content: flex-end;

@@ -6,7 +6,7 @@ import { path } from "@/router";
 
 const router = useRouter();
 const inspectionStore = useInspectionStore();
-const {isInspector} = storeToRefs(inspectionStore);
+const {isInspector, isComplex} = storeToRefs(inspectionStore);
 
 const onWork = () => {
   router.push({ name: path.work.name });
@@ -118,6 +118,9 @@ const onInspector = () => {
             012345678 <span :class="title.divider">|</span>우영우 검수1팀
           </p>
         </div>
+        <button :class="title.btn" @click="() => isComplex = !isComplex">
+          <p>{{isComplex ? '기본문서': '복합문서'}}</p>
+        </button>
         <button :class="title.btn" @click="onInspector">
           <svg v-if="!isInspector" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M9.30564 4.58366C6.69763 4.58366 4.58341 6.69787 4.58341 9.30588C4.58341 11.9139 6.69763 14.0281 9.30564 14.0281C11.9136 14.0281 14.0279 11.9139 14.0279 9.30588C14.0279 6.69787 11.9136 4.58366 9.30564 4.58366ZM2.91675 9.30588C2.91675 5.7774 5.77715 2.91699 9.30564 2.91699C12.8341 2.91699 15.6945 5.7774 15.6945 9.30588C15.6945 12.8344 12.8341 15.6948 9.30564 15.6948C5.77715 15.6948 2.91675 12.8344 2.91675 9.30588Z" fill="white"/>

@@ -4,7 +4,7 @@ import { useInspectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 
 const inspectionStore = useInspectionStore();
-const { isInspector, currentField } = storeToRefs(inspectionStore);
+const { isInspector, isComplex, currentField } = storeToRefs(inspectionStore);
 
 const onInputField = () => {
   if (!isInspector.value) {
@@ -14,7 +14,12 @@ const onInputField = () => {
 </script>
 
 <template>
-  <article :class="container.layout">
+  <article
+    :class="{
+      [container.layout]: !isComplex,
+      [container.layout_complex]: isComplex,
+    }"
+  >
     <section :class="document.layout" aria-label="문서 종류">
       <p :class="document.text">문서종류</p>
       <div :class="document.combo">
@@ -77,6 +82,10 @@ const onInputField = () => {
 <style lang="scss" module="container">
 .layout {
   width: 332px;
+  height: 100%;
+}
+.layout_complex {
+  width: 664px;
   height: 100%;
 }
 </style>

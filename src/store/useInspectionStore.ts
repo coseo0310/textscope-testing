@@ -11,10 +11,11 @@ interface Preview {
 }
 
 type States = {
-  isInspector: boolean;
   previewList: Preview[];
   currentPage: number;
   currentField: Field[] | null;
+  isInspector: boolean;
+  isComplex: boolean;
 };
 
 // useStore could be anything like useUser, useCart
@@ -24,10 +25,11 @@ export const useInspectionStore = defineStore("inspectionStore", {
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
-      isInspector: false,
       previewList: getPreview(),
       currentPage: 1,
       currentField: getFields(),
+      isInspector: false,
+      isComplex: false,
     };
   },
   getters: {},
