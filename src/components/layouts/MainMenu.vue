@@ -16,7 +16,7 @@ const { imperfectTotal } = storeToRefs(workStore);
 const isPop = ref<boolean>(false);
 
 const onPage = (name: string) => {
-  router.push({ name });
+  router.push({ path: `/${name}` });
 };
 
 const onPop = () => {
@@ -25,6 +25,7 @@ const onPop = () => {
 
 const onProfile = () => {
   isPop.value = false;
+  router.push({ name: path.profile.name });
 };
 const onLogout = () => {
   isPop.value = false;
@@ -357,7 +358,7 @@ onUnmounted(() => {
   flex-direction: column;
   width: 200px;
   height: 100vh;
-  background-color: $m-900;
+  background-color: $m-800;
   padding: 40px 16px 20px 16px;
 }
 

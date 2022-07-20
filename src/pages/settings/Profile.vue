@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <router-view></router-view>
+  <main>프로필관리</main>
 </template>
 
 <style lang="scss"></style>

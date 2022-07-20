@@ -14,7 +14,6 @@ interface User {
 type States = {
   user: User | null;
   isLogin: boolean;
-  isSubMenu: boolean;
   errorMsg: string;
 };
 
@@ -27,7 +26,6 @@ export const useAuthStore = defineStore("authStore", {
       // all these properties will have their type inferred automatically
       user: null,
       isLogin: false,
-      isSubMenu: false,
       errorMsg: "",
     };
   },

@@ -4,6 +4,10 @@ import WorkPage from "@/pages/work/WorkPage.vue";
 import SettingsPage from "@/pages/settings/Settings.vue";
 import DashboardPage from "@/pages/dashboard/Dashboard.vue";
 import InspectorPage from "@/pages/inspector/Inspector.vue";
+import ProfilePage from "@/pages/settings/Profile.vue";
+import ManagementAuthPage from "@/pages/settings/ManagementAuth.vue";
+import ManagementRPAPage from "@/pages/settings/ManagementRPA.vue";
+import ManagementLogPage from "@/pages/settings/ManagementLog.vue";
 import Error from "@/pages/auth/404.vue";
 
 export const path = {
@@ -19,7 +23,11 @@ export const path = {
     name: "inspection",
     component: InspectorPage,
   },
+  profile: { path: "/profile", name: "profile", component: ProfilePage },
   settings: { path: "/settings", name: "settings", component: SettingsPage },
+  auth: { path: "/settings/auth", name: "auth", component: ManagementAuthPage },
+  log: { path: "/settings/log", name: "log", component: ManagementLogPage },
+  rpa: { path: "/settings/rpa", name: "rpa", component: ManagementRPAPage },
   404: { path: "/404", name: "404", component: Error },
 };
 
@@ -58,12 +66,47 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: path.profile.path,
+    name: path.profile.name,
+    component: path.profile.component,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: path.settings.path,
     name: path.settings.name,
     component: path.settings.component,
     meta: {
       requiresAuth: true,
     },
+    children: [
+      { path: "", redirect: path.auth.path },
+      {
+        path: path.auth.path,
+        name: path.auth.name,
+        component: path.auth.component,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: path.log.path,
+        name: path.log.name,
+        component: path.log.component,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: path.rpa.path,
+        name: path.rpa.name,
+        component: path.rpa.component,
+        meta: {
+          requiresAuth: true,
+        },
+      },
+    ],
   },
   {
     path: path[404].path,
