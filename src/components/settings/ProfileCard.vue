@@ -78,7 +78,7 @@
   font-size: 14px;
   font-weight: 400;
   color: $n-70;
-  padding: 0 10px;
+  padding: 0 15px;
 }
 
 .text {

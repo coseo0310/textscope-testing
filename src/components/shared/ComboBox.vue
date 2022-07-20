@@ -125,14 +125,12 @@ onUnmounted(() => {
     justify-content: center;
     background-color: #ffffff;
     width: 100%;
-    border-radius: 4px;
     font-size: 14px;
-    font-weight: 200;
+    font-weight: 400;
     color: #1b1b1b;
     cursor: pointer;
-    box-shadow: 0px 10px 18px rgba(9, 30, 66, 0.15),
+    box-shadow: 0px 3px 5px rgba(9, 30, 66, 0.2),
       0px 0px 1px rgba(9, 30, 66, 0.31);
-    padding: 10px 0;
     z-index: 2;
     .item {
       display: flex;

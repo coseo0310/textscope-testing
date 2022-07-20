@@ -14,8 +14,6 @@ import ProfileCard from "@/components/settings/ProfileCard.vue";
   width: calc(100vw - 200px);
   height: 100vh;
   padding: 0 32px 48px 32px;
-
-  overflow: scroll;
 }
 
 .title {
