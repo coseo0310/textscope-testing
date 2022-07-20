@@ -193,7 +193,7 @@ onUnmounted(() => {
         >
           업무 목록
         </p>
-        <p v-if="routes.path.includes('work')" :class="nav.badge">
+        <p :class="nav.badge">
           {{ imperfectTotal }}
         </p>
       </div>
