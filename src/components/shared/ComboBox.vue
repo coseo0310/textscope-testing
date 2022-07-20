@@ -80,27 +80,42 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .combobox-container {
+  width: 100%;
+  height: 100%;
+
   position: relative;
-  z-index: 11;
+  z-index: 2;
   .select {
     display: flex;
     justify-content: space-around;
     align-items: center;
     font-size: 14px;
     font-weight: 400;
-    color: #7a869a;
+    color: $m-800;
     cursor: pointer;
     border: 1px solid #dfe1e6;
     border-radius: 4px;
     width: 100%;
+    height: 100%;
+
     &.open {
       background-color: #f4f5f7;
     }
     .text {
-      margin-bottom: 1px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+
       &.open {
         color: #1b1b1b;
       }
+    }
+
+    .chevron {
+      position: absolute;
+      right: 10px;
     }
   }
   .list {
@@ -118,18 +133,18 @@ onUnmounted(() => {
     box-shadow: 0px 10px 18px rgba(9, 30, 66, 0.15),
       0px 0px 1px rgba(9, 30, 66, 0.31);
     padding: 10px 0;
-    z-index: 10;
+    z-index: 2;
     .item {
       display: flex;
       align-items: center;
       height: 32px;
       padding: 10px 20px;
       &.on {
-        background-color: #1b1b1b;
+        background-color: $m-800;
         color: #ffffff;
       }
       &:hover {
-        background-color: #5e5e5e;
+        background-color: $m-300;
         color: #ffffff;
       }
     }
