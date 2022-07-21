@@ -9,6 +9,7 @@ const settingsStore = useSettingsStore();
 const { authColumns, authList } = storeToRefs(settingsStore);
 
 const currentPage = ref<number>(1);
+const term = ref<string>("");
 
 const onPage = (n: number) => {
   settingsStore.getLogList(n);
@@ -17,12 +18,49 @@ const onPage = (n: number) => {
 const onModify = (id: string) => {
   alert("준비중...");
 };
+
+const onSearch = () => {
+  alert(`${term.value} 준비중...`);
+};
 </script>
 
 <template>
   <article :class="container.layout">
     <section :class="top.layout" aria-label="Total">
-      <p :class="top.text">총 1,024건</p>
+      <div :class="top.text">
+        검수 1팀
+        <p>총 20명</p>
+      </div>
+      <div :class="top.search">
+        <input
+          type="text"
+          placeholder="이름 또는 이메일로 검색"
+          v-model="term"
+          @keyup.enter="onSearch"
+        />
+        <i @click="onSearch">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M12.5343 12.5336C12.8467 12.2212 13.3533 12.2212 13.6657 12.5336L16.5657 15.4336C16.8781 15.7461 16.8781 16.2526 16.5657 16.565C16.2533 16.8774 15.7467 16.8774 15.4343 16.565L12.5343 13.665C12.2219 13.3526 12.2219 12.8461 12.5343 12.5336Z"
+              fill="#1B1B1B"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M9.33335 4.79922C6.82965 4.79922 4.80001 6.82886 4.80001 9.33255C4.80001 11.8362 6.82965 13.8659 9.33335 13.8659C11.837 13.8659 13.8667 11.8362 13.8667 9.33255C13.8667 6.82886 11.837 4.79922 9.33335 4.79922ZM3.20001 9.33255C3.20001 5.94521 5.946 3.19922 9.33335 3.19922C12.7207 3.19922 15.4667 5.94521 15.4667 9.33255C15.4667 12.7199 12.7207 15.4659 9.33335 15.4659C5.946 15.4659 3.20001 12.7199 3.20001 9.33255Z"
+              fill="#1B1B1B"
+            />
+          </svg>
+        </i>
+      </div>
     </section>
     <section :class="middle.layout" aria-label="Grid section">
       <Grid :columns="authColumns" :grid-list="authList">
@@ -107,16 +145,53 @@ const onModify = (id: string) => {
 
 <style lang="scss" module="top">
 .layout {
+  width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   padding-bottom: 50px;
 }
 
 .text {
-  color: $m-400;
-  font-size: 14px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: $m-800;
+  font-size: 20px;
+  font-weight: 500;
+
+  p {
+    color: $m-400;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 10px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  input {
+    width: 240px;
+    height: 32px;
+    border: 1px solid $n-50;
+    border-radius: 4px;
+    outline: none;
+    padding: 0 15px;
+
+    &::placeholder {
+      color: $n-100;
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+
+  i {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
 }
 </style>
 
