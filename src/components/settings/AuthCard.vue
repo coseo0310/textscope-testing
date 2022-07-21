@@ -15,7 +15,7 @@ const isModal = ref<boolean>(false);
 const modalItem = ref<Item | null>(null);
 
 const onPage = (n: number) => {
-  settingsStore.getLogList(n);
+  settingsStore.getAuthList(n);
 };
 
 const onModify = (item: Item) => {
