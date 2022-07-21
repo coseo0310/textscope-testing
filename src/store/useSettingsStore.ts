@@ -1,95 +1,19 @@
 import { defineStore } from "pinia";
-import { getList } from "@/api/http/work";
 import { Grid } from "@/types";
 
-interface Selector {
-  id: string;
-  text: string;
-}
-interface Filter {
-  align: "register" | "inspector";
-  startDate: string;
-  endDate: string;
-  status: string[];
-  documents: Selector[];
-  teams: Selector[];
-  register: Selector[];
-}
-
-interface FileItem {
-  id: string;
-  complete: boolean;
-  type: string;
-  file: File;
-}
-
-type FileItems = FileItem[];
-
-type States = {
-  imperfectTotal: number;
-  completeTotal: number;
-  workTotal: number;
-  searchTerm: string;
-  selection: string[];
-  columns: Grid.Columns;
-  list: Grid.GridList;
-  filter: Filter;
-  files: FileItems;
-};
+type States = {};
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
-export const useWorkStore = defineStore("workStore", {
+export const useSettingsStore = defineStore("settingsStore", {
   // arrow function recommended for full type inference
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
-      imperfectTotal: 25,
-      completeTotal: 325,
-      workTotal: 350,
-      searchTerm: "",
-      selection: [],
-      columns: getWorkColumns(),
-      list: getGridList(),
-      files: [],
-      filter: {
-        align: "register",
-        startDate: "",
-        endDate: "",
-        status: [],
-        documents: [],
-        teams: [],
-        register: [],
-      },
     };
   },
-  getters: {
-    isSelection: (state) => state.selection.length > 0,
-    isRPA: (state) => state.selection.length > 0,
-  },
-  actions: {
-    clearFilter() {
-      this.filter = {
-        align: "register",
-        startDate: ``,
-        endDate: ``,
-        status: [],
-        documents: [],
-        teams: [],
-        register: [],
-      };
-    },
-
-    async getGridList(n: number = 1) {
-      try {
-        const data = await getList(n);
-        console.log(data);
-        this.list = getGridList(n);
-      } catch (error: any) {
-        console.log(error.response);
-      }
-    },
-  },
+  getters: {},
+  actions: {},
 });
 
 function getWorkColumns(): Grid.Columns {
