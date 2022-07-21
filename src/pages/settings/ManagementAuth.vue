@@ -5,7 +5,7 @@ import TeamCard from "@/components/settings/TeamCard.vue";
 
 <template>
   <main :class="main.layout">
-    <h1 :class="main.title">검수 1팀</h1>
+    <h1 :class="main.title">권한 관리</h1>
     <div :class="main.card_layout">
       <AuthCard />
       <TeamCard />
