@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { Grid } from "@/types";
 
-type States = {};
+type States = {
+  logColumns: Grid.Columns;
+  logList: Grid.GridList;
+};
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
@@ -10,84 +13,58 @@ export const useSettingsStore = defineStore("settingsStore", {
   state: (): States => {
     return {
       // all these properties will have their type inferred automatically
+      logColumns: getLogColumns(),
+      logList: getGridLogList(),
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    getLogList(n: number) {
+      this.logList = getGridLogList(n);
+    },
+  },
 });
 
-function getWorkColumns(): Grid.Columns {
+function getLogColumns(): Grid.Columns {
   return [
     {
-      width: 150,
-      text: "Task ID",
-      align: "start",
+      width: 220,
+      text: "배치시작 일시",
+      align: "center",
       sortable: false,
-      value: "id",
+      value: "startDt",
     },
     {
       width: 220,
-      text: "문서종류",
-      align: "start",
+      text: "배치종료 일시",
+      align: "center",
       sortable: false,
-      value: "document",
+      value: "endDt",
     },
     {
-      text: "문서명",
-      align: "start",
+      text: "배치유형",
+      align: "center",
+      sortable: false,
+      value: "type",
+    },
+    {
+      width: 100,
+      text: "배치명",
+      align: "center",
       sortable: false,
       value: "name",
     },
     {
-      width: 100,
-      text: "페이지수",
+      text: "결과 메시지",
       align: "center",
       sortable: false,
-      value: "pageTotal",
-    },
-    {
-      width: 210,
-      text: "등록자/등록일",
-      align: "center",
-      sortable: false,
-      value: "register",
-    },
-    {
-      width: 210,
-      text: "검수자/검수일",
-      align: "center",
-      sortable: false,
-      value: "inspector",
-    },
-    {
-      width: 100,
-      text: "처리 상태",
-      align: "center",
-      sortable: false,
-      value: "status",
-    },
-    {
-      width: 150,
-      text: "정확도",
-      align: "center",
-      sortable: false,
-      value: "accuracy",
+      value: "message",
     },
   ];
 }
 
-function getGridList(c: number = 1): Grid.GridList {
+function getGridLogList(c: number = 1): Grid.GridList {
   let tmp = [];
-  const documents = [
-    "-",
-    "Commercial Invoice",
-    "해외투자 사업계획서",
-    "B/L",
-    "Invoice",
-  ];
-  const status = ["analysis", "wait", "progress", "complete"];
-  const teams = ["검수 1팀", "검수 2팀", "검수 3팀", "검수 4팀"];
-  const names = ["우영우", "정명석", "동그라미", "최수연"];
   //TODO: Get Grid list
   for (let i = 0; i < 10; i++) {
     const id = `${Date.now() + i + c}`;
@@ -99,18 +76,11 @@ function getGridList(c: number = 1): Grid.GridList {
 
     const obj = {
       id,
-      document: documents[r],
-      documentTotal: `9`,
-      name: `document-${id}-${i}.pdf`,
-      pageTotal: r === 0 ? `-` : `${Math.floor(99 / (i + 1))}`,
-      register: names[r],
-      rDate: `2022-07-12 10:00:00`,
-      rTeam: teams[r],
-      inspector: r === 0 ? `-` : names[r],
-      iDate: `2022-07-12 10:00:00`,
-      iTeam: teams[r],
-      status: status[r],
-      accuracy: r === 0 ? "-" : `${a}`,
+      startDt: `2022-07-12 10:00:00`,
+      endDt: `2022-07-12 10:00:00`,
+      type: `type-${id}`,
+      name: i % 2 === 0 ? "auth" : "data",
+      message: `success-${id}`,
     };
     tmp.push(obj);
   }
