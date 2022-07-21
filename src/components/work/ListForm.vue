@@ -145,7 +145,10 @@ const onReload = () => {
   workStore.getGridList(currentPage.value);
 };
 
-const onInspection = (id: string) => {
+const onInspection = (id: string, reject: boolean) => {
+  if (reject) {
+    return;
+  }
   router.push({ name: path.inspection.name, query: { id } });
 };
 
@@ -229,7 +232,7 @@ workStore.getGridList(currentPage.value);
               [name.on]: item.status !== 'analysis',
               [name.off]: item.status === 'analysis',
             }"
-            @click="onInspection(item.id)"
+            @click="onInspection(item.id, item.status === 'analysis')"
           >
             {{ item.name }}
           </div>
