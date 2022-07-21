@@ -10,9 +10,9 @@ const onSave = () => {
 
 <template>
   <article :class="container.layout">
-    <div :class="profile.box">
-      <div :class="profile.label">RPA봇 수신메일 주소</div>
-      <div :class="profile.combo">
+    <div :class="rpa.box">
+      <div :class="rpa.label">RPA봇 수신메일 주소</div>
+      <div :class="rpa.combo">
         <ComboBox
           :items="[
             { id: 1, text: 'rpabot0001@koreaexim.co.kr', value: 'adsf' },
@@ -23,14 +23,14 @@ const onSave = () => {
         />
       </div>
     </div>
-    <div :class="profile.box">
-      <div :class="profile.label">인식결과 저장 경로 (NAS)</div>
-      <input :class="profile.input" type="text" value="\192.168.0.10\AIOCR" />
+    <div :class="rpa.box">
+      <div :class="rpa.label">인식결과 저장 경로 (NAS)</div>
+      <input :class="rpa.input" type="text" value="\192.168.0.10\AIOCR" />
     </div>
-    <div :class="profile.box">
-      <div :class="profile.label">메일 발송 문구</div>
+    <div :class="rpa.box">
+      <div :class="rpa.label">메일 발송 문구</div>
       <textarea
-        :class="profile.textarea"
+        :class="rpa.textarea"
         type="text"
         rows="8"
         cols="50"
@@ -38,7 +38,7 @@ const onSave = () => {
       >
       </textarea>
     </div>
-    <button :class="profile.btn" type="button" @click="onSave">
+    <button :class="rpa.btn" type="button" @click="onSave">
       <svg
         width="18"
         height="18"
@@ -70,7 +70,7 @@ const onSave = () => {
 }
 </style>
 
-<style lang="scss" module="profile">
+<style lang="scss" module="rpa">
 .box {
   display: flex;
   padding: 8px 0;
