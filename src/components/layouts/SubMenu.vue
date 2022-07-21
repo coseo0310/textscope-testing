@@ -167,7 +167,6 @@ onUnmounted(() => {
 
 .select_background {
   background-color: rgba(255, 255, 255, 0.1);
-  padding-top: 4px;
 }
 
 .icon {
