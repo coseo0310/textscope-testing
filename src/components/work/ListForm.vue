@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import Grid, { GridList } from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import Filter from "@/components/work/Filter.vue";
 import Confirm from "@/components/shared/Confirm.vue";
 import Toast from "@/components/shared/Toast.vue";
 import Alert from "@/components/shared/Alert.vue";
-import { useWorkStore } from "@/store";
+import { useWorkStore, useCommonStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { path } from "@/router";
 
 const router = useRouter();
 const workStore = useWorkStore();
+const commonStore = useCommonStore();
 const { searchTerm, filter, columns, list, selection } = storeToRefs(workStore);
 
 const isFilter = ref<boolean>(false);
@@ -142,7 +143,11 @@ const onPage = (v: number) => {
 };
 
 const onReload = () => {
-  workStore.getGridList(currentPage.value);
+  commonStore.setLoader(true, "업무 목록 새로고침 중...");
+  setTimeout(() => {
+    workStore.getGridList(currentPage.value);
+    commonStore.setLoader(false, "");
+  }, 1000);
 };
 
 const onInspection = (id: string, reject: boolean) => {
@@ -153,7 +158,7 @@ const onInspection = (id: string, reject: boolean) => {
 };
 
 // ----
-workStore.getGridList(currentPage.value);
+// workStore.getGridList(currentPage.value);
 </script>
 
 <template>

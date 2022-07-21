@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import MainMenu from "@/components/layouts/MainMenu.vue";
 import SubMenu from "@/components/layouts/SubMenu.vue";
+import Loader from "@/components/shared/Loader.vue";
 import { useAuthStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
@@ -13,6 +13,7 @@ const { isLogin } = storeToRefs(authStore);
 
 <template>
   <div :class="app.main">
+    <Loader />
     <section v-if="isLogin" aria-label="메인 메뉴">
       <MainMenu />
     </section>

@@ -6,10 +6,12 @@ interface Selector {
 }
 
 type States = {
+  isLoader: boolean;
   isMenuExtend: boolean;
   teams: Selector[];
   registers: Selector[];
   documnets: Selector[];
+  loaderMsg: string;
 };
 
 // useStore could be anything like useUser, useCart
@@ -20,9 +22,11 @@ export const useCommonStore = defineStore("commonStore", {
     return {
       // all these properties will have their type inferred automatically
       isMenuExtend: false,
+      isLoader: false,
       teams: [],
       registers: [],
       documnets: [],
+      loaderMsg: "Loading...",
     };
   },
   getters: {
@@ -57,5 +61,10 @@ export const useCommonStore = defineStore("commonStore", {
       { id: "16", text: "15Bill Of Landing" },
     ],
   },
-  actions: {},
+  actions: {
+    setLoader(is: boolean, msg?: string) {
+      this.isLoader = is;
+      this.loaderMsg = msg || "";
+    },
+  },
 });
