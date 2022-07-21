@@ -96,7 +96,7 @@ function getGridAuthList(c: number = 1): Grid.GridList {
   let tmp = [];
   //TODO: Get Grid list
   for (let i = 0; i < 10; i++) {
-    const auth = ["auth", "normal", "nil", "nil"];
+    const auth = ["admin", "user", "nil", "nil"];
     const positions = ["대리", "사원", "과장", "부장"];
     const names = ["우영우", "정명석", "동그라미", "최수연"];
     const id = `${Date.now() + i + c}`;
@@ -109,11 +109,14 @@ function getGridAuthList(c: number = 1): Grid.GridList {
     const obj = {
       id,
       name: names[r],
+      team: "검수 1팀",
       position: positions[r],
       auth: auth[r],
       email: `test-${a}@test.co.kr`,
       phone: "0000",
-      date: `2022-07-12 10:00:00`,
+      date: `2022-07-12`,
+      startDt: `2022-07-12`,
+      endDt: `2022-07-12`,
       modify: "",
     };
     tmp.push(obj);

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Grid from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
+import AuthModal, { Item } from "@/components/settings/AuthModal.vue";
 import { useSettingsStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -10,17 +11,29 @@ const { authColumns, authList } = storeToRefs(settingsStore);
 
 const currentPage = ref<number>(1);
 const term = ref<string>("");
+const isModal = ref<boolean>(false);
+const modalItem = ref<Item | null>(null);
 
 const onPage = (n: number) => {
   settingsStore.getLogList(n);
 };
 
-const onModify = (id: string) => {
-  alert("준비중...");
+const onModify = (item: Item) => {
+  modalItem.value = item;
+  isModal.value = true;
+};
+
+const onClose = () => {
+  modalItem.value = null;
+  isModal.value = false;
 };
 
 const onSearch = () => {
   alert(`${term.value} 준비중...`);
+};
+
+const onModifyConfirm = () => {
+  isModal.value = false;
 };
 </script>
 
@@ -73,15 +86,15 @@ const onSearch = () => {
         <template v-slot:auth="{ item }">
           <div
             :class="{
-              [badge.auth]: item.auth === 'auth',
-              [badge.normal]: item.auth === 'normal',
+              [badge.admin]: item.auth === 'admin',
+              [badge.user]: item.auth === 'user',
               [badge.nil]: item.auth === 'nil',
             }"
           >
             {{
-              item.auth === "auth"
+              item.auth === "admin"
                 ? "권한"
-                : item.auth === "normal"
+                : item.auth === "user"
                 ? "일반"
                 : "없음"
             }}
@@ -94,7 +107,7 @@ const onSearch = () => {
           <div :class="middle.text">{{ item.phone }}</div>
         </template>
         <template v-slot:modify="{ item }">
-          <div :class="middle.modify" @click="onModify(item.id)">
+          <div :class="middle.modify" @click="onModify(item)">
             <svg
               width="12"
               height="12"
@@ -128,6 +141,12 @@ const onSearch = () => {
     <section :class="bottom.layout" aria-label="Pagination section">
       <Pagination :current="currentPage" @change="onPage" />
     </section>
+    <AuthModal
+      v-if="isModal"
+      :item="modalItem"
+      @confirm="onModifyConfirm"
+      @cancel="onClose"
+    />
   </article>
 </template>
 
@@ -230,7 +249,7 @@ const onSearch = () => {
 </style>
 
 <style lang="scss" module="badge">
-.auth {
+.admin {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -243,7 +262,7 @@ const onSearch = () => {
   background-color: $p-50;
 }
 
-.normal {
+.user {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -3,15 +3,30 @@ import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Calendar from "@/components/shared/Calendar.vue";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const FULL_DAYS = [
+  "일요일",
+  "월요일",
+  "화요일",
+  "수요일",
+  "목요일",
+  "금요일",
+  "토요일",
+];
 
 interface Props {
   range?: boolean;
   defaultStart?: string;
   defaultEnd?: string;
+  width?: string;
+  fullDays?: boolean;
+  startLimit?: string;
+  endLimit?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   range: false,
+  width: `124px`,
+  fullDays: false,
 });
 
 const emits = defineEmits<{
@@ -50,11 +65,25 @@ watch(props, () => {
 
 const getStartDt = computed(() => {
   const date = new Date(startDt.value);
-  return `${startDt.value.split("-").join(".")}. ${DAYS[date.getDay()]}`;
+  const sp = startDt.value.split("-");
+  const year = sp[0];
+  const month = sp[1];
+  const day = sp[2];
+
+  return `${year}.${month.padStart(2, "0")}.${day.padStart(2, "0")}. ${
+    props.fullDays ? FULL_DAYS[date.getDay()] : DAYS[date.getDay()]
+  }`;
 });
 const getEndDt = computed(() => {
   const date = new Date(endDt.value);
-  return `${endDt.value.split("-").join(".")}. ${DAYS[date.getDay()]}`;
+  const sp = startDt.value.split("-");
+  const year = sp[0];
+  const month = sp[1];
+  const day = sp[2];
+
+  return `${year}.${month.padStart(2, "0")}.${day.padStart(2, "0")}.  ${
+    props.fullDays ? FULL_DAYS[date.getDay()] : DAYS[date.getDay()]
+  }`;
 });
 const onCalendar = (t: "start" | "end") => {
   if (t === "start") {
@@ -75,10 +104,29 @@ const dateVaildate = (s: string, e: string) => {
   return false;
 };
 const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
+  if (t === "cancel") {
+    isStartDt.value = false;
+    isEndDt.value = false;
+    return;
+  }
   if (!props.range) {
+    if (
+      (props.startLimit && dateVaildate(props.startLimit, d)) ||
+      (props.endLimit && dateVaildate(d, props.endLimit))
+    ) {
+      return;
+    }
     startDt.value = d;
     isStartDt.value = false;
-    emits("selected", `${startDt.value}`);
+    const sp = startDt.value.split("-");
+    const year = sp[0];
+    const month = sp[1];
+    const day = sp[2];
+
+    emits(
+      "selected",
+      `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+    );
   } else {
     if (t === "start") {
       if (dateVaildate(d, endDt.value)) {
@@ -92,11 +140,24 @@ const onDateConfirm = (d: string, t: "start" | "end" | "cancel") => {
       }
       endDt.value = d;
       isEndDt.value = false;
-    } else {
-      isStartDt.value = false;
-      isEndDt.value = false;
     }
-    emits("selected", `${startDt.value}~${endDt.value}`);
+
+    const sp1 = startDt.value.split("-");
+    const year1 = sp1[0];
+    const month1 = sp1[1];
+    const day1 = sp1[2];
+
+    const sp2 = endDt.value.split("-");
+    const year2 = sp2[0];
+    const month2 = sp2[1];
+    const day2 = sp2[2];
+    emits(
+      "selected",
+      `${year1}-${month1.padStart(2, "0")}-${day1.padStart(
+        2,
+        "0"
+      )}~${year2}-${month2.padStart(2, "0")}-${day2.padStart(2, "0")}`
+    );
   }
 };
 const onClosest = (e: MouseEvent) => {
@@ -157,13 +218,16 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .date-picker {
+  width: 100%;
   display: flex;
   align-items: center;
+
   .divider {
     margin: 0 10px;
   }
+
   .time {
     display: flex;
     justify-content: flex-start;
@@ -172,7 +236,7 @@ onUnmounted(() => {
     background-color: #ffffff;
     border: 1px solid #dfe1e6;
     border-radius: 4px;
-    width: 124px;
+    width: v-bind("props.width");
 
     color: #1b1b1b;
     cursor: pointer;

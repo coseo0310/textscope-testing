@@ -228,6 +228,7 @@ for (let i = 0; i < 12; i++) {
       justify-content: center;
       align-items: center;
       .combobox {
+        width: 90px;
         margin: 0 5px;
       }
     }
@@ -321,6 +322,7 @@ for (let i = 0; i < 12; i++) {
       background-color: $m-700;
       color: $n-0;
       border: none;
+
       padding: 10px 14px;
       border-radius: 4px;
       font-weight: 500;
@@ -328,6 +330,8 @@ for (let i = 0; i < 12; i++) {
       cursor: pointer;
 
       p {
+        color: #ffffff;
+        width: 100%;
         padding-left: 5px;
       }
     }
