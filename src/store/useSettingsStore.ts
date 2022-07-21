@@ -56,7 +56,7 @@ function getAuthColumns(): Grid.Columns {
       value: "position",
     },
     {
-      width: 100,
+      width: 150,
       text: "권한",
       align: "center",
       sortable: false,
@@ -69,7 +69,7 @@ function getAuthColumns(): Grid.Columns {
       value: "email",
     },
     {
-      width: 80,
+      width: 150,
       text: "내선번호",
       align: "center",
       sortable: false,
@@ -127,14 +127,12 @@ function getGridAuthList(c: number = 1): Grid.GridList {
 function getLogColumns(): Grid.Columns {
   return [
     {
-      width: 220,
       text: "배치시작 일시",
       align: "center",
       sortable: false,
       value: "startDt",
     },
     {
-      width: 220,
       text: "배치종료 일시",
       align: "center",
       sortable: false,
@@ -147,7 +145,6 @@ function getLogColumns(): Grid.Columns {
       value: "type",
     },
     {
-      width: 100,
       text: "배치명",
       align: "center",
       sortable: false,
