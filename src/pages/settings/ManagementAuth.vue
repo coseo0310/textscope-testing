@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import AuthCard from "@/components/settings/AuthCard.vue";
+import TeamCard from "@/components/settings/TeamCard.vue";
 </script>
 
 <template>
   <main :class="main.layout">
     <h1 :class="main.title">검수 1팀</h1>
-    <AuthCard />
+    <div :class="main.card_layout">
+      <AuthCard />
+      <TeamCard />
+    </div>
   </main>
 </template>
 
@@ -21,6 +25,12 @@ import AuthCard from "@/components/settings/AuthCard.vue";
   font-size: 29px;
   font-weight: 700;
   padding-top: 42px;
-  padding-bottom: 24px;
+  padding-bottom: 14px;
+}
+
+.card_layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 </style>
