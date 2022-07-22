@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <article :class="container.layout">개인 검수 현황</article>
+  <article :class="container.layout">문서 분류 모델 정확도</article>
 </template>
 
 <style lang="scss" module="container">

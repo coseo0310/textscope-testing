@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <article :class="container.layout">개인 검수 현황</article>
+  <article :class="container.layout">문서별 KV 오류율</article>
 </template>
 
 <style lang="scss" module="container">

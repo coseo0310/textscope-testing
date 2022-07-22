@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import InspectorCard from "@/components/dashboard/InspectorCard.vue";
+import WorkCard from "@/components/dashboard/WorkCard.vue";
+import RecognizeAccuracyCard from "@/components/dashboard/InspectorCard.vue";
+import ModelCard from "@/components/dashboard/ModelCard.vue";
+import ModelAccuracyCard from "@/components/dashboard/ModelAccuracyCard.vue";
+import UseCard from "@/components/dashboard/UseCard.vue";
+import ErrorCard from "@/components/dashboard/ErrorCard.vue";
 import SearchCard from "@/components/dashboard/SearchCard.vue";
 import NavCard from "@/components/dashboard/NavCard.vue";
 </script>
@@ -9,11 +15,12 @@ import NavCard from "@/components/dashboard/NavCard.vue";
     <div :class="main.card_layout">
       <aside>
         <InspectorCard class="card" />
-        <InspectorCard class="card" />
-        <InspectorCard class="card" />
-        <InspectorCard class="card" />
-        <InspectorCard class="card" />
-        <InspectorCard class="card" />
+        <WorkCard class="card" />
+        <UseCard class="card" />
+        <ModelCard class="card" />
+        <ModelAccuracyCard class="card" />
+        <RecognizeAccuracyCard class="card" />
+        <ErrorCard class="card" />
       </aside>
       <nav>
         <NavCard />
