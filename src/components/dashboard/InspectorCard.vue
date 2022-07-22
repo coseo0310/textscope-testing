@@ -1,10 +1,122 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ComboBox from "../shared/ComboBox.vue";
-import Chart, { ChartConfiguration, ChartDataset } from "chart.js/auto";
+import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+Chart.register(ChartDataLabels);
+
 const canvas = ref<HTMLCanvasElement | null>(null);
+const c = ref<any>(null);
+
+onMounted(() => {
+  if (!canvas.value) {
+    return;
+  }
+  c.value = new Chart(canvas.value, {
+    type: "bar",
+    data: {
+      labels: [
+        "12/1",
+        "12/2",
+        "12/3",
+        "12/4",
+        "12/5",
+        "12/6",
+        "12/7",
+        "12/8",
+        "12/9",
+        "12/10",
+        "12/11",
+        "12/12",
+        "12/13",
+        "12/14",
+        "12/15",
+        "12/17",
+        "12/18",
+        "12/19",
+        "12/20",
+        "12/21",
+        "12/22",
+        "12/23",
+        "12/24",
+        "12/25",
+        "12/27",
+        "12/28",
+        "12/29",
+        "12/30",
+        "12/31",
+      ],
+      datasets: [
+        {
+          label: "검수한 문서 수",
+          data: [
+            10, 29, 30, 49, 0, 22, 32, 44, 56, 10, 29, 30, 49, 0, 22, 32, 44,
+            56, 10, 29, 30, 49, 0, 22, 32, 44, 56, 32, 22,
+          ],
+          backgroundColor: "#2684FF",
+          borderWidth: 0,
+          datalabels: {
+            color: "#5E5E5E",
+            anchor: "end",
+            padding: 0,
+            font: {
+              family: "'Pretendard', 'sans-serif'",
+              size: 12,
+              weight: "normal",
+            },
+            display: "auto",
+            formatter: function (value) {
+              return `${value ? value : ""}\n`;
+            },
+          },
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          display: true,
+          align: "start",
+          position: "bottom",
+          labels: {
+            padding: 20,
+          },
+        },
+        tooltip: {
+          enabled: false,
+        },
+      },
+      scales: {
+        title: {
+          display: false,
+        },
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            padding: 0,
+            color: "#5E5E5E",
+            font: {
+              family: "'Pretendard', 'sans-serif'",
+              size: 12,
+              weight: "400",
+            },
+          },
+        },
+        y: {
+          beginAtZero: true,
+          display: true,
+          ticks: {
+            padding: 20,
+          },
+        },
+      },
+    },
+  });
+});
 </script>
 
 <template>
@@ -92,7 +204,7 @@ const canvas = ref<HTMLCanvasElement | null>(null);
         />
       </div>
       <div :class="chart.wrap">
-        <canvas ref="canvas"></canvas>
+        <canvas ref="canvas" height="261"></canvas>
       </div>
     </section>
   </article>
@@ -194,9 +306,10 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 }
 
 .wrap {
-  width: 100%;
-  height: 261px;
-  display: flex;
+  canvas {
+    width: 100%;
+    height: 261px;
+  }
 }
 
 .combo {

@@ -1,104 +1,217 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ComboBox from "../shared/ComboBox.vue";
-import Chart, { ChartConfiguration, ChartDataset } from "chart.js/auto";
+import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
+Chart.register(ChartDataLabels);
+
 const canvas = ref<HTMLCanvasElement | null>(null);
+const c = ref<any>(null);
+
+onMounted(() => {
+  if (!canvas.value) {
+    return;
+  }
+  c.value = new Chart(canvas.value, {
+    type: "bar",
+    data: {
+      labels: [
+        "무역금융부",
+        "품질부",
+        "경영지원부",
+        "무역금융부",
+        "무역금융부",
+        "경영지원부",
+        "품질부",
+        "품질부",
+      ],
+      datasets: [
+        {
+          label: "등록한 문서 수",
+          data: [1, 29, 20, 49, 10, 22, 32, 44],
+          backgroundColor: "#FB8532",
+          borderWidth: 0,
+          datalabels: {
+            color: "#5E5E5E",
+            anchor: "end",
+            padding: 0,
+            font: {
+              family: "'Pretendard', 'sans-serif'",
+              size: 12,
+              weight: "normal",
+            },
+            display: "auto",
+            formatter: function (value) {
+              return `${value ? value : ""}\n`;
+            },
+          },
+        },
+        {
+          label: "검수한 문서 수",
+          data: [10, 49, 30, 20, 3, 24, 36, 22],
+          backgroundColor: "#2684FF",
+          borderWidth: 0,
+          datalabels: {
+            color: "#5E5E5E",
+            anchor: "end",
+            padding: 0,
+            font: {
+              family: "'Pretendard', 'sans-serif'",
+              size: 12,
+              weight: "normal",
+            },
+            display: "auto",
+            formatter: function (value) {
+              return `${value ? value : ""}\n`;
+            },
+          },
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          display: true,
+          align: "start",
+          position: "bottom",
+          labels: {
+            padding: 20,
+          },
+        },
+        tooltip: {
+          enabled: false,
+        },
+      },
+      scales: {
+        title: {
+          display: false,
+        },
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            padding: 0,
+            color: "#5E5E5E",
+            font: {
+              family: "'Pretendard', 'sans-serif'",
+              size: 12,
+              weight: "400",
+            },
+          },
+        },
+        y: {
+          beginAtZero: true,
+          display: true,
+          ticks: {
+            padding: 20,
+          },
+        },
+      },
+    },
+  });
+});
 </script>
 
 <template>
   <article :class="container.layout">
-    <section>
-      <section :class="top.layout" aria-label="Top section">
-        <h1 :class="top.title">부서 업무 현황</h1>
-        <div :class="top.box">
-          <div :class="top.count">
-            <i :class="top.icon_orange">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10 1.5C10.5523 1.5 11 1.94772 11 2.5V12.5C11 13.0523 10.5523 13.5 10 13.5C9.44772 13.5 9 13.0523 9 12.5V2.5C9 1.94772 9.44772 1.5 10 1.5Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M9.2929 1.79289C9.68343 1.40237 10.3166 1.40237 10.7071 1.79289L14.8738 5.95956C15.2643 6.35008 15.2643 6.98325 14.8738 7.37377C14.4833 7.7643 13.8501 7.7643 13.4596 7.37377L10 3.91421L6.54045 7.37377C6.14993 7.7643 5.51676 7.7643 5.12624 7.37377C4.73571 6.98325 4.73571 6.35008 5.12624 5.95956L9.2929 1.79289Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10 1.5C10.5523 1.5 11 1.94772 11 2.5V12.5C11 13.0523 10.5523 13.5 10 13.5C9.44772 13.5 9 13.0523 9 12.5V2.5C9 1.94772 9.44772 1.5 10 1.5Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M2.5 11.5C3.05228 11.5 3.5 11.9477 3.5 12.5V15.8333C3.5 16.0101 3.57024 16.1797 3.69526 16.3047C3.82029 16.4298 3.98986 16.5 4.16667 16.5H15.8333C16.0101 16.5 16.1797 16.4298 16.3047 16.3047C16.4298 16.1797 16.5 16.0101 16.5 15.8333V12.5C16.5 11.9477 16.9477 11.5 17.5 11.5C18.0523 11.5 18.5 11.9477 18.5 12.5V15.8333C18.5 16.5406 18.219 17.2189 17.719 17.719C17.2189 18.219 16.5406 18.5 15.8333 18.5H4.16667C3.45942 18.5 2.78115 18.219 2.28105 17.719C1.78095 17.2189 1.5 16.5406 1.5 15.8333V12.5C1.5 11.9477 1.94772 11.5 2.5 11.5Z"
-                  fill="white"
-                />
-              </svg>
-            </i>
-            <div :class="top.info">
-              <p>등록 합계</p>
-              <p>9,354<span>건</span></p>
-            </div>
-          </div>
-          <div :class="top.count">
-            <i :class="top.icon">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M12.9848 3.29673C11.5403 2.65311 9.92645 2.49366 8.38396 2.84217C6.84146 3.19068 5.45294 4.02846 4.42549 5.23058C3.39803 6.4327 2.7867 7.93475 2.68265 9.5127C2.5786 11.0906 2.98741 12.66 3.84812 13.9866C4.70883 15.3132 5.97532 16.3261 7.45869 16.8741C8.94207 17.4221 10.5629 17.476 12.0793 17.0276C13.5958 16.5792 14.9267 15.6526 15.8736 14.3861C16.8205 13.1195 17.3325 11.5808 17.3334 9.9994V9.2333C17.3334 8.68102 17.7811 8.2333 18.3334 8.2333C18.8857 8.2333 19.3334 8.68102 19.3334 9.2333V9.99997C19.3323 12.0126 18.6805 13.9716 17.4755 15.5836C16.2704 17.1956 14.5765 18.3749 12.6464 18.9455C10.7164 19.5162 8.65352 19.4476 6.76559 18.7502C4.87765 18.0527 3.26576 16.7636 2.17031 15.0751C1.07486 13.3867 0.554553 11.3894 0.68698 9.3811C0.819406 7.3728 1.59747 5.46111 2.90514 3.93114C4.21281 2.40117 5.98001 1.3349 7.94319 0.891344C9.90637 0.44779 11.9603 0.650722 13.7988 1.46987C14.3032 1.69465 14.53 2.28583 14.3052 2.7903C14.0804 3.29478 13.4892 3.52151 12.9848 3.29673Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M19.0401 2.62585C19.4309 3.01618 19.4312 3.64935 19.0409 4.04007L10.7075 12.3817C10.52 12.5694 10.2656 12.6749 10.0003 12.675C9.73501 12.675 9.48055 12.5697 9.29295 12.3821L6.79295 9.88209C6.40243 9.49156 6.40243 8.8584 6.79295 8.46787C7.18348 8.07735 7.81664 8.07735 8.20717 8.46787L9.99971 10.2604L17.6259 2.62656C18.0163 2.23584 18.6494 2.23552 19.0401 2.62585Z"
-                  fill="white"
-                />
-              </svg>
-            </i>
-            <div :class="top.info">
-              <p>검수 합계</p>
-              <p>9,190<span>건</span></p>
-            </div>
+    <section :class="top.layout" aria-label="Top section">
+      <h1 :class="top.title">부서 업무 현황</h1>
+      <div :class="top.box">
+        <div :class="top.count">
+          <i :class="top.icon_orange">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10 1.5C10.5523 1.5 11 1.94772 11 2.5V12.5C11 13.0523 10.5523 13.5 10 13.5C9.44772 13.5 9 13.0523 9 12.5V2.5C9 1.94772 9.44772 1.5 10 1.5Z"
+                fill="white"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M9.2929 1.79289C9.68343 1.40237 10.3166 1.40237 10.7071 1.79289L14.8738 5.95956C15.2643 6.35008 15.2643 6.98325 14.8738 7.37377C14.4833 7.7643 13.8501 7.7643 13.4596 7.37377L10 3.91421L6.54045 7.37377C6.14993 7.7643 5.51676 7.7643 5.12624 7.37377C4.73571 6.98325 4.73571 6.35008 5.12624 5.95956L9.2929 1.79289Z"
+                fill="white"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10 1.5C10.5523 1.5 11 1.94772 11 2.5V12.5C11 13.0523 10.5523 13.5 10 13.5C9.44772 13.5 9 13.0523 9 12.5V2.5C9 1.94772 9.44772 1.5 10 1.5Z"
+                fill="white"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M2.5 11.5C3.05228 11.5 3.5 11.9477 3.5 12.5V15.8333C3.5 16.0101 3.57024 16.1797 3.69526 16.3047C3.82029 16.4298 3.98986 16.5 4.16667 16.5H15.8333C16.0101 16.5 16.1797 16.4298 16.3047 16.3047C16.4298 16.1797 16.5 16.0101 16.5 15.8333V12.5C16.5 11.9477 16.9477 11.5 17.5 11.5C18.0523 11.5 18.5 11.9477 18.5 12.5V15.8333C18.5 16.5406 18.219 17.2189 17.719 17.719C17.2189 18.219 16.5406 18.5 15.8333 18.5H4.16667C3.45942 18.5 2.78115 18.219 2.28105 17.719C1.78095 17.2189 1.5 16.5406 1.5 15.8333V12.5C1.5 11.9477 1.94772 11.5 2.5 11.5Z"
+                fill="white"
+              />
+            </svg>
+          </i>
+          <div :class="top.info">
+            <p>등록 합계</p>
+            <p>9,354<span>건</span></p>
           </div>
         </div>
-      </section>
-      <section :class="chart.layout" aria-label="Chart section">
-        <div :class="chart.combo">
-          <ComboBox
-            :items="[
-              { id: 1, text: '무역금융부', value: '무역금융부' },
-              { id: 2, text: '품질부', value: '품질부' },
-            ]"
-          />
+        <div :class="top.count">
+          <i :class="top.icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12.9848 3.29673C11.5403 2.65311 9.92645 2.49366 8.38396 2.84217C6.84146 3.19068 5.45294 4.02846 4.42549 5.23058C3.39803 6.4327 2.7867 7.93475 2.68265 9.5127C2.5786 11.0906 2.98741 12.66 3.84812 13.9866C4.70883 15.3132 5.97532 16.3261 7.45869 16.8741C8.94207 17.4221 10.5629 17.476 12.0793 17.0276C13.5958 16.5792 14.9267 15.6526 15.8736 14.3861C16.8205 13.1195 17.3325 11.5808 17.3334 9.9994V9.2333C17.3334 8.68102 17.7811 8.2333 18.3334 8.2333C18.8857 8.2333 19.3334 8.68102 19.3334 9.2333V9.99997C19.3323 12.0126 18.6805 13.9716 17.4755 15.5836C16.2704 17.1956 14.5765 18.3749 12.6464 18.9455C10.7164 19.5162 8.65352 19.4476 6.76559 18.7502C4.87765 18.0527 3.26576 16.7636 2.17031 15.0751C1.07486 13.3867 0.554553 11.3894 0.68698 9.3811C0.819406 7.3728 1.59747 5.46111 2.90514 3.93114C4.21281 2.40117 5.98001 1.3349 7.94319 0.891344C9.90637 0.44779 11.9603 0.650722 13.7988 1.46987C14.3032 1.69465 14.53 2.28583 14.3052 2.7903C14.0804 3.29478 13.4892 3.52151 12.9848 3.29673Z"
+                fill="white"
+              />
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M19.0401 2.62585C19.4309 3.01618 19.4312 3.64935 19.0409 4.04007L10.7075 12.3817C10.52 12.5694 10.2656 12.6749 10.0003 12.675C9.73501 12.675 9.48055 12.5697 9.29295 12.3821L6.79295 9.88209C6.40243 9.49156 6.40243 8.8584 6.79295 8.46787C7.18348 8.07735 7.81664 8.07735 8.20717 8.46787L9.99971 10.2604L17.6259 2.62656C18.0163 2.23584 18.6494 2.23552 19.0401 2.62585Z"
+                fill="white"
+              />
+            </svg>
+          </i>
+          <div :class="top.info">
+            <p>검수 합계</p>
+            <p>9,190<span>건</span></p>
+          </div>
         </div>
-        <div :class="chart.wrap">
-          <canvas ref="canvas"></canvas>
-        </div>
-      </section>
+      </div>
+    </section>
+    <section :class="chart.layout" aria-label="Chart section">
+      <div :class="chart.combo">
+        <ComboBox
+          :items="[
+            { id: 1, text: '무역금융부', value: '무역금융부' },
+            { id: 2, text: '품질부', value: '품질부' },
+          ]"
+        />
+      </div>
+      <div :class="chart.wrap">
+        <canvas ref="canvas" height="261"></canvas>
+      </div>
     </section>
   </article>
 </template>
+
+<style lang="scss" scoped>
+canvas {
+  width: 100%;
+  height: 231px;
+}
+</style>
 
 <style lang="scss" module="container">
 .layout {
@@ -206,9 +319,10 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 }
 
 .wrap {
-  width: 100%;
-  height: 261px;
-  display: flex;
+  canvas {
+    width: 100%;
+    height: 261px;
+  }
 }
 
 .combo {
