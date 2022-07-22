@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import DatePicker from "@/components/shared/DatePicker.vue";
+import ChartModal from "@/components/dashboard/ChartModal.vue";
 import { useCommonStore } from "@/store";
 
 const commonStore = useCommonStore();
@@ -10,6 +11,7 @@ const year = date.getFullYear();
 const month = date.getMonth() + 1;
 const day = date.getDate();
 
+const isModal = ref<boolean>(false);
 const startDt = ref<string>(
   `${year}-${month.toString().padStart(2, "0")}-${day
     .toString()
@@ -28,12 +30,8 @@ const onEndDate = (d: string) => {
   endDt.value = d;
 };
 
-const onUpdate = () => {
-  alert("준비중...");
-  // commonStore.setLoader(true, "차트 다운로드 중...");
-  // setTimeout(() => {
-  //   commonStore.setLoader(false, "");
-  // }, 1000);
+const onDownload = () => {
+  isModal.value = true;
 };
 </script>
 
@@ -69,7 +67,7 @@ const onUpdate = () => {
     <div :class="container.divider"></div>
     <div :class="sso.layout">
       <h1 :class="sso.title">데이터 내보내기</h1>
-      <button type="button" :class="sso.btn" @click="onUpdate">
+      <button type="button" :class="sso.btn" @click="onDownload">
         <svg
           width="18"
           height="18"
@@ -99,15 +97,17 @@ const onUpdate = () => {
         차트 내보내기(.xlsx)
       </button>
     </div>
+    <ChartModal v-if="isModal" :close-callback="() => (isModal = !isModal)" />
   </article>
 </template>
 
 <style lang="scss" module="container">
 .layout {
+  position: relative;
   width: 252px;
   height: 277px;
   background-color: #ffffff;
-  box-shadow: 0px 1px 1px rgba(9, 30, 66, 0.25),
+  box-shadow: 0px 3px 5px rgba(9, 30, 66, 0.2),
     0px 0px 1px rgba(9, 30, 66, 0.31);
   border-radius: 3px;
   margin-left: 12px;

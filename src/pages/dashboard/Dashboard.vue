@@ -2,7 +2,7 @@
 import InspectorCard from "@/components/dashboard/InspectorCard.vue";
 import WorkCard from "@/components/dashboard/WorkCard.vue";
 import RecognizeAccuracyCard from "@/components/dashboard/InspectorCard.vue";
-import ModelCard from "@/components/dashboard/ModelCard.vue";
+import DocumentCard from "@/components/dashboard/DocumentCard.vue";
 import ModelAccuracyCard from "@/components/dashboard/ModelAccuracyCard.vue";
 import UseCard from "@/components/dashboard/UseCard.vue";
 import ErrorCard from "@/components/dashboard/ErrorCard.vue";
@@ -17,7 +17,7 @@ import NavCard from "@/components/dashboard/NavCard.vue";
         <InspectorCard class="card" />
         <WorkCard class="card" />
         <UseCard class="card" />
-        <ModelCard class="card" />
+        <DocumentCard class="card" />
         <ModelAccuracyCard class="card" />
         <RecognizeAccuracyCard class="card" />
         <ErrorCard class="card" />
