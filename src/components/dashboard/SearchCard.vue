@@ -29,10 +29,11 @@ const onEndDate = (d: string) => {
 };
 
 const onUpdate = () => {
-  commonStore.setLoader(true, "차트 다운로드 중...");
-  setTimeout(() => {
-    commonStore.setLoader(false, "");
-  }, 1000);
+  alert("준비중...");
+  // commonStore.setLoader(true, "차트 다운로드 중...");
+  // setTimeout(() => {
+  //   commonStore.setLoader(false, "");
+  // }, 1000);
 };
 </script>
 
