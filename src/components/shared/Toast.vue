@@ -1,13 +1,16 @@
 <script setup lang="ts">
 interface Props {
   text: string;
-  callback: Function;
   types: "warn" | "confirm" | "info";
+  callback?: Function;
 }
 
 const props = defineProps<Props>();
 
 const onClose = () => {
+  if (!props.callback) {
+    return;
+  }
   props.callback();
 };
 </script>

@@ -40,14 +40,29 @@ const onConfirm = () => {
   emits("confirm", result.value);
 };
 
+const onClosest = (e: MouseEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const el = e.target as HTMLElement;
+  if (!el) {
+    return;
+  }
+
+  const closest = el.closest(".modal");
+  if (closest) {
+    return;
+  }
+  onCancel();
+};
+
 const onCancel = () => {
   emits("cancel");
 };
 </script>
 
 <template>
-  <article :class="container.layout">
-    <div :class="modal.layout">
+  <article :class="container.layout" @click="onClosest">
+    <div class="modal" :class="modal.layout">
       <h1 :class="modal.title">권한 수정</h1>
       <div :class="modal.box">
         <label :class="modal.label">대상 직원</label>

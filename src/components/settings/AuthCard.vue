@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Grid from "@/components/shared/Grid.vue";
 import Pagination from "@/components/shared/Pagination.vue";
 import AuthModal, { Item } from "@/components/settings/AuthModal.vue";
+import Toast from "@/components/shared/Toast.vue";
 import { useSettingsStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -11,8 +12,9 @@ const { authColumns, authList } = storeToRefs(settingsStore);
 
 const currentPage = ref<number>(1);
 const term = ref<string>("");
-const isModal = ref<boolean>(false);
 const modalItem = ref<Item | null>(null);
+const isModal = ref<boolean>(false);
+const isToast = ref<boolean>(false);
 
 const onPage = (n: number) => {
   settingsStore.getAuthList(n);
@@ -34,7 +36,13 @@ const onSearch = () => {
 
 const onModifyConfirm = () => {
   isModal.value = false;
+  isToast.value = true;
+  setTimeout(() => {
+    isToast.value = false;
+  }, 1000);
 };
+
+const onToastCallback = () => {};
 </script>
 
 <template>
@@ -146,6 +154,12 @@ const onModifyConfirm = () => {
       :item="modalItem"
       @confirm="onModifyConfirm"
       @cancel="onClose"
+    />
+    <Toast
+      v-if="isToast"
+      text="권한이 성공적으로 변경되었습니다."
+      types="confirm"
+      :callback="onToastCallback"
     />
   </article>
 </template>
