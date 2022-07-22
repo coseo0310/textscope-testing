@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import LogCard from "@/components/settings/LogCard.vue";
+import SearchCard from "@/components/settings/SearchCard.vue";
 </script>
 
 <template>
   <main :class="main.layout">
     <h1 :class="main.title">인사정보 배치이력 조회</h1>
-    <LogCard />
+    <div :class="main.card_layout">
+      <LogCard />
+      <SearchCard />
+    </div>
   </main>
 </template>
 
@@ -22,5 +26,11 @@ import LogCard from "@/components/settings/LogCard.vue";
   font-weight: 700;
   padding-top: 42px;
   padding-bottom: 24px;
+}
+
+.card_layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 </style>

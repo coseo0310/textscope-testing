@@ -1,7 +1,12 @@
 <script setup lang="ts"></script>
 
 <template>
-  <article>dashboard</article>
+  <main :class="main.layout"></main>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" module="main">
+.layout {
+  display: flex;
+  flex-direction: column;
+}
+</style>
