@@ -156,6 +156,11 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 }
 
 .info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+
   p:first-child {
     font-size: 12px;
     font-weight: 400;
@@ -192,7 +197,6 @@ const canvas = ref<HTMLCanvasElement | null>(null);
   width: 100%;
   height: 261px;
   display: flex;
-  background-color: lightcyan;
 }
 
 .combo {

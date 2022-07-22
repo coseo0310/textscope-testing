@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import InspectorCard from "@/components/dashboard/InspectorCard.vue";
 import WorkCard from "@/components/dashboard/WorkCard.vue";
-import RecognizeAccuracyCard from "@/components/dashboard/InspectorCard.vue";
+import RecognizeAccuracyCard from "@/components/dashboard/RecognizeAccuracyCard.vue";
 import DocumentCard from "@/components/dashboard/DocumentCard.vue";
 import ModelAccuracyCard from "@/components/dashboard/ModelAccuracyCard.vue";
+import WorkTotalCard from "@/components/dashboard/WorkTotalCard.vue";
 import UseCard from "@/components/dashboard/UseCard.vue";
 import ErrorCard from "@/components/dashboard/ErrorCard.vue";
 import SearchCard from "@/components/dashboard/SearchCard.vue";
@@ -16,7 +17,10 @@ import NavCard from "@/components/dashboard/NavCard.vue";
       <aside>
         <InspectorCard class="card" />
         <WorkCard class="card" />
-        <UseCard class="card" />
+        <div class="split card">
+          <WorkTotalCard />
+          <UseCard />
+        </div>
         <DocumentCard class="card" />
         <ModelAccuracyCard class="card" />
         <RecognizeAccuracyCard class="card" />
@@ -34,6 +38,11 @@ import NavCard from "@/components/dashboard/NavCard.vue";
   &:not(:first-child) {
     margin-top: 12px;
   }
+}
+.split {
+  display: grid;
+  grid-template-columns: 1fr 504px;
+  gap: 12px;
 }
 </style>
 
