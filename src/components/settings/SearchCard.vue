@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import DatePicker from "@/components/shared/DatePicker.vue";
+import { useCommonStore } from "@/store";
+
+const commonStore = useCommonStore();
 
 const date = new Date();
 const year = date.getFullYear();
@@ -26,7 +29,10 @@ const onEndDate = (d: string) => {
 };
 
 const onUpdate = () => {
-  alert("준비중...");
+  commonStore.setLoader(true, "목록 새로고침 중...");
+  setTimeout(() => {
+    commonStore.setLoader(false, "");
+  }, 1000);
 };
 </script>
 
